@@ -24,11 +24,12 @@ flowchart LR
 
 ## The dashboard
 
-Built like an internal operations product, not a notebook. The visual language is IBM's Carbon Design System (Gray 10 theme, IBM Plex Sans and Mono served locally, square corners, 14px body, 12px labels, one interactive blue, status colours only for status). I went through how Intercom, Zendesk, Gorgias, Langfuse, LangSmith, Phoenix and Evidently lay these things out, and through Carbon's own patterns for data tables, tags, notifications and the UI shell. A fixed header carries the environment, the run id and the reviewer; a left nav has three groups and nine pages.
+Built like an internal operations product, not a notebook. The visual language is IBM's Carbon Design System (Gray 10 theme, IBM Plex Sans and Mono served locally, square corners, 14px body, 12px labels, one interactive blue, status colours only for status). I went through how Intercom, Zendesk, Gorgias, Langfuse, LangSmith, Phoenix and Evidently lay these things out, and through Carbon's own patterns for data tables, tags, notifications and the UI shell. A fixed header carries the environment, the run id and the reviewer; a left nav has three groups and ten pages.
 
 Operate
 
 - **Overview**: KPI tiles, a pipeline funnel (received, classified by confidence band, routed by reason, QA result, review status), weekly volume, cancel mentions, a Needs attention queue, and why emails go to a consultant.
+- **Live triage**: paste one email, or pick one of five fresh examples, and watch the same six stages run on it on this machine, each row filling in as its stage finishes. The result is the same view the Inbox shows: category with confidence band, sentiment, the four policy chunks with BM25 and dense ranks, the routing rule that fired, and when the route allows it a draft with sentence support and the QA scorecard, plus approve or discard. Needs Ollama; the page says which model is missing instead of failing half way.
 - **Inbox**: saved views (Needs attention, QA fails, Low confidence, Consultant calls, Pending review, Reviewed), filters, one row per email with band, QA score and review status. Selecting a row shows the email, the prediction, the draft with a provenance banner, sentence-level support highlighting, a seven-check QA scorecard, and the review actions: approve, edit then approve, discard, correct the category or sentiment with a reason. Each decision appends to `out/reviews.jsonl` and raises a toast.
 - **Activity**: every review decision, who made it and when, filterable by action and reviewer, with what reviewers corrected and an export. Empty state points back to the Inbox.
 
@@ -50,13 +51,17 @@ There is also a small FastAPI service (`app/api.py`) over the same code, with `/
 
 No logo or trademark is used anywhere.
 
-| Inbox, reviewing the draft that made something up | Pipeline trace |
+| Live triage, one email through every stage | Inbox, reviewing the draft that made something up |
 |---|---|
-| ![Inbox review of E061](dashboard-review-E061.jpg) | ![Pipeline](dashboard-trace.jpg) |
+| ![Live triage](dashboard-live.jpg) | ![Inbox review of E061](dashboard-review-E061.jpg) |
 
-| Model quality | Model facts | Configuration |
-|---|---|---|
-| ![Model quality](dashboard-quality.jpg) | ![Model facts](dashboard-facts.jpg) | ![Configuration](dashboard-config.jpg) |
+| Pipeline trace | Model quality |
+|---|---|
+| ![Pipeline](dashboard-trace.jpg) | ![Model quality](dashboard-quality.jpg) |
+
+| Model facts | Configuration |
+|---|---|
+| ![Model facts](dashboard-facts.jpg) | ![Configuration](dashboard-config.jpg) |
 
 ## What is in here
 
@@ -73,7 +78,9 @@ app/pipeline.py          runs every email through, writes out/results.csv, out/t
 app/eval_retrieval.py    hit@k / MRR for BM25, dense, hybrid and the boosted pipeline -> models/retrieval_eval.json
 app/api.py               FastAPI service over the same code (uvicorn api:app --app-dir app)
 app/dashboard.py         Streamlit entrypoint: UI shell, nav, page routing
-app/views.py             the nine pages
+app/views.py             nine of the ten pages
+app/live.py              the Live triage page
+app/triage.py            one email through every stage, shared by the Live page and the API
 app/ui.py                Carbon tokens, CSS, Altair theme, data loaders, status checks, small components
 app/static/fonts/        IBM Plex Sans and Mono (OFL), served locally
 .streamlit/config.toml   Streamlit theme: Carbon colours, Plex font faces, square corners
@@ -101,7 +108,7 @@ streamlit run app/dashboard.py
 
 Or `make setup`, `make all`, `make app`.
 
-The outputs of the last run are committed (`models/`, `out/`), so the dashboard works straight after `pip install -r requirements.txt` and `streamlit run app/dashboard.py`, with no Ollama and no retraining. Ollama is only needed to rerun the pipeline, for the live search box on the Knowledge base page, and for the API's `/triage` endpoint.
+The outputs of the last run are committed (`models/`, `out/`), so the dashboard works straight after `pip install -r requirements.txt` and `streamlit run app/dashboard.py`, with no Ollama and no retraining. Ollama is only needed for the Live triage page, to rerun the pipeline, for the search box on the Knowledge base page, and for the API's `/triage` endpoint.
 
 On Windows (tested target: a Ryzen laptop with 16 GB), in PowerShell:
 

@@ -1,16 +1,16 @@
 {
-  "run_id": "run-20261019-000844",
-  "config_version": "0.4.0",
-  "config_hash": "484786fa8ba5",
+  "run_id": "run-20261019-113456",
+  "config_version": "0.5.0",
+  "config_hash": "5c5a3232dfa7",
   "routing_rules": [
     "guarantee",
     "medical",
     "disappointed",
     "cancel"
   ],
-  "started_at": "2026-10-19T00:08:44",
-  "finished_at": "2026-10-19T00:10:50",
-  "wall_seconds": 126.0,
+  "started_at": "2026-10-19T11:34:56",
+  "finished_at": "2026-10-19T11:37:01",
+  "wall_seconds": 125.4,
   "host": "Meets-MacBook-Pro.local",
   "python": "3.12.8",
   "sklearn": "1.7.2",
@@ -35,9 +35,9 @@
   ],
   "timing_seconds": {
     "index_load": 0.01,
-    "embed_all": 1.0,
+    "embed_all": 1.13,
     "classify_all": 0.001,
-    "draft_total": 114.6
+    "draft_total": 113.3
   },
   "routes": {
     "draft_reply": 76,

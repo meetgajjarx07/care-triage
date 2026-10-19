@@ -2,6 +2,12 @@
 
 All dates are 2026. Versions follow the `version` field in `config/triage.yaml`, which is stamped into `out/run.json` on every run.
 
+## 0.5.0 (2026-10-19)
+
+- Live triage page: paste one email and watch the six stages run on it, each row filling in as its stage finishes, then the same result view the Inbox shows (policy chunks, draft with sentence support, QA scorecard, approve or discard). Five fresh example emails, none of them in the training set. The page checks Ollama and both models first and says what is missing.
+- `app/triage.py`: one email through embed, classify, retrieve, route, draft and check, returning a record shaped like a line of `out/trace.jsonl`, with a progress callback. The Live page uses it; the API's `/triage` does the same work.
+- Two more offline tests (`tests/test_triage.py`): record shape without drafting, and that a guarantee claim routes to a consultant and never drafts. 32 tests.
+
 ## 0.4.0 (2026-10-18)
 
 - Visual language moved to IBM Carbon conventions with IBM Plex Sans and Plex Mono served from `app/static/fonts`.

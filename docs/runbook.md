@@ -8,6 +8,7 @@ How I operate the demo. Everything here is a laptop command or a click in the da
 2. Work the queue from the Inbox. For a draft: read the email, read the draft with sentence support switched on, read the QA scorecard. Approve, edit then approve, or discard. For a consultant call there is no draft; the retrieved policy is what the consultant should have open.
 3. When the model got the category or sentiment wrong, open Correct the prediction, set the right value and give a one line reason. The correction is logged. It does not change the live model, and the page says so.
 4. Decisions go to `out/reviews.jsonl`. The Activity page shows all of them and exports the file.
+5. For a new email that is not in the run, use Live triage: paste it, press the button, read the result the same way. It needs Ollama running with both models; the page says which one is missing. Its decisions land in the same review log with a `LIVE-` id.
 
 ## Weekly: retrain with the new labels
 

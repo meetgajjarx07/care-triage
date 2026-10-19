@@ -986,7 +986,7 @@ def facts():
             with st.expander("CHANGELOG.md", expanded=False):
                 st.markdown(cl)
         else:
-            kv([("v0.4.0", "Carbon design language, configuration file, Configuration / Model facts / Activity pages, API, tests"),
+            kv([("v0.5.0", "Live triage page, one-email triage module, two more tests"), ("v0.4.0", "Carbon design language, configuration file, Configuration / Model facts / Activity pages, API, tests"),
                 ("v0.3.0", "review loop, provenance, QA scorecard, sentence support, out-of-fold quality"),
                 ("v0.2.0", "trace view, run log, retrieval evaluation"), ("v0.1.0", "pipeline and first dashboard")])
     footer(run)
