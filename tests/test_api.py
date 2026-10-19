@@ -49,7 +49,8 @@ def test_triage_without_draft(client):
     d = r.json()
     assert d["route"] in ("draft_reply", "consultant_call")
     assert len(d["chunks"]) == 4 and d["confidence_band"] in ("high", "medium", "low")
-    assert set(d["ms"]) == {"embed", "classify", "retrieve"} and d["draft"] is None
+    assert set(d["ms"]) == {"embed", "classify", "retrieve", "grade", "brief"} and d["draft"] is None
+    assert d["brief"]["facts"] == [] and d["crag"]["kept"] == 4
 
 
 def test_reviews_roundtrip(client, tmp_path):

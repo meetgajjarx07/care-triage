@@ -22,7 +22,7 @@ Corrections are the labels the next model should learn from.
    RUN=$(python -c "import json;print(json.load(open('out/run.json'))['run_id'])")
    mkdir -p archive/$RUN && cp -R models out archive/$RUN/
    ```
-4. `make all`. Training takes about a minute, the pipeline about two, retrieval evaluation seconds.
+4. `make all`. Training takes about a minute, the pipeline about twelve (the grading and the briefs are one small model call per paragraph and per email), retrieval evaluation seconds. Set `genai.crag: false` or `genai.brief: false` in the config for a two-minute run without them.
 5. Open Model quality and read the Checks table first. Compare out-of-fold accuracy, the worst class recall and the critical QA fail count with the archived run. If a check that passed last week fails now, restore `models/` from the archive and look at which rows changed label before trying again.
 6. Note the new run id and config hash from the Run log page.
 

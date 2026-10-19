@@ -10,7 +10,9 @@ def test_triage_record_shape_without_draft():
                        draft=False, progress=lambda s, r: seen.append(s))
     S = rec["stages"]
     assert rec["id"].startswith("LIVE-") and rec["live"] is True
-    assert seen == ["embed", "classify", "retrieve", "route"]
+    assert seen == ["embed", "classify", "retrieve", "brief", "route"]
+    assert S["brief"]["facts"] == ["two charges"] and S["brief"]["dropped_facts"] == ["order 99999"]
+    assert S["retrieve"]["crag"]["kept"] == 4
     assert S["embed"]["dim"] == 768
     assert S["classify"]["band"] in ("high", "medium", "low")
     assert set(S["classify"]["category"]) == {"guarantee_claim", "results_question", "safety_concern", "dosage_question",

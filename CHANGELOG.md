@@ -2,6 +2,12 @@
 
 All dates are 2026. Versions follow the `version` field in `config/triage.yaml`, which is stamped into `out/run.json` on every run.
 
+## 0.7.0 (2026-10-19)
+
+- The language model now does three jobs, each with a guard (`app/genai.py`), the same shape as the email system this rebuilds: it grades every retrieved paragraph against the email and drops the ones about something else, with the search's best match always kept; if it rejects all of them it rephrases the question once and searches again, and if that also fails the email is marked a content gap (corrective RAG with a guard, because a 3B grader over-rejects); it writes a two-line brief for whoever handles the email and copies the facts out of it, each fact kept only if it appears in the email text; and it writes the draft, from the kept paragraphs only. It still never routes and never grades its own draft.
+- `triage.retrieve_graded()` and `triage.make_brief()` are shared by the live path, the API and the batch pipeline. The trace gains `retrieve.crag` and a `brief` stage; results.csv gains `brief_asks`, `brief_check`, `brief_facts`, `crag_kept`, `crag_dropped`. The API `/triage` now runs `triage_email` and returns `brief` and `crag`.
+- Step cards show the grading (dropped paragraphs struck through with the model's reason) and the brief; the tags say which steps use generative AI.
+
 ## 0.6.0 (2026-10-19)
 
 - Walkthrough page, first in the nav and the default page: the project in six stops in plain words, built from the run. Stop three reuses the Live triage panel (`live.panel`), stop four shows E061's draft with its failed check.

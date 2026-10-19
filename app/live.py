@@ -53,19 +53,19 @@ EXAMPLES = {
 STEPS = [  # (key, question, what happens while it runs)
     ("about", "What is this email about?", "reading the email"),
     ("policy", "Which policy applies?", "looking through the policy library"),
-    ("who", "Who should handle it?", "applying the routing rules"),
+    ("who", "Who should handle it?", "writing a brief and applying the routing rules"),
     ("draft", "A first draft", "writing, from the policy paragraphs only"),
     ("safe", "Is the draft safe?", "checking the draft"),
     ("person", "A person decides", ""),
 ]
 # What does the work at each step, in plain words. Generative AI is used in one place: the draft.
 WHO = [("AI model", "ai", "an embedding model reads the email into numbers; a small classifier trained on 110 labelled emails names the topic and the mood"),
-       ("AI search", "ai", "the same embedding model plus a keyword index find the closest policy paragraphs"),
-       ("Rule", "rule", "a routing rule written by hand, in a config file"),
+       ("AI search, graded by GenAI", "gen", "the embedding model plus a keyword index find the closest paragraphs; the language model then reads each one against the email and drops the ones about something else; the best match always stays; if it doubts all of them it rephrases the question once and searches again"),
+       ("Rule, plus a GenAI brief", "gen", "a routing rule written by hand decides who handles it; the language model writes a two-line brief and copies the facts out of the email, each fact checked against the email text"),
        ("Generative AI", "gen", "a small language model on this laptop writes the draft from the retrieved paragraphs only"),
-       ("Rules, not AI", "rule", "seven deterministic checks; the model is never asked to grade itself"),
+       ("Rules, not AI", "rule", "seven deterministic checks; the model is never asked to grade itself, because when it was tried it missed a real error and flagged sentences copied from the notes"),
        ("Person", "person", "a human reads, edits, sends or discards")]
-STAGE_TO_STEP = {"embed": 0, "classify": 1, "retrieve": 2, "route": 3, "draft": 4, "check": 5}
+STAGE_TO_STEP = {"embed": 0, "classify": 1, "retrieve": 2, "brief": 2, "route": 3, "draft": 4, "check": 5}
 MOOD = {"negative": "unhappy", "neutral": "calm", "positive": "happy"}
 CRITICAL = [("grounded", "Sticks to the policy", "every number and instruction in the draft comes from the policy paragraphs or the customer's own email"),
             ("no_refund_promise", "Does not promise a refund", "only a person can decide that"),
@@ -87,6 +87,9 @@ CSS = f"""<style>
 .chk .ic.ok {{ background: #24a148; }} .chk .ic.bad {{ background: {CRIT}; }}
 .chk .d {{ color: #525252; font-size: 12px; line-height: 16px; }}
 .chk .ev {{ color: {CRIT}; font-size: 13px; }}
+.brief {{ font-size: 14px; line-height: 20px; margin-top: 8px; padding: 10px 12px; background: #f4f4f4; border-left: 3px solid #0f62fe; }}
+.brief b {{ font-weight: 600; }}
+.drop {{ color: #8d8d8d; text-decoration: line-through; }} .drop i {{ text-decoration: none; font-style: normal; font-size: 12px; margin-left: 6px; }}
 .pill {{ display: inline-block; font-size: 12px; line-height: 16px; padding: 2px 8px; border-radius: 20px; margin-left: 6px; vertical-align: middle; }}
 .pill.ai {{ background: #d0e2ff; color: #0043ce; }} .pill.gen {{ background: #0f62fe; color: #fff; }} .pill.rule {{ background: #e0e0e0; color: #393939; }} .pill.person {{ background: #161616; color: #fff; }}
 .pill[title] {{ cursor: help; }}
@@ -149,21 +152,54 @@ def _render_steps(box, rec, upto=None):
             _step(0, "pending", STEPS[0][1], STEPS[0][2] + "…" if done >= 1 else "")
         # 2 policy
         if done >= 3 and S.get("retrieve"):
-            seen = list(dict.fromkeys((x.get("title", x["doc"]), x["heading"]) for x in S["retrieve"]["hits"]))
-            lines = "".join(f'<div>{_esc(t)}: <b>{_esc(hd)}</b></div>' for t, hd in seen)
-            _step(1, "done", STEPS[1][1], f'<div style="font-size:15px;line-height:22px">{lines}</div>',
-                  "From a small policy library built from AlgaeCal's public pages. These paragraphs are the only facts the draft is allowed to use.")
+            R = S["retrieve"]; cr = R.get("crag")
+            if cr:
+                graded = cr.get("second_pass") or cr["graded"]
+                lines = ""
+                for g in graded:
+                    if g["relevant"]:
+                        lines += f'<div>{_esc(g["title"])}: <b>{_esc(g["heading"])}</b></div>'
+                    else:
+                        lines += f'<div class="drop">{_esc(g["title"])}: {_esc(g["heading"])}<i>{_esc(g["why"])}</i></div>'
+                graded = cr["graded"] if cr.get("low_evidence") else graded
+                lines = ""
+                for k_, g in enumerate(graded):
+                    if g["relevant"] or k_ == 0:
+                        lines += f'<div>{_esc(g["title"])}: <b>{_esc(g["heading"])}</b>' + ("" if g["relevant"] else ' <span class="pill warn">best match, kept by rule</span>') + '</div>'
+                    else:
+                        lines += f'<div class="drop">{_esc(g["title"])}: {_esc(g["heading"])}<i>{_esc(g["why"])}</i></div>'
+                found = len(graded)
+                why = f'Found {found} paragraph{"s" if found != 1 else ""}; a language model read each one against the email and kept {cr["kept"]}. The best match always stays; the model can only trim the rest. '
+                if cr.get("rewritten_query"):
+                    why = f'The model doubted the first search, rephrased the question as “{_esc(cr["rewritten_query"])}” and searched again. ' + why
+                if cr.get("low_evidence"):
+                    why += "It still doubts the policy covers this, so the email is marked a content gap and the draft, if any, deserves a close read."
+                else:
+                    why += "The kept paragraphs are the only facts the draft is allowed to use."
+            else:
+                seen = list(dict.fromkeys((x.get("title", x["doc"]), x["heading"]) for x in R["hits"]))
+                lines = "".join(f'<div>{_esc(t)}: <b>{_esc(hd)}</b></div>' for t, hd in seen)
+                why = "From a small policy library built from AlgaeCal's public pages. These paragraphs are the only facts the draft is allowed to use."
+            _step(1, "done", STEPS[1][1], f'<div style="font-size:15px;line-height:22px">{lines}</div>', why)
         else:
             _step(1, "pending", STEPS[1][1], STEPS[1][2] + "…" if done == 2 else "")
         # 3 who
         if done >= 4 and S.get("route"):
-            R = S["route"]
+            R = S["route"]; B = S.get("brief")
+            extra = ""
+            if B and (B.get("asks") or B.get("check")):
+                facts = " · ".join(_esc(f) for f in B.get("facts", [])) or "none stated"
+                nd = len(B.get("dropped_facts", []))
+                extra = (f'<div class="brief"><div><b>Asks for:</b> {_esc(B["asks"])}</div><div><b>Check first:</b> {_esc(B["check"])}</div>'
+                         f'<div><b>Facts in the email:</b> {facts}</div>'
+                         f'<div style="color:#525252;font-size:12px;margin-top:4px">Brief written by the language model for whoever picks this up. Each fact was checked against the email text'
+                         + (f"; {nd} the model offered {'was' if nd == 1 else 'were'} not in the email and {'was' if nd == 1 else 'were'} dropped" if nd else "") + '.</div></div>')
             if R["decision"] == "consultant_call":
                 _step(2, "done", STEPS[2][1], "A Bone Health Consultant calls.",
-                      f'{R["reason"][0].upper() + R["reason"][1:]}. This is a plain rule, not a guess: some emails should never get a templated reply.')
+                      f'{R["reason"][0].upper() + R["reason"][1:]}. This is a plain rule, not a guess: some emails should never get a templated reply.', extra)
             else:
                 _step(2, "done", STEPS[2][1], "The care team, with a first draft to start from.",
-                      "No rule says this needs a phone call and the policy covers it, so the system writes a draft for a person to read.")
+                      "No rule says this needs a phone call and the policy covers it, so the system writes a draft for a person to read.", extra)
         else:
             _step(2, "pending", STEPS[2][1], STEPS[2][2] + "…" if done == 3 else "")
         # 4 draft, 5 safe
@@ -314,8 +350,9 @@ def panel(key="live", default_index=1, technical=True):
     with c2:
         section("Step by step", "each step fills in as it finishes")
         box = st.empty()
-        h('<div class="note" style="margin-top:6px"><span class="pill gen" style="margin-left:0">Generative AI</span> is used in one place: step 4, where a small language model on this laptop writes the first draft. '
-          '<span class="pill ai">AI model</span> steps read text into numbers and search with it. <span class="pill rule">Rule</span> steps are written by hand and never change on their own. The last word is always a <span class="pill person">Person</span>.</div>')
+        h('<div class="note" style="margin-top:6px"><span class="pill gen" style="margin-left:0">Generative AI</span> does three jobs here, each with a guard: in step 2 it reads every paragraph the search found and drops the ones about something else (the best match always stays; if it doubts all of them it rephrases the question once and searches again); '
+          'in step 3 it writes a two-line brief and copies the facts out of the email, each checked against the email text; in step 4 it writes the first draft from the kept paragraphs only. '
+          'It never routes and never grades its own draft: <span class="pill rule">Rule</span> steps are written by hand, and the last word is always a <span class="pill person">Person</span>.</div>')
 
     rec = st.session_state.get(f"{key}_rec")
     if go:

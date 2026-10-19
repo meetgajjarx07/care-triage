@@ -11,7 +11,6 @@ person to read; POST /reviews records what that person decided.
 """
 import json
 import sys
-import time
 from datetime import datetime
 from pathlib import Path
 from typing import Literal, Optional
@@ -24,10 +23,9 @@ import pandas as pd
 from fastapi import FastAPI, HTTPException, Query
 from pydantic import BaseModel, Field
 
-from classify import email_text, embed
+from triage import triage_email
 from config import CFG, config_hash
-from draft import confidence_band, draft_qa, draft_reply, lexical_check, route_rule
-from retrieve import Retriever, TOP_K
+from retrieve import Retriever
 
 ROOT = Path(__file__).resolve().parent.parent
 OUT, MODELS = ROOT / "out", ROOT / "models"
@@ -112,6 +110,7 @@ class TriageRequest(BaseModel):
 
 class Chunk(BaseModel):
     doc: str
+    title: Optional[str] = None
     heading: str
     text: str
     score: float
@@ -134,6 +133,8 @@ class TriageResponse(BaseModel):
     draft: Optional[str] = None
     qa: Optional[dict] = None
     grounding_flags: list[str] = []
+    brief: Optional[dict] = None
+    crag: Optional[dict] = None
     ms: dict[str, float]
 
 
@@ -202,39 +203,23 @@ def email(email_id: str) -> EmailDetail:
 
 @app.post("/triage", response_model=TriageResponse, tags=["triage"])
 def triage(req: TriageRequest) -> TriageResponse:
-    """Run one email through embed, classify, retrieve, route and, if asked and allowed, draft and check."""
-    ms: dict[str, float] = {}
-    t0 = time.time()
+    """Run one email through the same code as the dashboard and the pipeline: embed,
+    classify, retrieve and grade, brief, route and, if asked and allowed, draft and check."""
     try:
-        X = embed([email_text(req.subject, req.body)])
+        rec = triage_email(req.subject, req.body, req.from_name, draft=req.draft)
     except Exception as e:
-        raise HTTPException(503, f"Ollama is not reachable or the embedding model is not pulled: {e}")
-    ms["embed"] = round(1000 * (time.time() - t0), 1)
-    cat_m, sent_m = _models()
-    t0 = time.time()
-    cp, sp = cat_m.predict_proba(X)[0], sent_m.predict_proba(X)[0]
-    ms["classify"] = round(1000 * (time.time() - t0), 2)
-    category, sentiment = str(cat_m.classes_[cp.argmax()]), str(sent_m.classes_[sp.argmax()])
-    conf = float(cp.max())
-    t0 = time.time()
-    hits = _retriever().search(f"{req.subject}. {req.body}", k=TOP_K, category=category)
-    ms["retrieve"] = round(1000 * (time.time() - t0), 1)
-    rr = route_rule(category, sentiment, req.body)
-    out = TriageResponse(category=category, category_probs={c: round(float(p), 3) for c, p in zip(cat_m.classes_, cp)},
-                         confidence=round(conf, 3), confidence_band=confidence_band(conf), sentiment=sentiment,
-                         sentiment_probs={c: round(float(p), 3) for c, p in zip(sent_m.classes_, sp)},
-                         route=rr["action"], route_reason=rr["reason"], escalation_reason=rr["short"], rule_id=rr["rule_id"],
-                         chunks=[Chunk(**{k: h[k] for k in Chunk.model_fields}) for h in hits], ms=ms)
-    if req.draft and rr["action"] == "draft_reply":
-        t0 = time.time()
-        try:
-            out.draft = draft_reply(req.body, req.from_name, category, hits)
-        except Exception as e:
-            raise HTTPException(503, f"drafting model unavailable: {e}")
-        ms["draft"] = round(1000 * (time.time() - t0))
-        out.grounding_flags = lexical_check(out.draft, hits, req.body)
-        out.qa = draft_qa(out.draft, hits, req.body)
-    return out
+        raise HTTPException(503, f"Ollama is not reachable or a model is not pulled: {e}")
+    S = rec["stages"]; C = S["classify"]; R = S["retrieve"]; T = S["route"]
+    ms = {"embed": S["embed"]["ms"], "classify": C["ms"], "retrieve": R["ms"]}
+    if R.get("crag"): ms["grade"] = R["crag"]["ms"]
+    if S.get("brief"): ms["brief"] = S["brief"]["ms"]
+    if S["draft"]: ms["draft"] = S["draft"]["ms"]
+    return TriageResponse(category=C["pred_category"], category_probs=C["category"], confidence=C["confidence"], confidence_band=C["band"],
+                          sentiment=C["pred_sentiment"], sentiment_probs=C["sentiment"],
+                          route=T["decision"], route_reason=T["reason"], escalation_reason=T.get("short", ""), rule_id=T["rule_id"],
+                          chunks=[Chunk(**{k: h.get(k) for k in Chunk.model_fields}) for h in R["hits"]], ms=ms,
+                          draft=S["draft"]["text"] if S["draft"] else None, qa=S["check"]["qa"] if S["check"] else None,
+                          grounding_flags=S["check"]["flags"] if S["check"] else [], brief=S.get("brief"), crag=R.get("crag"))
 
 
 @app.get("/reviews", response_model=list[ReviewOut], tags=["reviews"])

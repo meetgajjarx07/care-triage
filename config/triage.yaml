@@ -3,7 +3,7 @@
 # `make run` (or `python app/pipeline.py`); the Configuration page shows the
 # values in force and the hash of this file is stamped into out/run.json.
 
-version: "0.6.0"
+version: "0.7.0"
 owner: "Khushi Gor"
 environment: "local"          # shown in the header; "local" means laptop + Ollama
 
@@ -14,6 +14,15 @@ models:
     temperature: 0
     seed: 7
     num_predict: 260
+
+# the generative model beyond the draft. Each use has a guard (see app/genai.py).
+genai:
+  brief: true                  # two-line brief + facts copied from the email, for the agent or the consultant, every email
+  crag: true                   # the model grades each retrieved paragraph; drops the ones that do not answer; one query rewrite if none fit; then a person
+  options:
+    temperature: 0
+    seed: 7
+    num_predict: 200
 
 classifier:
   C: 4

@@ -27,9 +27,18 @@ def no_network(monkeypatch):
     import classify, retrieve
     monkeypatch.setattr(classify, "embed", fake_embed)
     monkeypatch.setattr(retrieve, "embed", fake_embed)
+    import genai, json
+
+    def fake_chat(task, system, user, num_predict=None):
+        if task == "grade":
+            return json.dumps({"useful": True, "why": "test"})
+        if task == "brief":
+            return json.dumps({"asks": "a refund of a duplicate charge", "check": "the two charges on the account", "facts": ["two charges", "order 99999"]})
+        return json.dumps({"query": "duplicate charge refund subscription"})
+    monkeypatch.setattr(genai, "_chat", fake_chat)
     try:
         import api
-        monkeypatch.setattr(api, "embed", fake_embed)
+        monkeypatch.setattr(api, "embed", fake_embed, raising=False)
     except ImportError:
         pass
     yield

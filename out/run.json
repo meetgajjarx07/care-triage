@@ -1,16 +1,16 @@
 {
-  "run_id": "run-20261019-133833",
-  "config_version": "0.6.0",
-  "config_hash": "bbc015969693",
+  "run_id": "run-20261019-155110",
+  "config_version": "0.7.0",
+  "config_hash": "a13229a5391d",
   "routing_rules": [
     "guarantee",
     "medical",
     "disappointed",
     "cancel"
   ],
-  "started_at": "2026-10-19T13:38:33",
-  "finished_at": "2026-10-19T13:40:42",
-  "wall_seconds": 128.2,
+  "started_at": "2026-10-19T15:51:10",
+  "finished_at": "2026-10-19T16:03:22",
+  "wall_seconds": 732.4,
   "host": "Meets-MacBook-Pro.local",
   "python": "3.12.8",
   "sklearn": "1.7.2",
@@ -19,6 +19,17 @@
   "pandas": "2.3.3",
   "embed_model": "nomic-embed-text",
   "draft_model": "llama3.2",
+  "genai": {
+    "brief": true,
+    "crag": true,
+    "options": {
+      "temperature": 0,
+      "seed": 7,
+      "num_predict": 200
+    }
+  },
+  "crag_low_evidence": 37,
+  "crag_dropped_total": 255,
   "draft_options": {
     "temperature": 0,
     "seed": 7,
@@ -35,17 +46,17 @@
   ],
   "timing_seconds": {
     "index_load": 0.01,
-    "embed_all": 1.56,
-    "classify_all": 0.001,
-    "draft_total": 116.1
+    "embed_all": 1.14,
+    "classify_all": 0.005,
+    "draft_total": 198.7
   },
   "routes": {
     "draft_reply": 76,
     "consultant_call": 34
   },
   "drafted": 76,
-  "flagged": 7,
-  "qa_below_100": 13,
+  "flagged": 6,
+  "qa_below_100": 11,
   "confidence_bands": {
     "high": 67,
     "medium": 41,

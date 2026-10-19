@@ -281,6 +281,11 @@ def inbox():
             ("Status", status_tag(r.Status))])
         _review_block(r, r.Status)
     with c2:
+        B = tr.get("stages", {}).get("brief")
+        if B and (B.get("asks") or B.get("check")):
+            facts = " · ".join(B.get("facts", [])) or "none stated"
+            h(f'<div class="panel soft"><div class="t">Brief, written by the language model</div><div><b>Asks for:</b> {B["asks"]}<br><b>Check first:</b> {B["check"]}<br><b>Facts in the email:</b> {facts}</div>'
+              f'<div class="note" style="margin-top:4px">Each fact was checked against the email text; {len(B.get("dropped_facts", []))} the model offered were not in the email and were dropped.</div></div>')
         if r.route == "consultant_call":
             hits = tr.get("stages", {}).get("retrieve", {}).get("hits", [])
             h(f'<div class="panel soft"><div class="t">No draft</div><div>Routed to a Bone Health Consultant: {r.escalation_reason.lower()}. '
@@ -401,6 +406,12 @@ def pipeline():
                  column_config={"#": st.column_config.NumberColumn(width="small"), "Fused": st.column_config.NumberColumn(format="%.4f", width="small"),
                                 "Chunk starts": st.column_config.TextColumn(width="large"),
                                 "BM25 rank": st.column_config.NumberColumn(width="small"), "Dense rank": st.column_config.NumberColumn(width="small")})
+    cr = R.get("crag")
+    if cr:
+        dropped = "; ".join(f'{x["heading"]} ({x["why"]})' for x in cr["dropped"]) or "none"
+        h(f'<div class="note"><b>Graded by {cr["model"]}</b> in {fmt_ms(cr["ms"])}: kept {cr["kept"]} of {len(cr["graded"])} (best match always kept). Dropped: {dropped}.'
+          + (f' Rephrased the question as “{cr["rewritten_query"]}” and searched again.' if cr.get("rewritten_query") else "")
+          + (" Still doubtful: marked a content gap." if cr.get("low_evidence") else "") + "</div>")
     with st.expander("Chunk text handed to the drafting model"):
         for x in R["hits"]:
             st.markdown(f"**{x['doc']} › {x['heading']}**"); st.text(x["text"])
@@ -632,7 +643,8 @@ def knowledge():
     stats([("Documents", chunks.doc.nunique()), ("Chunks", len(chunks), "", "one per section, one per bullet in long lists"),
            ("Dense index", "on" if ret.dense is not None else "off", "", f"{run.get('embed_model','')} · cached in models/"),
            ("Sections ever retrieved", int(hits.groupby(["doc", "heading"]).ngroups) if len(hits) else 0, f"/{chunks.groupby(['doc','heading']).ngroups}", f"top-4 over {len(trace)} emails"),
-           ("Low-evidence emails", len(rev.get("low_evidence", {}).get("ids", [])), "", "weakest 10% of best fused score")])
+           ("Low-evidence emails", len(rev.get("low_evidence", {}).get("ids", [])), "", "weakest 10% of best fused score"),
+           ("Doubted by the grader", int(df.crag_low_evidence.sum()) if "crag_low_evidence" in df else 0, "", "the language model rejected every paragraph, twice; the best match was kept and a person should read closely")])
 
     c1, c2 = st.columns([1, 1.2], gap="large")
     with c1:
@@ -989,7 +1001,7 @@ def facts():
             with st.expander("CHANGELOG.md", expanded=False):
                 st.markdown(cl)
         else:
-            kv([("v0.6.0", "Walkthrough page, Live triage panel reused"), ("v0.5.0", "Live triage page, one-email triage module, two more tests"), ("v0.4.0", "Carbon design language, configuration file, Configuration / Model facts / Activity pages, API, tests"),
+            kv([("v0.7.0", "Generative grading of retrieved paragraphs, query rewrite, brief with grounded facts"), ("v0.6.0", "Walkthrough page, Live triage panel reused"), ("v0.5.0", "Live triage page, one-email triage module, two more tests"), ("v0.4.0", "Carbon design language, configuration file, Configuration / Model facts / Activity pages, API, tests"),
                 ("v0.3.0", "review loop, provenance, QA scorecard, sentence support, out-of-fold quality"),
                 ("v0.2.0", "trace view, run log, retrieval evaluation"), ("v0.1.0", "pipeline and first dashboard")])
     footer(run)

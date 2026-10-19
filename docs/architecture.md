@@ -41,7 +41,7 @@ The dashed arrow is a manual step. Corrections are logged, nothing retrains itse
 | Draft | `app/draft.py` `draft_reply()` | llama3.2 through Ollama, temperature 0, seed 7, 260 token cap, only the retrieved notes as facts | a reply for a person to read |
 | Check | `app/draft.py` `draft_qa()`, `lexical_check()`, `sentence_support()` | deterministic rules, number and directive matching, per sentence cosine against the notes | score 0 to 100, flags, per sentence support |
 
-`app/pipeline.py` runs these in order for every email and writes `out/`. `app/triage.py` runs the same six stages for one email and returns a record shaped like a line of `out/trace.jsonl`; the dashboard's Live triage page draws each stage as it finishes, and the API's `/triage` does the same work. `app/eval_retrieval.py` and `app/classify.py` write the evaluation files in `models/`.
+`app/genai.py` holds the generative steps beyond the draft: per-paragraph relevance grading with one query rewrite (corrective RAG) and the brief with grounded facts; `app/triage.py` composes them in `retrieve_graded()` and `make_brief()`. `app/pipeline.py` runs these in order for every email and writes `out/`. `app/triage.py` runs the same six stages for one email and returns a record shaped like a line of `out/trace.jsonl`; the dashboard's Live triage page draws each stage as it finishes, and the API's `/triage` does the same work. `app/eval_retrieval.py` and `app/classify.py` write the evaluation files in `models/`.
 
 ## Where things live
 
