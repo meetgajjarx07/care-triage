@@ -272,11 +272,11 @@ def _decision(rec):
     h('<div class="note">Approving means a person agreed with the draft. Sending it is the care team\'s job in their own mail tool, not this one.</div>')
 
 
-def live():
+def panel(key="live", default_index=1, technical=True):
+    """The email picker on the left and the six steps on the right. Used by the Live
+    triage page and by the Walkthrough; `key` keeps their widgets and results apart."""
     run = load_json("run")
     h(CSS)
-    page_header("Live triage", "Paste one customer email and watch it handled, one step at a time, on this laptop. "
-                "Nothing leaves the machine and nothing is sent.", run)
     ok, models = ollama_status()
     want = CFG["models"]
     embed_ok = ok and want["embed"].split(":")[0] in models
@@ -291,21 +291,21 @@ def live():
     c1, c2 = st.columns([1, 1.25], gap="large")
     with c1:
         section("The email", "pick an example or write your own")
-        ex = st.selectbox("Example", ["Write my own"] + list(EXAMPLES), index=1, label_visibility="collapsed", key="live_ex")
+        ex = st.selectbox("Example", ["Write my own"] + list(EXAMPLES), index=default_index, label_visibility="collapsed", key=f"{key}_ex")
         name0, subj0, body0 = EXAMPLES.get(ex, ("", "", ""))
         a, b = st.columns([1, 1.6])
-        from_name = a.text_input("From", value=name0, key=f"live_from_{ex}", placeholder="Customer name")
-        subject = b.text_input("Subject", value=subj0, key=f"live_subj_{ex}", placeholder="Subject line")
-        body = st.text_area("Body", value=body0, height=170, key=f"live_body_{ex}", placeholder="Paste the customer's email here", label_visibility="collapsed")
-        want_draft = st.toggle("Write a first draft when the route allows it", value=draft_ok, disabled=not draft_ok, key="live_draft",
+        from_name = a.text_input("From", value=name0, key=f"{key}_from_{ex}", placeholder="Customer name")
+        subject = b.text_input("Subject", value=subj0, key=f"{key}_subj_{ex}", placeholder="Subject line")
+        body = st.text_area("Body", value=body0, height=170, key=f"{key}_body_{ex}", placeholder="Paste the customer's email here", label_visibility="collapsed")
+        want_draft = st.toggle("Write a first draft when the route allows it", value=draft_ok, disabled=not draft_ok, key=f"{key}_draft",
                                help="The draft is the slow step: a small language model on the CPU, roughly 2 to 20 seconds depending on the machine.")
-        go = st.button("Handle this email", type="primary", disabled=not (embed_ok and body.strip()), key="live_go")
+        go = st.button("Handle this email", type="primary", disabled=not (embed_ok and body.strip()), key=f"{key}_go")
         h('<div class="note" style="margin-top:10px">What happens, in order: it works out what the email is about, finds the policy that applies, decides whether a person should call or a draft will do, writes the draft from those policy paragraphs only, checks the draft, and then a person decides. The same six steps run on every email in the Inbox.</div>')
     with c2:
         section("Step by step", "each step fills in as it finishes")
         box = st.empty()
 
-    rec = st.session_state.get("live_rec")
+    rec = st.session_state.get(f"{key}_rec")
     if go:
         from triage import triage_email
         rec = {"stages": {}, "_want_draft": want_draft}
@@ -320,7 +320,7 @@ def live():
             with st.spinner("Working…", show_time=True):
                 rec = triage_email(subject, body, from_name, draft=want_draft, progress=progress)
             rec["_want_draft"] = want_draft
-            st.session_state["live_rec"] = rec
+            st.session_state[f"{key}_rec"] = rec
         except Exception as e:
             notification("error", "The run failed part way.", f" {_esc(str(e))[:300]}. Check that Ollama is running and both models are pulled.")
             rec = None
@@ -329,11 +329,19 @@ def live():
         if rec["stages"].get("check"):
             with c2:
                 _decision(rec)
-        st.write("")
-        with st.expander("How it decided (the technical view)"):
-            _technical(rec, run)
+        if technical:
+            st.write("")
+            with st.expander("How it decided (the technical view)"):
+                _technical(rec, run)
     else:
         with box.container():
-            for i, (key, q, _) in enumerate(STEPS):
+            for i, (key_, q, _) in enumerate(STEPS):
                 _step(i, "pending", q, "")
+
+
+def live():
+    run = load_json("run")
+    page_header("Live triage", "Paste one customer email and watch it handled, one step at a time, on this laptop. "
+                "Nothing leaves the machine and nothing is sent.", run)
+    panel()
     footer(run)
