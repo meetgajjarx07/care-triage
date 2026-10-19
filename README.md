@@ -99,7 +99,23 @@ python app/eval_retrieval.py       # seconds
 streamlit run app/dashboard.py
 ```
 
-Or `make setup`, `make all`, `make app`. `make test` runs the offline tests, `make api` starts the service with OpenAPI docs at localhost:8000/docs. Edit `config/triage.yaml` to change a threshold or a routing rule, then `make test` and `make run`.
+Or `make setup`, `make all`, `make app`.
+
+The outputs of the last run are committed (`models/`, `out/`), so the dashboard works straight after `pip install -r requirements.txt` and `streamlit run app/dashboard.py`, with no Ollama and no retraining. Ollama is only needed to rerun the pipeline, for the live search box on the Knowledge base page, and for the API's `/triage` endpoint.
+
+On Windows (tested target: a Ryzen laptop with 16 GB), in PowerShell:
+
+```
+winget install Ollama.Ollama            # or the installer from ollama.com; it runs in the tray
+py -3.12 -m venv .venv ; .venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+streamlit run app/dashboard.py          # dashboard only, nothing else needed
+ollama pull nomic-embed-text ; ollama pull llama3.2
+python app/classify.py --llm ; python app/pipeline.py ; python app/eval_retrieval.py   # full rerun, 5 to 10 min on CPU
+del out\reviews.jsonl                   # reset the review log
+```
+
+`make` is not installed on Windows by default; use the python commands above instead of the Makefile targets. `make test` runs the offline tests, `make api` starts the service with OpenAPI docs at localhost:8000/docs. Edit `config/triage.yaml` to change a threshold or a routing rule, then `make test` and `make run`.
 
 ## What I found
 
