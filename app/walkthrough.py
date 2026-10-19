@@ -15,19 +15,27 @@ from ui import (G40, G90, INK, GREY, LINE, BLUE, CRIT, h, page_header, footer, s
 import live
 import views
 
-BEATS = [("The pile", "one email, then all of them"),
-         ("The question", "what the team lead asked"),
-         ("Four steps, live", "one email handled in front of you"),
-         ("The one it got wrong", "and the check that caught it"),
-         ("What changed", "for the agents and the team lead"),
-         ("The honest number", "how far to trust it")]
+# (name, sub, time stamp in the four-minute video). The three chapters below are the
+# three parts of the Round 2 question, in its own words.
+BEATS = [("The pile", "one email, then all of them", "0:25"),
+         ("The question", "what the team lead asked", "0:55"),
+         ("Four steps, live", "one email handled in front of you", "1:05"),
+         ("The one it got wrong", "and the check that caught it", "1:50"),
+         ("What changed", "for the agents and the team lead", "2:30"),
+         ("The honest number", "how far to trust it", "2:50")]
+CHAPTERS = [("The initial question or problem", 2), ("How I solved it", 2), ("The outcome for stakeholders", 2)]
 
 CSS = f"""<style>
-.prog {{ display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; margin: 4px 0 18px; }}
-.pstep {{ border-top: 2px solid {LINE}; padding: 8px 8px 0 0; min-height: 52px; }}
+.chap {{ display: grid; grid-template-columns: 1fr repeat(6, 1.6fr) 1fr; gap: 8px; margin: 10px 0 0; }}
+.chap div {{ font-size: 12px; line-height: 16px; letter-spacing: 0.32px; color: {GREY}; text-transform: uppercase; padding: 0 0 4px; }}
+.chap div.c {{ color: {INK}; border-bottom: 1px solid {LINE}; }}
+.prog {{ display: grid; grid-template-columns: 1fr repeat(6, 1.6fr) 1fr; gap: 8px; margin: 4px 0 18px; }}
+.pstep {{ border-top: 2px solid {LINE}; padding: 8px 8px 0 0; min-height: 56px; }}
 .pstep .n {{ display: inline-flex; width: 16px; height: 16px; border-radius: 50%; border: 1px solid {GREY}; color: {GREY}; font-size: 10px; align-items: center; justify-content: center; margin-right: 6px; vertical-align: -2px; }}
 .pstep .l {{ font-size: 14px; line-height: 18px; color: {GREY}; }}
 .pstep .s {{ font-size: 12px; line-height: 16px; color: {GREY}; margin-left: 22px; }}
+.pstep .t {{ font-family: 'IBM Plex Mono', Menlo, monospace; font-size: 11px; color: {GREY}; margin-left: 22px; }}
+.pstep.cam {{ border-top-style: dashed; }} .pstep.cam .l {{ font-size: 12px; }}
 .pstep.done {{ border-top-color: {BLUE}; }} .pstep.done .n {{ background: {BLUE}; border-color: {BLUE}; color: #fff; }} .pstep.done .l {{ color: {INK}; }}
 .pstep.now {{ border-top-color: {BLUE}; }} .pstep.now .n {{ border: 2px solid {BLUE}; color: {BLUE}; font-weight: 600; }} .pstep.now .l {{ color: {INK}; font-weight: 600; }}
 .display {{ font-size: 32px; line-height: 42px; font-weight: 300; color: {INK}; max-width: 34ch; margin: 6px 0 18px; letter-spacing: 0; }}
@@ -39,11 +47,13 @@ CSS = f"""<style>
 
 
 def _progress(i):
-    cells = ""
-    for k, (name, sub) in enumerate(BEATS):
+    chap = '<div></div>' + "".join(f'<div class="c" style="grid-column: span {n}">{name}</div>' for name, n in CHAPTERS) + '<div></div>'
+    cells = '<div class="pstep cam"><span class="l">Camera</span><div class="t">0:00</div></div>'
+    for k, (name, sub, t) in enumerate(BEATS):
         cls = "done" if k < i else ("now" if k == i else "")
-        cells += f'<div class="pstep {cls}"><span class="n">{k+1}</span><span class="l">{name}</span><div class="s">{sub}</div></div>'
-    h(f'<div class="prog">{cells}</div>')
+        cells += f'<div class="pstep {cls}"><span class="n">{k+1}</span><span class="l">{name}</span><div class="s">{sub}</div><div class="t">{t}</div></div>'
+    cells += '<div class="pstep cam"><span class="l">Camera</span><div class="t">3:05 to 3:35</div></div>'
+    h(f'<div class="chap">{chap}</div><div class="prog">{cells}</div>')
 
 
 def _email_card(name, subject, body, meta="new email"):
@@ -65,10 +75,10 @@ def walkthrough():
     df, run, tr = load_results(), load_json("run"), load_trace()
     h(CSS)
     i = st.session_state.setdefault("wt", 0)
-    page_header("Walkthrough", "The project in six stops, for someone who does not code. Everything on screen comes from the run; nothing is a mock-up.", run)
+    page_header("Walkthrough", "The project in six stops, in the order of the Round 2 question, with the minute each stop lands in the four-minute video. Everything on screen comes from the run; nothing is a mock-up.", run)
     _progress(i)
     _nav(i, "top")
-    name, sub = BEATS[i]
+    name, sub, _t = BEATS[i]
     section(f"{i+1}. {name}", sub)
 
     n = len(df); calls = int((df.route == "consultant_call").sum()); drafts = n - calls
