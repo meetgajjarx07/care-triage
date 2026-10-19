@@ -1,9 +1,15 @@
-"""Live triage page: paste one email, watch every stage run, review the result.
+"""Live triage page: paste one email and watch it handled, one step at a time.
 
-Same code path as the batch pipeline (triage.triage_email), drawn stage by
-stage as each one finishes. Needs Ollama running with the embedding model;
-drafting also needs the drafting model. Both are checked before the button
-is enabled, so the page says what is missing instead of failing half way.
+Six steps in plain words, each one filling in as the system finishes it:
+what the email is about, which policy applies, who should handle it, a first
+draft, whether the draft is safe, and a person's decision. The technical view
+(timings, model names, probabilities, retrieval ranks, the full scorecard) is
+one click away at the bottom, under "How it decided".
+
+Same code path as the batch pipeline (triage.triage_email). Needs Ollama with
+the embedding model; drafting also needs the drafting model. Both are checked
+before the button is enabled, so the page says what is missing instead of
+failing half way.
 """
 import html
 import time
@@ -12,7 +18,7 @@ import altair as alt
 import pandas as pd
 import streamlit as st
 
-from ui import (G40, G90, INK, GREY, CRIT, LABELS, ROUTE_LABEL, BAND_HIGH, BAND_MED, h, page_header, footer,
+from ui import (G40, G90, INK, CRIT, LABELS, ROUTE_LABEL, BAND_HIGH, BAND_MED, h, page_header, footer,
                 section, tag, route_tag, band_tag, qa_tag, sentiment_dot, fmt_ms, faithfulness, highlight_draft,
                 notification, ollama_status, add_review, flash, load_json, load_reviews)
 from config import CFG
@@ -44,67 +50,161 @@ EXAMPLES = {
         "I have four days of Plus left. Can you send another one or tell me what is going on?"),
 }
 
-STAGE_META = [
-    ("embed", "01", "Embed", "turn the email into a 768-number vector"),
-    ("classify", "02", "Classify", "what it is about, how the customer feels, how sure we are"),
-    ("retrieve", "03", "Retrieve", "find the policy paragraphs that matter"),
-    ("route", "04", "Route", "a person, or a draft for a person"),
-    ("draft", "05", "Draft", "write a first reply from those paragraphs only"),
-    ("check", "06", "Check", "seven rules, three of them critical"),
+STEPS = [  # (key, question, what happens while it runs)
+    ("about", "What is this email about?", "reading the email"),
+    ("policy", "Which policy applies?", "looking through the policy library"),
+    ("who", "Who should handle it?", "applying the routing rules"),
+    ("draft", "A first draft", "writing, from the policy paragraphs only"),
+    ("safe", "Is the draft safe?", "checking the draft"),
+    ("person", "A person decides", ""),
 ]
+STAGE_TO_STEP = {"embed": 0, "classify": 1, "retrieve": 2, "route": 3, "draft": 4, "check": 5}
+MOOD = {"negative": "unhappy", "neutral": "calm", "positive": "happy"}
+CRITICAL = [("grounded", "Sticks to the policy", "every number and instruction in the draft comes from the policy paragraphs or the customer's own email"),
+            ("no_refund_promise", "Does not promise a refund", "only a person can decide that"),
+            ("no_medical_advice", "Does not give medical advice", "it may suggest the customer ask their doctor, never tell them what to take")]
+
+CSS = f"""<style>
+.step {{ display: grid; grid-template-columns: 34px 1fr; gap: 12px; padding: 14px 16px 14px 14px; background: #fff; border: 1px solid #e0e0e0; margin-bottom: 8px; }}
+.step .num {{ width: 28px; height: 28px; border-radius: 50%; background: #0f62fe; color: #fff; font-size: 13px; font-weight: 600; display: flex; align-items: center; justify-content: center; margin-top: 2px; }}
+.step.pending .num {{ background: #e0e0e0; color: #525252; }}
+.step.flag .num {{ background: {CRIT}; }}
+.step.skip .num {{ background: #8d8d8d; }}
+.step .q {{ font-size: 12px; line-height: 16px; letter-spacing: 0.32px; color: #525252; }}
+.step .a {{ font-size: 18px; line-height: 26px; color: {INK}; margin: 2px 0 4px; }}
+.step .a.small {{ font-size: 14px; line-height: 20px; white-space: pre-wrap; }}
+.step .why {{ font-size: 13px; line-height: 18px; color: #525252; max-width: 80ch; }}
+.step.pending .a {{ color: #8d8d8d; font-size: 14px; }}
+.chk {{ display: flex; gap: 10px; align-items: flex-start; font-size: 14px; line-height: 20px; margin: 6px 0; }}
+.chk .ic {{ flex: 0 0 18px; width: 18px; height: 18px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: #fff; margin-top: 1px; }}
+.chk .ic.ok {{ background: #24a148; }} .chk .ic.bad {{ background: {CRIT}; }}
+.chk .d {{ color: #525252; font-size: 12px; line-height: 16px; }}
+.chk .ev {{ color: {CRIT}; font-size: 13px; }}
+.pill {{ display: inline-block; font-size: 12px; line-height: 16px; padding: 2px 8px; border-radius: 20px; margin-left: 6px; vertical-align: middle; }}
+.pill.ok {{ background: #a7f0ba; color: #0e6027; }} .pill.warn {{ background: #fcf4d6; color: #684e00; border: 1px solid #f1c21b; }} .pill.bad {{ background: #ffd7d9; color: #a2191f; }}
+</style>"""
 
 
 def _esc(s):
     return html.escape(str(s or ""))
 
 
-def _stage_card(key, S, pending=False, skipped=""):
-    n, name, what = [m[1:] for m in STAGE_META if m[0] == key][0]
-    if skipped:
-        ms = "—"; body = f'<span style="color:{GREY}">{skipped}</span>'
-    elif pending or key not in S or S[key] is None:
-        ms = "…"; body = f'<span style="color:{GREY}">{what}</span>'
-    else:
-        st_ = S[key]; ms = fmt_ms(st_.get("ms", 0))
-        body = ""
-        if key == "embed":
-            body = f'<span class="mono" style="color:{GREY}">{_esc(st_["input"])}…</span> <span style="color:{GREY}">· {st_["dim"]} dims · <code>{st_["model"]}</code></span>'
-        elif key == "classify":
-            body = (f'{tag(LABELS[st_["pred_category"]], "g")} {band_tag(st_["band"])} '
-                    f'<span style="color:{GREY}">p={st_["confidence"]:.2f} · sentiment</span> {sentiment_dot(st_["pred_sentiment"])}')
-        elif key == "retrieve":
-            chips = "".join(tag(f'{x["doc"].replace(".md", "")} › {x["heading"]}', "chip") for x in st_["hits"])
-            body = chips
-        elif key == "route":
-            body = route_tag(st_["decision"]) + (tag(st_["short"], "n") if st_.get("short") else "") + f'<span style="color:{GREY}"> {st_["reason"]}</span>'
-        elif key == "draft":
-            body = f'<span style="color:{GREY}"><code>{st_["model"]}</code> · temperature {st_["temperature"]} · {st_["words"]} words</span>'
-        elif key == "check":
-            qa = st_["qa"]
-            body = qa_tag(qa["score"], qa["critical_fail"]) + f'<span style="color:{GREY}"> {qa["passed"]} of {qa["total"]} checks passed' + (f' · {"; ".join(st_["flags"])}' if st_["flags"] else "") + "</span>"
-    h(f'<div class="stage"><div class="n">{n}</div><div><div class="h"><span class="name">{name}</span><span class="comp">{"" if body and not pending else ""}</span>'
-      f'<span class="ms">{ms}</span></div><div class="body">{body}</div></div></div>')
+def _band_words():
+    """How often each confidence band is right, from out-of-fold predictions in models/eval.json."""
+    ev = load_json("eval")
+    rows = ev.get("category", {}).get("oof", {}).get("rows", [])
+    acc = {"high": 0.88, "medium": 0.79, "low": 0.52}
+    if rows:
+        d = pd.DataFrame(rows)
+        d["band"] = pd.cut(d.conf, [-1, BAND_MED, BAND_HIGH, 2], labels=["low", "medium", "high"])
+        d["ok"] = d.true == d.pred
+        for b, g in d.groupby("band", observed=True):
+            if len(g):
+                acc[str(b)] = float(g.ok.mean())
+    return acc
 
 
-def _render_stages(box, rec, upto=None, running=None):
-    """Draw all six stage rows into `box`. Stages after `upto` are pending."""
-    S = rec["stages"]
-    order = [m[0] for m in STAGE_META]
-    cut = len(order) if upto is None else order.index(upto) + 1
+def _in_n(p):
+    """0.88 -> 'about 9 times in 10'; 0.79 -> 'about 4 times in 5'; 0.52 -> 'about half the time'."""
+    if p >= 0.95: return "almost every time"
+    if p >= 0.85: return "about 9 times in 10"
+    if p >= 0.75: return "about 4 times in 5"
+    if p >= 0.6: return "about 2 times in 3"
+    if p >= 0.45: return "about half the time"
+    return "less than half the time"
+
+
+def _step(i, state, q, answer="", why="", extra=""):
+    """state: pending | done | flag | skip"""
+    h(f'<div class="step {state}"><div class="num">{i + 1}</div><div><div class="q">{q}</div>'
+      f'<div class="a{" small" if state == "done" and len(answer) > 160 else ""}">{answer}</div>{extra}'
+      + (f'<div class="why">{why}</div>' if why else "") + '</div></div>')
+
+
+def _render_steps(box, rec, upto=None):
+    """Draw the six step cards into `box`; steps beyond `upto` (a stage name) show as pending."""
+    S = rec.get("stages", {})
+    done = 6 if upto is None else STAGE_TO_STEP[upto] + 1
     route = (S.get("route") or {}).get("decision")
+    bands = _band_words()
     with box.container():
-        for i, key in enumerate(order):
-            if key in ("draft", "check") and route == "consultant_call":
-                _stage_card(key, S, skipped="skipped: a consultant calls, there is no auto draft")
-            elif key in ("draft", "check") and S.get("draft") is None and S.get("route") and not rec.get("_want_draft", True):
-                _stage_card(key, S, skipped="skipped: drafting switched off for this run")
-            elif i < cut and S.get(key) is not None:
-                _stage_card(key, S)
+        # 1 about
+        if done >= 2 and S.get("classify"):
+            C = S["classify"]; band = C["band"]
+            sure = {"high": "Sure", "medium": "Fairly sure", "low": "Not sure"}[band]
+            tail = "" if band != "low" else " A person should check this one before trusting the sort."
+            _step(0, "done", STEPS[0][1], f'{LABELS[C["pred_category"]]}. The customer sounds {MOOD[C["pred_sentiment"]]}.',
+                  f'{sure}: at this confidence level it is right {_in_n(bands[band])}.{tail} It learned this from 110 emails a person labelled by hand.')
+        else:
+            _step(0, "pending", STEPS[0][1], STEPS[0][2] + "…" if done >= 1 else "")
+        # 2 policy
+        if done >= 3 and S.get("retrieve"):
+            seen = list(dict.fromkeys((x.get("title", x["doc"]), x["heading"]) for x in S["retrieve"]["hits"]))
+            lines = "".join(f'<div>{_esc(t)}: <b>{_esc(hd)}</b></div>' for t, hd in seen)
+            _step(1, "done", STEPS[1][1], f'<div style="font-size:15px;line-height:22px">{lines}</div>',
+                  "From a small policy library built from AlgaeCal's public pages. These paragraphs are the only facts the draft is allowed to use.")
+        else:
+            _step(1, "pending", STEPS[1][1], STEPS[1][2] + "…" if done == 2 else "")
+        # 3 who
+        if done >= 4 and S.get("route"):
+            R = S["route"]
+            if R["decision"] == "consultant_call":
+                _step(2, "done", STEPS[2][1], "A Bone Health Consultant calls.",
+                      f'{R["reason"][0].upper() + R["reason"][1:]}. This is a plain rule, not a guess: some emails should never get a templated reply.')
             else:
-                _stage_card(key, S, pending=True)
+                _step(2, "done", STEPS[2][1], "The care team, with a first draft to start from.",
+                      "No rule says this needs a phone call and the policy covers it, so the system writes a draft for a person to read.")
+        else:
+            _step(2, "pending", STEPS[2][1], STEPS[2][2] + "…" if done == 3 else "")
+        # 4 draft, 5 safe
+        if route == "consultant_call":
+            _step(3, "skip", STEPS[3][1], "Skipped on purpose.", "Consultants call. The system never drafts on their behalf; they see the policy paragraphs above when they pick up the phone.")
+            _step(4, "skip", STEPS[4][1], "Nothing to check.", "")
+        elif S.get("route") and not rec.get("_want_draft", True):
+            _step(3, "skip", STEPS[3][1], "Drafting was switched off for this run.", "")
+            _step(4, "skip", STEPS[4][1], "Nothing to check.", "")
+        else:
+            if done >= 5 and S.get("draft"):
+                D = S["draft"]
+                _step(3, "done", STEPS[3][1], _esc(D["text"]),
+                      f'Written in {max(1, round(D["ms"] / 1000))} second{"" if round(D["ms"] / 1000) <= 1 else "s"} by a small language model on this laptop, using only the paragraphs in step 2. Nobody has read it yet.')
+            else:
+                _step(3, "pending", STEPS[3][1], STEPS[3][2] + "…" if done == 4 else "")
+            if done >= 6 and S.get("check"):
+                K = S["check"]; qa = K["qa"]; byk = {c["key"]: c for c in qa["checks"]}
+                rows = ""
+                for key, label, why in CRITICAL:
+                    c = byk[key]
+                    ev = f'<div class="ev">It wrote: “{_esc(c["evidence"])}”</div>' if (not c["ok"] and c["evidence"]) else ""
+                    rows += f'<div class="chk"><span class="ic {"ok" if c["ok"] else "bad"}">{"✓" if c["ok"] else "✕"}</span><div><div>{label}</div><div class="d">{why}</div>{ev}</div></div>'
+                minor = [c for c in qa["checks"] if not c["critical"]]
+                n_ok = sum(1 for c in minor if c["ok"])
+                all_ok = n_ok == len(minor)
+                rows += (f'<div class="chk"><span class="ic {"ok" if all_ok else "bad"}">{"✓" if all_ok else "!"}</span><div><div>Also: answers the question first, under {CFG["draft_qa"]["max_words"]} words, plain tone, signed off</div>'
+                         f'<div class="d">{n_ok} of {len(minor)}' + ("" if all_ok else ": " + ", ".join(c["label"].lower() for c in minor if not c["ok"])) + '</div></div></div>')
+                if qa["critical_fail"]:
+                    verdict = 'Flagged. <span class="pill bad">a person must read this closely</span>'
+                elif qa["score"] < 100:
+                    verdict = 'Mostly fine. <span class="pill warn">one small thing to fix</span>'
+                else:
+                    verdict = 'Looks safe. <span class="pill ok">all checks passed</span>'
+                _step(4, "flag" if qa["critical_fail"] else "done", STEPS[4][1], verdict, "", rows)
+            else:
+                _step(4, "pending", STEPS[4][1], STEPS[4][2] + "…" if done == 5 else "")
+        # 6 person
+        if done >= 6 and S.get("route"):
+            if route == "consultant_call":
+                _step(5, "done", STEPS[5][1], "The consultant, on the phone.", "The system's job ended at step 3. Nothing is sent by this tool.")
+            elif S.get("check"):
+                _step(5, "done", STEPS[5][1], "Approve, or discard. Buttons below.", "A person reads every draft before anything goes out. Nothing is sent by this tool.")
+            else:
+                _step(5, "done", STEPS[5][1], "A person writes the reply.", "")
+        else:
+            _step(5, "pending", STEPS[5][1], "")
 
 
-def _result(rec, run):
+def _technical(rec, run):
+    """The engineer's view, under an expander: stage timings, probabilities, retrieval ranks, full scorecard."""
     S = rec["stages"]
     C = S["classify"]; R = S["route"]; D = S.get("draft"); K = S.get("check")
     total = S["embed"]["ms"] + C["ms"] + S["retrieve"]["ms"] + (D["ms"] if D else 0) + (K["ms"] if K else 0)
@@ -120,14 +220,16 @@ def _result(rec, run):
       + f'<div class="score"><div class="l">Total time</div><div class="v">{fmt_ms(total)}</div></div>'
       + '</div>')
     st.write("")
-    c1, c2 = st.columns([1.15, 1], gap="large")
+    c1, c2 = st.columns([1, 1], gap="large")
     with c1:
-        h(f'<div class="mail"><div class="hd"><span class="s">{_esc(rec["subject"])}</span><span class="m"><code>{rec["id"]}</code> · {rec["received_at"][11:]}</span></div>'
-          f'<div class="bd"><b>{_esc(rec["from_name"]) or "Customer"}</b>\n\n{_esc(rec["body"])}</div></div>')
-        if R["decision"] == "consultant_call":
-            st.write("")
-            notification("info", "This one goes to a Bone Health Consultant as a phone call.",
-                         f' {R["reason"].capitalize()}. The consultant sees the four policy paragraphs on the right when they pick up the phone. No draft is written.')
+        stage_rows = [("embed", f'<code>{S["embed"]["model"]}</code> · {S["embed"]["dim"]} dims', S["embed"]["ms"]),
+                      ("classify", f'two logistic regressions · {tag(LABELS[C["pred_category"]], "g")}{band_tag(C["band"])} p={C["confidence"]:.2f} · {sentiment_dot(C["pred_sentiment"])}', C["ms"]),
+                      ("retrieve", f'BM25 + dense, reciprocal rank fusion, top {S["retrieve"]["k"]}', S["retrieve"]["ms"]),
+                      ("route", route_tag(R["decision"]) + (tag(R["short"], "n") if R.get("short") else "") + f' rule <code>{R["rule_id"] or "default"}</code>', 0.01),
+                      ("draft", f'<code>{D["model"]}</code> · temperature {D["temperature"]} · seed {D["seed"]} · {D["words"]} words' if D else "skipped", D["ms"] if D else None),
+                      ("check", (qa_tag(K["qa"]["score"], K["qa"]["critical_fail"]) + f' {K["qa"]["passed"]} of {K["qa"]["total"]} rules' + (" · " + "; ".join(K["flags"]) if K["flags"] else "")) if K else "skipped", K["ms"] if K else None)]
+        for i, (name, body, ms) in enumerate(stage_rows):
+            h(f'<div class="stage"><div class="n">0{i + 1}</div><div><div class="h"><span class="name">{name}</span><span class="ms">{fmt_ms(ms) if ms is not None else "—"}</span></div><div class="body">{body}</div></div></div>')
     with c2:
         cat = C["category"]
         pc = pd.DataFrame({"label": [LABELS[k] for k in cat], "p": list(cat.values()), "key": list(cat.keys())})
@@ -137,43 +239,44 @@ def _result(rec, run):
             x=alt.X("p:Q", title=None, scale=alt.Scale(domain=[0, 1]), axis=alt.Axis(format="%")),
             color=alt.condition(alt.datum.kind == "chosen", alt.value(G90), alt.value(G40)), tooltip=["label", alt.Tooltip("p:Q", format=".3f")]).properties(height=165)
         st.altair_chart(ch + ch.mark_text(align="left", dx=4, color=INK, fontSize=11).encode(text=alt.Text("p:Q", format=".2f")), width="stretch")
-        h(f'<div class="note">Category probabilities. High is p ≥ {BAND_HIGH}, medium ≥ {BAND_MED}. Below that the row is marked low and a person should not trust the sort.</div>')
-    section("Policy the system found", f'top {S["retrieve"]["k"]} of {run.get("kb_chunks", "")} chunks · BM25 + dense, fused · {fmt_ms(S["retrieve"]["ms"])}')
-    rows = [[f'<b>{x["doc"].replace(".md", "")}</b> › {_esc(x["heading"])}', _esc(x["text"][:260]) + ("…" if len(x["text"]) > 260 else ""), x["bm25_rank"], x["dense_rank"] if x["dense_rank"] else "—"] for x in S["retrieve"]["hits"]]
-    h('<table class="stab"><thead><tr><th>Section</th><th>Text</th><th>BM25</th><th>Dense</th></tr></thead><tbody>'
+        h(f'<div class="note">Category probabilities. High is p ≥ {BAND_HIGH}, medium ≥ {BAND_MED}, low below that.</div>')
+    section("Retrieved chunks", f'top {S["retrieve"]["k"]} of {run.get("kb_chunks", "")} · {fmt_ms(S["retrieve"]["ms"])}')
+    rows = [[f'<b>{x["doc"].replace(".md", "")}</b> › {_esc(x["heading"])}', _esc(x["text"][:240]) + ("…" if len(x["text"]) > 240 else ""), x["bm25_rank"], x["dense_rank"] if x["dense_rank"] else "—", f'{x["score"]:.4f}'] for x in S["retrieve"]["hits"]]
+    h('<table class="stab"><thead><tr><th>Section</th><th>Text</th><th>BM25</th><th>Dense</th><th>Fused</th></tr></thead><tbody>'
       + "".join("<tr>" + "".join(f"<td>{c}</td>" for c in r) + "</tr>" for r in rows) + "</tbody></table>")
-    if D:
-        section("Draft for a person to read", "written only from the paragraphs above. Underline green = supported sentence, yellow = weak, red = not found in the notes")
+    if D and K:
+        section("Draft with sentence support", "green = supported by the notes, yellow = weak, red = not found")
         qa = K["qa"]; support = K["support"]
-        show = st.toggle("Highlight sentence support", value=True, key=f"hl_{rec['id']}")
-        body = highlight_draft(D["text"], support) if (show and support) else D["text"]
+        body = highlight_draft(D["text"], support) if support else D["text"]
         cls = "crit" if qa["critical_fail"] else ("bad" if qa["score"] < 100 else "")
         h(f'<div class="mail draft {cls}"><div class="hd"><span class="s">Draft reply</span><span class="m">{qa_tag(qa["score"], qa["critical_fail"])}</span></div>'
           + _provenance(S["retrieve"]["hits"], D["model"], D["ms"] / 1000, D["words"]) + f'<div class="bd">{body}</div></div>')
-        if support:
-            n_un = sum(1 for s in support if s["sim"] < CFG["draft_qa"]["support_thresholds"]["weak"])
-            h(f'<div class="note" style="margin-top:4px">{len(support)} sentences scored, {n_un} not found in the notes or the email. Similarity is a soft signal; the rules below are the hard one.</div>')
         st.write("")
         _qa_table(qa)
-        section("Review", "the decision is appended to out/reviews.jsonl, like every other review")
-        rv = load_reviews()
-        done = rv[rv.id == rec["id"]] if len(rv) else rv
-        if len(done):
-            x = done.iloc[-1]
-            notification("success" if x.action != "discard" else "warning", f'{x.reviewer} {"approved" if x.action == "approve" else "discarded"} this draft.', f' Logged at {str(x.at)[11:19]}.')
-        else:
-            b1, b2, b3 = st.columns([1, 1, 2])
-            if b1.button("Approve draft", type="primary", key=f"ap_{rec['id']}", width="stretch"):
-                add_review(id=rec["id"], action="approve", reviewer=st.session_state.get("reviewer", "khushi")); flash(f"{rec['id']} approved"); st.rerun()
-            if b2.button("Discard draft", key=f"di_{rec['id']}", width="stretch"):
-                add_review(id=rec["id"], action="discard", reviewer=st.session_state.get("reviewer", "khushi"), reason="live triage"); flash(f"{rec['id']} draft discarded", ":material/delete:"); st.rerun()
-            h('<div class="note">Nothing here sends email. Approving means a person agreed with the draft; what happens next is the care team\'s call.</div>')
+    with st.expander("Raw record (JSON)"):
+        st.json({k: v for k, v in rec.items() if not k.startswith("_")}, expanded=1)
+
+
+def _decision(rec):
+    rv = load_reviews()
+    done = rv[rv.id == rec["id"]] if len(rv) else rv
+    if len(done):
+        x = done.iloc[-1]
+        notification("success" if x.action != "discard" else "warning", f'{x.reviewer} {"approved" if x.action == "approve" else "discarded"} this draft.', f' Logged at {str(x.at)[11:19]}. Nothing was sent.')
+        return
+    b1, b2, b3 = st.columns([1, 1, 2.4])
+    if b1.button("Approve draft", type="primary", key=f"ap_{rec['id']}", width="stretch"):
+        add_review(id=rec["id"], action="approve", reviewer=st.session_state.get("reviewer", "khushi")); flash(f"{rec['id']} approved"); st.rerun()
+    if b2.button("Discard draft", key=f"di_{rec['id']}", width="stretch"):
+        add_review(id=rec["id"], action="discard", reviewer=st.session_state.get("reviewer", "khushi"), reason="live triage"); flash(f"{rec['id']} draft discarded", ":material/delete:"); st.rerun()
+    h('<div class="note">Approving means a person agreed with the draft. Sending it is the care team\'s job in their own mail tool, not this one.</div>')
 
 
 def live():
     run = load_json("run")
-    page_header("Live triage", "Paste one email and watch the same pipeline run on it, stage by stage, on this machine. "
-                "Nothing leaves the laptop and nothing is sent.", run)
+    h(CSS)
+    page_header("Live triage", "Paste one customer email and watch it handled, one step at a time, on this laptop. "
+                "Nothing leaves the machine and nothing is sent.", run)
     ok, models = ollama_status()
     want = CFG["models"]
     embed_ok = ok and want["embed"].split(":")[0] in models
@@ -183,51 +286,54 @@ def live():
     elif not embed_ok:
         notification("error", f"Embedding model <code>{want['embed']}</code> is not pulled.", f" Run <code>ollama pull {want['embed']}</code>, then reload.")
     elif not draft_ok:
-        notification("warning", f"Drafting model <code>{want['draft']}</code> is not pulled.", f" Sorting, policy lookup and routing will run; drafting is switched off. <code>ollama pull {want['draft']}</code> to enable it.")
+        notification("warning", f"Drafting model <code>{want['draft']}</code> is not pulled.", f" Steps 1 to 3 will run; the draft is switched off. <code>ollama pull {want['draft']}</code> to enable it.")
 
-    c1, c2 = st.columns([1.25, 1], gap="large")
+    c1, c2 = st.columns([1, 1.25], gap="large")
     with c1:
-        section("Email", "pick an example or write your own")
+        section("The email", "pick an example or write your own")
         ex = st.selectbox("Example", ["Write my own"] + list(EXAMPLES), index=1, label_visibility="collapsed", key="live_ex")
         name0, subj0, body0 = EXAMPLES.get(ex, ("", "", ""))
         a, b = st.columns([1, 1.6])
         from_name = a.text_input("From", value=name0, key=f"live_from_{ex}", placeholder="Customer name")
         subject = b.text_input("Subject", value=subj0, key=f"live_subj_{ex}", placeholder="Subject line")
-        body = st.text_area("Body", value=body0, height=150, key=f"live_body_{ex}", placeholder="Paste the customer's email here", label_visibility="collapsed")
-        want_draft = st.toggle("Write a draft reply when the route allows it", value=draft_ok, disabled=not draft_ok, key="live_draft",
-                               help="Drafting is the slow stage: a 3B model on the CPU, roughly 5 to 20 seconds depending on the machine.")
-        go = st.button("Triage this email", type="primary", disabled=not (embed_ok and body.strip()), key="live_go")
+        body = st.text_area("Body", value=body0, height=170, key=f"live_body_{ex}", placeholder="Paste the customer's email here", label_visibility="collapsed")
+        want_draft = st.toggle("Write a first draft when the route allows it", value=draft_ok, disabled=not draft_ok, key="live_draft",
+                               help="The draft is the slow step: a small language model on the CPU, roughly 2 to 20 seconds depending on the machine.")
+        go = st.button("Handle this email", type="primary", disabled=not (embed_ok and body.strip()), key="live_go")
+        h('<div class="note" style="margin-top:10px">What happens, in order: it works out what the email is about, finds the policy that applies, decides whether a person should call or a draft will do, writes the draft from those policy paragraphs only, checks the draft, and then a person decides. The same six steps run on every email in the Inbox.</div>')
     with c2:
-        section("Pipeline", "each row fills in as the stage finishes")
+        section("Step by step", "each step fills in as it finishes")
         box = st.empty()
 
     rec = st.session_state.get("live_rec")
     if go:
         from triage import triage_email
         rec = {"stages": {}, "_want_draft": want_draft}
-        _render_stages(box, rec, upto=None, running="embed")
+        _render_steps(box, rec, upto="embed")
 
         def progress(stage, r):
             r["_want_draft"] = want_draft
-            _render_stages(box, r, upto=stage)
-            time.sleep(0.15)  # let the eye catch each stage
+            _render_steps(box, r, upto=stage)
+            time.sleep(0.25)  # let the eye catch each step
 
         try:
-            with st.spinner("Running…", show_time=True):
+            with st.spinner("Working…", show_time=True):
                 rec = triage_email(subject, body, from_name, draft=want_draft, progress=progress)
             rec["_want_draft"] = want_draft
             st.session_state["live_rec"] = rec
-            st.session_state["live_log"] = st.session_state.get("live_log", []) + [rec["id"]]
         except Exception as e:
             notification("error", "The run failed part way.", f" {_esc(str(e))[:300]}. Check that Ollama is running and both models are pulled.")
             rec = None
     if rec and rec.get("stages", {}).get("embed"):
-        _render_stages(box, rec)
+        _render_steps(box, rec)
+        if rec["stages"].get("check"):
+            with c2:
+                _decision(rec)
         st.write("")
-        _result(rec, run)
+        with st.expander("How it decided (the technical view)"):
+            _technical(rec, run)
     else:
         with box.container():
-            for key, *_ in STAGE_META:
-                _stage_card(key, {}, pending=True)
-        h('<div class="note" style="margin-top:8px">Same six stages as the batch run on the Pipeline page. Timings are for this one email on this machine.</div>')
+            for i, (key, q, _) in enumerate(STEPS):
+                _step(i, "pending", q, "")
     footer(run)

@@ -77,7 +77,7 @@ def triage_email(subject, body, from_name="", draft=True, progress=None, email_i
     q = f"{subject}. {body}"
     hits = ret.search(q, k=TOP_K, category=category)
     S["retrieve"] = {"ms": _ms(t0), "k": TOP_K, "query": q[:160], "boost_category": category,
-                     "hits": [{"doc": x["doc"], "heading": x["heading"], "text": x["text"], "score": x["score"],
+                     "hits": [{"doc": x["doc"], "title": x.get("title", x["doc"]), "heading": x["heading"], "text": x["text"], "score": x["score"],
                                "bm25_rank": x["bm25_rank"], "dense_rank": x["dense_rank"]} for x in hits]}
     tick("retrieve")
 

@@ -133,6 +133,9 @@ def overview():
     acc_rate = (status == "approved").sum() / max(reviewed, 1)
     oof = ev.get("category", {}).get("oof", {}).get("acc", float("nan"))
     ho = metrics.get("category", {}).get("holdout_acc", float("nan"))
+    h(f'<div class="plain">In the ten weeks shown, <b>{n} emails</b> came in. <b>{calls}</b> needed a phone call from a Bone Health Consultant and never got an automatic draft. '
+      f'<b>{drafts}</b> were routine and got a first draft for the care team; <b>{qa0}</b> of those drafts were flagged by the safety check before anyone read them. '
+      f'A person has reviewed <b>{reviewed}</b> so far. Nothing is sent by this tool.</div>')
     stats([
         ("Emails", n, "", f"{df.received_at.min():%d %b} to {df.received_at.max():%d %b}"),
         ("Consultant calls", calls, "", f"{calls/n:.0%} of volume, no auto draft"),

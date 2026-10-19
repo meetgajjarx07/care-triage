@@ -106,6 +106,8 @@ code {{ font-family: {MONO} !important; font-size: 12px !important; background: 
 .sec {{ display: flex; align-items: baseline; justify-content: space-between; margin: 1.5rem 0 0.5rem; }}
 .sec h2 {{ font-size: 16px; font-weight: 600; line-height: 22px; margin: 0; color: {INK}; }}
 .sec .hint {{ font-size: 12px; line-height: 16px; color: {GREY}; }}
+.plain {{ font-size: 16px; line-height: 24px; color: {INK}; background: {LAYER}; border: 1px solid {LINE}; border-left: 3px solid {BLUE}; padding: 14px 18px; margin: 0 0 14px; max-width: 110ch; }}
+.plain b {{ font-weight: 600; }}
 .note {{ font-size: 12px; line-height: 16px; color: {GREY}; max-width: 100ch; letter-spacing: 0.16px; }}
 .note b {{ color: {INK}; font-weight: 500; }}
 .note code {{ font-size: 11.5px !important; color: {INK} !important; }}
