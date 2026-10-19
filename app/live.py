@@ -58,6 +58,13 @@ STEPS = [  # (key, question, what happens while it runs)
     ("safe", "Is the draft safe?", "checking the draft"),
     ("person", "A person decides", ""),
 ]
+# What does the work at each step, in plain words. Generative AI is used in one place: the draft.
+WHO = [("AI model", "ai", "an embedding model reads the email into numbers; a small classifier trained on 110 labelled emails names the topic and the mood"),
+       ("AI search", "ai", "the same embedding model plus a keyword index find the closest policy paragraphs"),
+       ("Rule", "rule", "a routing rule written by hand, in a config file"),
+       ("Generative AI", "gen", "a small language model on this laptop writes the draft from the retrieved paragraphs only"),
+       ("Rules, not AI", "rule", "seven deterministic checks; the model is never asked to grade itself"),
+       ("Person", "person", "a human reads, edits, sends or discards")]
 STAGE_TO_STEP = {"embed": 0, "classify": 1, "retrieve": 2, "route": 3, "draft": 4, "check": 5}
 MOOD = {"negative": "unhappy", "neutral": "calm", "positive": "happy"}
 CRITICAL = [("grounded", "Sticks to the policy", "every number and instruction in the draft comes from the policy paragraphs or the customer's own email"),
@@ -81,6 +88,8 @@ CSS = f"""<style>
 .chk .d {{ color: #525252; font-size: 12px; line-height: 16px; }}
 .chk .ev {{ color: {CRIT}; font-size: 13px; }}
 .pill {{ display: inline-block; font-size: 12px; line-height: 16px; padding: 2px 8px; border-radius: 20px; margin-left: 6px; vertical-align: middle; }}
+.pill.ai {{ background: #d0e2ff; color: #0043ce; }} .pill.gen {{ background: #0f62fe; color: #fff; }} .pill.rule {{ background: #e0e0e0; color: #393939; }} .pill.person {{ background: #161616; color: #fff; }}
+.pill[title] {{ cursor: help; }}
 .pill.ok {{ background: #a7f0ba; color: #0e6027; }} .pill.warn {{ background: #fcf4d6; color: #684e00; border: 1px solid #f1c21b; }} .pill.bad {{ background: #ffd7d9; color: #a2191f; }}
 </style>"""
 
@@ -116,7 +125,8 @@ def _in_n(p):
 
 def _step(i, state, q, answer="", why="", extra=""):
     """state: pending | done | flag | skip"""
-    h(f'<div class="step {state}"><div class="num">{i + 1}</div><div><div class="q">{q}</div>'
+    who = f'<span class="pill {WHO[i][1]}" title="{_esc(WHO[i][2])}">{WHO[i][0]}</span>' if i < len(WHO) else ""
+    h(f'<div class="step {state}"><div class="num">{i + 1}</div><div><div class="q">{q}{who}</div>'
       f'<div class="a{" small" if state == "done" and len(answer) > 160 else ""}">{answer}</div>{extra}'
       + (f'<div class="why">{why}</div>' if why else "") + '</div></div>')
 
@@ -304,6 +314,8 @@ def panel(key="live", default_index=1, technical=True):
     with c2:
         section("Step by step", "each step fills in as it finishes")
         box = st.empty()
+        h('<div class="note" style="margin-top:6px"><span class="pill gen" style="margin-left:0">Generative AI</span> is used in one place: step 4, where a small language model on this laptop writes the first draft. '
+          '<span class="pill ai">AI model</span> steps read text into numbers and search with it. <span class="pill rule">Rule</span> steps are written by hand and never change on their own. The last word is always a <span class="pill person">Person</span>.</div>')
 
     rec = st.session_state.get(f"{key}_rec")
     if go:

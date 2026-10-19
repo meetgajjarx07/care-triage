@@ -97,7 +97,7 @@ def walkthrough():
 
     elif i == 2:
         h('<div class="lead">One new email, handled in front of you.</div>')
-        h('<div class="plain">Press <b>Handle this email</b> and watch the steps fill in. Some emails skip the draft on purpose: '
+        h('<div class="plain">Press <b>Handle this email</b> and watch the steps fill in. Each card says who does the work: an AI model, a rule, generative AI, or a person. Some emails skip the draft on purpose: '
           '<b>scan results, health questions, and anyone cancelling because it did not work</b> go straight to a Bone Health Consultant for a phone call.</div>')
         live.panel(key="wt", default_index=2, technical=False)
 
