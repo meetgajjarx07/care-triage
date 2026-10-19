@@ -24,7 +24,7 @@ flowchart LR
 
 ## The dashboard
 
-Built like an internal operations product, not a notebook. The visual language is IBM's Carbon Design System (Gray 10 theme, IBM Plex Sans and Mono served locally, square corners, 14px body, 12px labels, one interactive blue, status colours only for status). I went through how Intercom, Zendesk, Gorgias, Langfuse, LangSmith, Phoenix and Evidently lay these things out, and through Carbon's own patterns for data tables, tags, notifications and the UI shell. A fixed header carries the environment, the run id and the reviewer; a left nav has three groups and eleven pages.
+Built like an internal operations product, not a notebook. The visual language is IBM's Carbon Design System (Gray 10 theme, IBM Plex Sans and Mono served locally, square corners, 14px body, 12px labels, one interactive blue, status colours only for status). I went through how Intercom, Zendesk, Gorgias, Langfuse, LangSmith, Phoenix and Evidently lay these things out, and through Carbon's own patterns for data tables, tags, notifications and the UI shell. A fixed header carries the environment, the run id and the reviewer; a left nav has four groups and twelve pages.
 
 Operate
 
@@ -51,6 +51,14 @@ Everything configurable lives in one file, `config/triage.yaml`: models, classif
 There is also a small FastAPI service (`app/api.py`) over the same code, with `/health`, `/config`, `/emails`, `/emails/{id}`, `/triage` and `/reviews`, so the dashboard is one client of the pipeline rather than the pipeline itself. `tests/` has 32 offline tests (routing, QA rules, retrieval, config validation, API, parity) that run without Ollama. `docs/` has the architecture with a data-flow diagram, a runbook, and five decision records. `CHANGELOG.md` tracks the versions.
 
 No logo or trademark is used anywhere.
+
+## The story, first
+
+For anyone who does not code, `story/index.html` tells the whole project in six scenes: one email, the pile, the question, four steps, the draft that made something up, what changed, and the honest number. It is a single file with no dependencies; open it in a browser and use the arrow keys. It is also the first page of the dashboard.
+
+| | |
+|---|---|
+| ![The story, title](story-title.jpg) | ![The story, the one it got wrong](story-twist.jpg) |
 
 | Inbox replay, ten weeks arriving in thirty seconds | Live triage, one email through every stage |
 |---|---|
@@ -83,7 +91,9 @@ app/pipeline.py          runs every email through, writes out/results.csv, out/t
 app/eval_retrieval.py    hit@k / MRR for BM25, dense, hybrid and the boosted pipeline -> models/retrieval_eval.json
 app/api.py               FastAPI service over the same code (uvicorn api:app --app-dir app)
 app/dashboard.py         Streamlit entrypoint: UI shell, nav, page routing
-app/views.py             nine of the eleven pages
+story/index.html         the six-scene story, standalone
+app/story.py             the dashboard page that embeds it
+app/views.py             nine of the twelve pages
 app/live.py              the Live triage page
 app/replay.py            the Inbox replay page
 app/triage.py            one email through every stage, shared by the Live page and the API
