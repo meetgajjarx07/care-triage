@@ -2,6 +2,11 @@
 
 All dates are 2026. Versions follow the `version` field in `config/triage.yaml`, which is stamped into `out/run.json` on every run.
 
+## 0.6.0 (2026-10-19)
+
+- Inbox replay page: the ten-week run played back in 30, 60 or 120 seconds. Emails arrive one at a time with category, route and safety verdict; the four counters, the category bars and the weekly chart fill in as they go. Plain HTML re-rendered per frame, no charts library, so it stays smooth on a laptop. Honest label on the page: same emails and decisions as the run, nothing classified live.
+- Pipeline rerun under the 0.6.0 config: predictions, drafts and QA identical to 0.5.0.
+
 ## 0.5.0 (2026-10-19)
 
 - Live triage page: paste one email and watch it handled one step at a time, in plain words (what it is about and how sure, which policy, who handles it, a first draft, is it safe, a person decides), each step filling in as it finishes. The engineer's view (timings, model names, probabilities, retrieval ranks, scorecard, sentence support) sits under one expander. Five fresh example emails, none of them in the training set. The page checks Ollama and both models first and says what is missing.

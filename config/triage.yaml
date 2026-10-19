@@ -3,7 +3,7 @@
 # `make run` (or `python app/pipeline.py`); the Configuration page shows the
 # values in force and the hash of this file is stamped into out/run.json.
 
-version: "0.5.0"
+version: "0.6.0"
 owner: "Khushi Gor"
 environment: "local"          # shown in the header; "local" means laptop + Ollama
 

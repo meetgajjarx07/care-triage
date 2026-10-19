@@ -5,7 +5,7 @@ Regarding your question about taking Magnesium Relax, we can confirm that the ca
 
 However, we would like to clarify that the effectiveness of the supplement may vary depending on the individual's ability to absorb the magnesium. We recommend consulting with your doctor or pharmacist to discuss the best way to take the supplement in your specific situation.
 
-AlgaeCal Customer Care.",1.4,,,100.0,,False
+AlgaeCal Customer Care.",3.3,,,100.0,,False
 E064,2026-08-03 13:58,Grace Mbeki,Wrong item received,"I ordered the Bone Builder Pack and received a box of Collagen. Order number 7718204. I don't want to pay to ship it back, I'm 76 and don't drive anymore. Please send the correct item.",shipping_issue,negative,0,shipping_issue,0.552,negative,0.718,high,draft_reply,"covered by the knowledge base, draft for human review","[{""doc"": ""shipping.md"", ""heading"": ""Late, lost or damaged""}, {""doc"": ""shipping.md"", ""heading"": ""Late, lost or damaged""}, {""doc"": ""shipping.md"", ""heading"": ""Standard shipping""}, {""doc"": ""shipping.md"", ""heading"": ""Late, lost or damaged""}]","Dear Grace,
 
 We apologize for the mistake in your order. According to our policy, if the item is damaged or wrong, we will send a replacement. Since you have received a box of Collagen instead of the Bone Builder Pack, we will reship the correct item to you.
@@ -21,7 +21,7 @@ In your case, since your hip improved from osteoporosis to osteopenia, but your 
 
 Please contact our Customer Care team by phone (1-800-820-0184) or email (support@algaecal.com) with both DEXA reports to initiate the refund process.
 
-AlgaeCal Customer Care",2.3,,,0.0,No refund promise,False
+AlgaeCal Customer Care",2.2,,,0.0,No refund promise,False
 E099,2026-08-05 19:38,Rosalind Fairweather,no side effects at all,I've tried four different calcium supplements over the years and every one of them gave me stomach problems. Three months on AlgaeCal and nothing. I don't know if my bones are better yet but at least I can take it. That's something.,positive_feedback,positive,0,positive_feedback,0.409,positive,0.692,medium,draft_reply,"covered by the knowledge base, draft for human review","[{""doc"": ""contact_and_escalation.md"", ""heading"": ""Route to a Bone Health Consultant (human call) instead of an auto reply when""}, {""doc"": ""contact_and_escalation.md"", ""heading"": ""Route to a Bone Health Consultant (human call) instead of an auto reply when""}, {""doc"": ""contact_and_escalation.md"", ""heading"": ""Route to a Bone Health Consultant (human call) instead of an auto reply when""}, {""doc"": ""contact_and_escalation.md"", ""heading"": ""Route to a Bone Health Consultant (human call) instead of an auto reply when""}]","Dear Rosalind,
 
 We're glad to hear that you've been able to tolerate AlgaeCal without any stomach issues, which is a significant improvement from your previous experiences with other calcium supplements.
@@ -53,7 +53,7 @@ We've received your email regarding the damaged package. According to our policy
 
 Please send us the order number and your shipping address so we can proceed with a replacement or refund. We will also review the tracking information to determine the cause of the delay.
 
-AlgaeCal Customer Care",1.5,,,100.0,,False
+AlgaeCal Customer Care",1.6,,,100.0,,False
 E075,2026-08-07 16:24,Geraldine Foy,Tracking number,I never received a tracking number for my order last week. Can you send it? Order was around the 9th under this email.,shipping_issue,neutral,0,shipping_issue,0.712,negative,0.477,high,draft_reply,"covered by the knowledge base, draft for human review","[{""doc"": ""shipping.md"", ""heading"": ""Late, lost or damaged""}, {""doc"": ""shipping.md"", ""heading"": ""Late, lost or damaged""}, {""doc"": ""shipping.md"", ""heading"": ""Late, lost or damaged""}, {""doc"": ""shipping.md"", ""heading"": ""Standard shipping""}]","Dear Geraldine,
 
 We apologize for the inconvenience you've experienced with your order. According to our policy, if the tracking information stalls or is not provided, we can reship or refund the order. To proceed, could you please provide us with your order number and the shipping address associated with your order, which was placed around the 9th of this email?
@@ -70,7 +70,7 @@ E100,2026-08-08 17:17,Bonnie Lightfoot,Collagen,Wasn't expecting much from the c
 
 We're glad to hear that our collagen supplement has had a positive impact on your nails and hair. It's always a nice surprise when our products meet or exceed expectations.
 
-AlgaeCal Customer Care",0.8,,,100.0,,False
+AlgaeCal Customer Care",0.9,,,100.0,,False
 E070,2026-08-08 17:45,Hazel Winterbourne,Delivered but not here,"UPS says delivered 2:14pm yesterday. Nothing on my porch, nothing with neighbours, no photo in the UPS app. I'm out of AlgaeCal tomorrow. What do we do.",shipping_issue,negative,0,shipping_issue,0.739,negative,0.813,high,draft_reply,"covered by the knowledge base, draft for human review","[{""doc"": ""shipping.md"", ""heading"": ""Late, lost or damaged""}, {""doc"": ""shipping.md"", ""heading"": ""Where AlgaeCal ships""}, {""doc"": ""shipping.md"", ""heading"": ""Late, lost or damaged""}, {""doc"": ""shipping.md"", ""heading"": ""Late, lost or damaged""}]","Dear Hazel,
 
 We've received your concern about the missing package. According to our policy, if the tracking information indicates delivery but the package is not found, we can reship or refund. 
@@ -85,7 +85,7 @@ We apologize for the delay in your package delivery. Given the extreme heat in P
 
 Please do not discard the capsules without consulting with your doctor or pharmacist, as they may still be usable. We will send a replacement if the item was damaged or wrong. If you have any further concerns, please contact us.
 
-AlgaeCal Customer Care",1.5,instruction 'refrigerate' not in notes,,0.0,Grounded in policy,True
+AlgaeCal Customer Care",1.6,instruction 'refrigerate' not in notes,,0.0,Grounded in policy,True
 E010,2026-08-09 14:04,Linda Castellano,Did not take strontium whole time,Honest question. I took AlgaeCal Plus for the full 12 months but I stopped the Strontium Boost after about 4 months because it upset my stomach. My scan shows no improvement. I'm assuming this means I don't qualify for the guarantee since it says both products. Is there any partial refund or is that it?,guarantee_claim,neutral,0,guarantee_claim,0.434,neutral,0.479,medium,consultant_call,guarantee claim with scan results: a person reviews the reports and calls,"[{""doc"": ""guarantee.md"", ""heading"": ""The promise""}, {""doc"": ""guarantee.md"", ""heading"": ""What it covers""}, {""doc"": ""guarantee.md"", ""heading"": ""How to claim""}, {""doc"": ""guarantee.md"", ""heading"": ""Common edge cases""}]",,,,Guarantee claim: scan review,,,True
 E029,2026-08-10 06:29,Arlene Goodwin,unsure if this is working,"9 months in. My back still hurts, I don't feel any different. I know the scan is the only real measure but I'm $800 in and I have doubts. What should I expect to feel if anything?",results_question,negative,0,results_question,0.601,negative,0.555,high,consultant_call,disappointed about results: a call retains more of these than an email,"[{""doc"": ""guarantee.md"", ""heading"": ""The three steps""}, {""doc"": ""safety_strontium_and_dexa.md"", ""heading"": ""Strontium and DEXA""}, {""doc"": ""guarantee.md"", ""heading"": ""The promise""}, {""doc"": ""safety_strontium_and_dexa.md"", ""heading"": ""How long until a scan shows change""}]",,,,Unhappy with results,,,True
 E077,2026-08-10 07:40,Bernadette Quinn,Express shipping option,Is there an express shipping option? I only see standard at checkout. I'm in Chicago and I'm willing to pay for it this once.,shipping_issue,neutral,0,shipping_issue,0.76,neutral,0.717,high,draft_reply,"covered by the knowledge base, draft for human review","[{""doc"": ""shipping.md"", ""heading"": ""Standard shipping""}, {""doc"": ""shipping.md"", ""heading"": ""Late, lost or damaged""}, {""doc"": ""shipping.md"", ""heading"": ""Late, lost or damaged""}, {""doc"": ""shipping.md"", ""heading"": ""Currency""}]","Dear Bernadette,
@@ -94,7 +94,7 @@ We can offer an express shipping option for an additional fee. However, we do no
 
 Please note that prices shown on our site are in USD, and you will be billed accordingly.
 
-AlgaeCal Customer Care",1.1,,,100.0,,False
+AlgaeCal Customer Care",1.2,,,100.0,,False
 E011,2026-08-11 09:38,Sharon Pruitt,money back,No improvement on my scan after a year. Want my money back as promised. Also stop my subscription. Sharon,guarantee_claim,negative,1,guarantee_claim,0.509,negative,0.838,medium,consultant_call,guarantee claim with scan results: a person reviews the reports and calls,"[{""doc"": ""guarantee.md"", ""heading"": ""The promise""}, {""doc"": ""guarantee.md"", ""heading"": ""The three steps""}, {""doc"": ""contact_and_escalation.md"", ""heading"": ""Never""}, {""doc"": ""contact_and_escalation.md"", ""heading"": ""Route to a Bone Health Consultant (human call) instead of an auto reply when""}]",,,,Guarantee claim: scan review,,,True
 E028,2026-08-11 09:45,Donna Reyes,trabecular bone score,My new DEXA report includes something called TBS (trabecular bone score) which my old one didn't have. The TBS improved but the BMD was flat. Does AlgaeCal have any data on TBS? Does it count for anything in the guarantee?,results_question,neutral,0,results_question,0.444,neutral,0.795,medium,draft_reply,"covered by the knowledge base, draft for human review","[{""doc"": ""guarantee.md"", ""heading"": ""The promise""}, {""doc"": ""guarantee.md"", ""heading"": ""What it covers""}, {""doc"": ""safety_strontium_and_dexa.md"", ""heading"": ""Strontium and DEXA""}, {""doc"": ""guarantee.md"", ""heading"": ""The three steps""}]","AlgaeCal Customer Care,
 
@@ -166,7 +166,7 @@ E094,2026-08-19 19:10,Olive Brannigan,Referral points,I referred my sister and s
 
 To answer your question, according to our policy, the referrer receives 400 points once the friend places a first order of $75 or more through the referral link. Since your sister's order was $135, which is above the required amount, she should have received the points. However, we will check on this further to confirm.
 
-AlgaeCal Customer Care.",1.2,,,100.0,,False
+AlgaeCal Customer Care.",1.3,,,100.0,,False
 E032,2026-08-20 16:24,Janet Kowalski,Strontium and heart,"My cardiologist asked me what I'm taking and when I said strontium he frowned and mentioned the European drug that was pulled for heart problems. Is yours the same thing? I have a-fib. I'd like a straight answer, not marketing.",safety_concern,neutral,0,safety_concern,0.67,neutral,0.73,high,consultant_call,"medical context: route to a consultant, do not auto reply","[{""doc"": ""safety_strontium_and_dexa.md"", ""heading"": ""Strontium""}, {""doc"": ""safety_strontium_and_dexa.md"", ""heading"": ""Strontium and DEXA""}, {""doc"": ""safety_strontium_and_dexa.md"", ""heading"": ""Common side effects""}, {""doc"": ""safety_strontium_and_dexa.md"", ""heading"": ""Lead and heavy metals""}]",,,,Medical context,,,True
 E036,2026-08-20 19:38,Mary Ellen Grimes,heart palpitations,started strontium boost 10 days ago and i have been getting heart palpitations at night. i have stopped it. is this a known side effect. i am 68 and otherwise healthy.,safety_concern,negative,0,safety_concern,0.614,negative,0.553,high,consultant_call,"medical context: route to a consultant, do not auto reply","[{""doc"": ""safety_strontium_and_dexa.md"", ""heading"": ""Strontium""}, {""doc"": ""safety_strontium_and_dexa.md"", ""heading"": ""Strontium and DEXA""}, {""doc"": ""safety_strontium_and_dexa.md"", ""heading"": ""Common side effects""}, {""doc"": ""safety_strontium_and_dexa.md"", ""heading"": ""Lead and heavy metals""}]",,,,Medical context,,,True
 E109,2026-08-22 06:48,Inez Castellano,Thanks for the reminder email,Just wanted to say the email before each shipment is genuinely useful. I was able to push my delivery back a week while I was away. Most companies just charge you.,positive_feedback,positive,0,positive_feedback,0.548,positive,0.736,medium,draft_reply,"covered by the knowledge base, draft for human review","[{""doc"": ""contact_and_escalation.md"", ""heading"": ""Safe to auto draft (still reviewed by a person before sending)""}, {""doc"": ""contact_and_escalation.md"", ""heading"": ""Never""}, {""doc"": ""contact_and_escalation.md"", ""heading"": ""Route to a Bone Health Consultant (human call) instead of an auto reply when""}, {""doc"": ""contact_and_escalation.md"", ""heading"": ""Route to a Bone Health Consultant (human call) instead of an auto reply when""}]","Dear Inez,
@@ -190,7 +190,7 @@ E081,2026-08-23 14:01,Anita Sorrentino,charged twice,"I was charged $112 twice o
 
 To process your refund, I need the order number or the last four digits of your card (4471) and the dates of the two charges. I will check on the status of your account and contact you with the outcome.
 
-AlgaeCal Customer Care",0.9,,,100.0,,False
+AlgaeCal Customer Care",1.0,,,100.0,,False
 E059,2026-08-24 06:11,Dorothy Nkemelu,Magnesium Relax makes me groggy,The Magnesium Relax works great for sleep but I'm groggy in the morning. Can I take 1 capsule instead of 2? Does that defeat the purpose?,dosage_question,neutral,0,dosage_question,0.677,neutral,0.707,high,draft_reply,"covered by the knowledge base, draft for human review","[{""doc"": ""dosing_and_products.md"", ""heading"": ""Daily doses (as labelled)""}, {""doc"": ""dosing_and_products.md"", ""heading"": ""Questions that come up a lot""}, {""doc"": ""dosing_and_products.md"", ""heading"": ""Daily doses (as labelled)""}, {""doc"": ""dosing_and_products.md"", ""heading"": ""Prices (USD, one time, Oct 2026)""}]","Dorothy,
 
 We understand that you're experiencing morning grogginess after taking Magnesium Relax. However, we cannot advise you to take a different dosage without consulting your doctor or pharmacist. 
@@ -239,7 +239,7 @@ We would be happy to help you understand your results, but we cannot review your
 
 Please contact us to discuss your results further.
 
-AlgaeCal Customer Care",2.0,,,100.0,,False
+AlgaeCal Customer Care",2.1,,,100.0,,False
 E041,2026-08-28 16:15,Wendy Lamontagne,Levothyroxine timing,I take levothyroxine first thing in the morning. How far apart do I need to take AlgaeCal? I read 4 hours somewhere else. If I take AlgaeCal at lunch and dinner is that okay?,safety_concern,neutral,0,dosage_question,0.407,neutral,0.847,medium,draft_reply,"covered by the knowledge base, draft for human review","[{""doc"": ""dosing_and_products.md"", ""heading"": ""Questions that come up a lot""}, {""doc"": ""dosing_and_products.md"", ""heading"": ""Daily doses (as labelled)""}, {""doc"": ""dosing_and_products.md"", ""heading"": ""Questions that come up a lot""}, {""doc"": ""dosing_and_products.md"", ""heading"": ""Daily doses (as labelled)""}]","Dear Wendy,
 
 To minimize potential interference with your levothyroxine, it's recommended to take AlgaeCal at least 4 hours apart from your levothyroxine. Taking AlgaeCal at lunch and dinner would be okay, as long as you're not taking it within 4 hours of your levothyroxine.
@@ -337,7 +337,7 @@ We understand your concern about the clinic and machine used for your follow-up 
 
 However, we can still review your case and assess the validity of your results. Please contact us with your scan results and we will do our best to evaluate them.
 
-AlgaeCal Customer Care",1.6,,,100.0,,False
+AlgaeCal Customer Care",1.7,,,100.0,,False
 E040,2026-09-14 07:05,Rosemary Achebe,Prolia and algaecal together,I get Prolia injections twice a year. Is there any issue taking AlgaeCal Plus and Strontium Boost at the same time? My endocrinologist said calcium is fine but she had never heard of strontium citrate.,safety_concern,neutral,0,safety_concern,0.558,neutral,0.832,high,draft_reply,"covered by the knowledge base, draft for human review","[{""doc"": ""safety_strontium_and_dexa.md"", ""heading"": ""Strontium""}, {""doc"": ""safety_strontium_and_dexa.md"", ""heading"": ""Strontium and DEXA""}, {""doc"": ""safety_strontium_and_dexa.md"", ""heading"": ""Medication interactions people ask about""}, {""doc"": ""safety_strontium_and_dexa.md"", ""heading"": ""Common side effects""}]","Dear Rosemary,
 
 We understand your concern about taking AlgaeCal Plus and Strontium Boost at the same time. According to our policy, customers taking Prolia injections should speak to their doctor first. This is because Prolia and bisphosphonates like Fosamax can interact with each other.
@@ -413,7 +413,7 @@ AlgaeCal Plus has a shelf life of 2 years from the date of manufacture, which is
 
 We recommend that you contact our customer service team to discuss further. We will check on the product's potency and advise on the best course of action.
 
-AlgaeCal Customer Care",1.4,,,100.0,,False
+AlgaeCal Customer Care",1.5,,,100.0,,False
 E002,2026-09-24 14:54,Judith Lindqvist,Re: Your Stronger Bones For Life Guarantee,"Hello, I want to make a claim under the guarantee. Both scans attached (the first one is from March 2025, the follow up is from this month, same clinic, I asked them to use the same machine like your website says). Hip did not change and spine went down slightly. Please tell me what else you need from me. Judith",guarantee_claim,neutral,0,guarantee_claim,0.606,neutral,0.478,high,consultant_call,guarantee claim with scan results: a person reviews the reports and calls,"[{""doc"": ""guarantee.md"", ""heading"": ""The three steps""}, {""doc"": ""guarantee.md"", ""heading"": ""The promise""}, {""doc"": ""guarantee.md"", ""heading"": ""Common edge cases""}, {""doc"": ""guarantee.md"", ""heading"": ""Common edge cases""}]",,,,Guarantee claim: scan review,,,True
 E080,2026-09-24 19:34,Lois Brandt,CANCEL,Cancel my auto ship immediately. I did not agree to a price increase. Confirm by email.,subscription_billing,negative,1,subscription_billing,0.637,negative,0.857,high,consultant_call,cancel intent: offer a call before processing,"[{""doc"": ""subscribe_and_save.md"", ""heading"": ""How it works""}, {""doc"": ""subscribe_and_save.md"", ""heading"": ""Pause, skip, cancel""}, {""doc"": ""subscribe_and_save.md"", ""heading"": ""Billing details customers ask about""}, {""doc"": ""subscribe_and_save.md"", ""heading"": ""Billing details customers ask about""}]",,,,Cancel intent,,,True
 E049,2026-09-25 07:26,Ruth Anne Halloran,Missed a week,I was in the hospital for a week and did not take anything. Do I need to make up the doses or do I just start again? Does this affect my guarantee?,dosage_question,neutral,0,dosage_question,0.39,neutral,0.621,medium,draft_reply,"covered by the knowledge base, draft for human review","[{""doc"": ""dosing_and_products.md"", ""heading"": ""Questions that come up a lot""}, {""doc"": ""dosing_and_products.md"", ""heading"": ""Daily doses (as labelled)""}, {""doc"": ""dosing_and_products.md"", ""heading"": ""Daily doses (as labelled)""}, {""doc"": ""dosing_and_products.md"", ""heading"": ""Daily doses (as labelled)""}]","Dear Ruth,
@@ -485,7 +485,7 @@ We're thrilled to hear that your scan results have improved, showing a decrease 
 
 We appreciate your understanding about the cost of our product, and we're happy to have been able to provide you with an alternative to medication.
 
-AlgaeCal Customer Care",1.4,,,100.0,,False
+AlgaeCal Customer Care",1.5,,,100.0,,False
 E063,2026-10-02 08:37,Patricia Hollingsworth,Where is my order,"Order placed on the 2nd, today is the 14th, tracking has said ""label created"" for 9 days. I am going to run out on Friday. This has never happened before. Please advise.",shipping_issue,negative,0,shipping_issue,0.627,negative,0.758,high,draft_reply,"covered by the knowledge base, draft for human review","[{""doc"": ""shipping.md"", ""heading"": ""Late, lost or damaged""}, {""doc"": ""shipping.md"", ""heading"": ""Standard shipping""}, {""doc"": ""shipping.md"", ""heading"": ""Late, lost or damaged""}, {""doc"": ""shipping.md"", ""heading"": ""Where AlgaeCal ships""}]","Dear Patricia,
 
 We apologize for the delay in your order. According to our tracking information, the label was created on the 2nd, but it has been 9 days since then. We will need to investigate further to determine the cause of the delay.

@@ -20,7 +20,7 @@ from config import CFG, config_hash
 ROOT = Path(__file__).resolve().parent.parent
 OUT, MODELS, KB, DOCS = ROOT / "out", ROOT / "models", ROOT / "kb", ROOT / "docs"
 REVIEWS = OUT / "reviews.jsonl"
-APP_VERSION = CFG.get("version", "0.5.0")
+APP_VERSION = CFG.get("version", "0.6.0")
 APP_NAME = "Care Triage"
 
 # ---- Carbon Gray 10 tokens

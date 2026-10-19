@@ -24,11 +24,12 @@ flowchart LR
 
 ## The dashboard
 
-Built like an internal operations product, not a notebook. The visual language is IBM's Carbon Design System (Gray 10 theme, IBM Plex Sans and Mono served locally, square corners, 14px body, 12px labels, one interactive blue, status colours only for status). I went through how Intercom, Zendesk, Gorgias, Langfuse, LangSmith, Phoenix and Evidently lay these things out, and through Carbon's own patterns for data tables, tags, notifications and the UI shell. A fixed header carries the environment, the run id and the reviewer; a left nav has three groups and ten pages.
+Built like an internal operations product, not a notebook. The visual language is IBM's Carbon Design System (Gray 10 theme, IBM Plex Sans and Mono served locally, square corners, 14px body, 12px labels, one interactive blue, status colours only for status). I went through how Intercom, Zendesk, Gorgias, Langfuse, LangSmith, Phoenix and Evidently lay these things out, and through Carbon's own patterns for data tables, tags, notifications and the UI shell. A fixed header carries the environment, the run id and the reviewer; a left nav has three groups and eleven pages.
 
 Operate
 
 - **Overview**: KPI tiles, a pipeline funnel (received, classified by confidence band, routed by reason, QA result, review status), weekly volume, cancel mentions, a Needs attention queue, and why emails go to a consultant.
+- **Inbox replay**: the ten-week run played back in half a minute. Emails arrive one at a time with what the system decided about each, the four big counters climb, the category bars and the weekly chart fill in. Same emails, same decisions as the batch run; nothing is classified on this page, and it says so.
 - **Live triage**: paste one customer email, or pick one of five fresh examples, and watch it handled one step at a time, in plain words: what it is about and how sure the system is (with how often that confidence level is right), which policy applies, who should handle it, a first draft, whether the draft is safe (sticks to the policy, no refund promise, no medical advice), and a person's decision. Each step fills in as it finishes. The technical view (timings, model names, probabilities, retrieval ranks, the full scorecard, sentence support) is one click away under "How it decided". Needs Ollama; the page says which model is missing instead of failing half way.
 - **Inbox**: saved views (Needs attention, QA fails, Low confidence, Consultant calls, Pending review, Reviewed), filters, one row per email with band, QA score and review status. Selecting a row shows the email, the prediction, the draft with a provenance banner, sentence-level support highlighting, a seven-check QA scorecard, and the review actions: approve, edit then approve, discard, correct the category or sentiment with a reason. Each decision appends to `out/reviews.jsonl` and raises a toast.
 - **Activity**: every review decision, who made it and when, filterable by action and reviewer, with what reviewers corrected and an export. Empty state points back to the Inbox.
@@ -47,21 +48,25 @@ Administer
 
 Everything configurable lives in one file, `config/triage.yaml`: models, classifier settings, confidence band thresholds, retrieval constants, QA limits, routing rules and monitoring limits. The pipeline, the dashboard and the API read the same object, and the file's hash is stamped into each run so the Configuration page can tell when a run predates a change. The routing rules are data; `tests/test_parity.py` replays the last run through them.
 
-There is also a small FastAPI service (`app/api.py`) over the same code, with `/health`, `/config`, `/emails`, `/emails/{id}`, `/triage` and `/reviews`, so the dashboard is one client of the pipeline rather than the pipeline itself. `tests/` has 30 offline tests (routing, QA rules, retrieval, config validation, API, parity) that run without Ollama. `docs/` has the architecture with a data-flow diagram, a runbook, and five decision records. `CHANGELOG.md` tracks the versions.
+There is also a small FastAPI service (`app/api.py`) over the same code, with `/health`, `/config`, `/emails`, `/emails/{id}`, `/triage` and `/reviews`, so the dashboard is one client of the pipeline rather than the pipeline itself. `tests/` has 32 offline tests (routing, QA rules, retrieval, config validation, API, parity) that run without Ollama. `docs/` has the architecture with a data-flow diagram, a runbook, and five decision records. `CHANGELOG.md` tracks the versions.
 
 No logo or trademark is used anywhere.
 
-| Live triage, one email through every stage | Inbox, reviewing the draft that made something up |
+| Inbox replay, ten weeks arriving in thirty seconds | Live triage, one email through every stage |
 |---|---|
-| ![Live triage](dashboard-live.jpg) | ![Inbox review of E061](dashboard-review-E061.jpg) |
+| ![Inbox replay](dashboard-replay.jpg) | ![Live triage](dashboard-live.jpg) |
 
-| Pipeline trace | Model quality |
+| Inbox, reviewing the draft that made something up | Pipeline trace |
 |---|---|
-| ![Pipeline](dashboard-trace.jpg) | ![Model quality](dashboard-quality.jpg) |
+| ![Inbox review of E061](dashboard-review-E061.jpg) | ![Pipeline](dashboard-trace.jpg) |
 
-| Model facts | Configuration |
+| Model quality | Model facts |
 |---|---|
-| ![Model facts](dashboard-facts.jpg) | ![Configuration](dashboard-config.jpg) |
+| ![Model quality](dashboard-quality.jpg) | ![Model facts](dashboard-facts.jpg) |
+
+| Configuration | |
+|---|---|
+| ![Configuration](dashboard-config.jpg) | |
 
 ## What is in here
 
@@ -78,8 +83,9 @@ app/pipeline.py          runs every email through, writes out/results.csv, out/t
 app/eval_retrieval.py    hit@k / MRR for BM25, dense, hybrid and the boosted pipeline -> models/retrieval_eval.json
 app/api.py               FastAPI service over the same code (uvicorn api:app --app-dir app)
 app/dashboard.py         Streamlit entrypoint: UI shell, nav, page routing
-app/views.py             nine of the ten pages
+app/views.py             nine of the eleven pages
 app/live.py              the Live triage page
+app/replay.py            the Inbox replay page
 app/triage.py            one email through every stage, shared by the Live page and the API
 app/ui.py                Carbon tokens, CSS, Altair theme, data loaders, status checks, small components
 app/static/fonts/        IBM Plex Sans and Mono (OFL), served locally
