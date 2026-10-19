@@ -1,0 +1,19 @@
+{
+  "n": 110,
+  "embed_seconds_all": 1.31,
+  "category": {
+    "holdout_acc": 0.893,
+    "holdout_macro_f1": 0.879,
+    "cv5x4_acc": 0.766
+  },
+  "sentiment": {
+    "holdout_acc": 0.857,
+    "holdout_macro_f1": 0.82,
+    "cv5x4_acc": 0.811
+  },
+  "llm_zero_shot": {
+    "holdout_acc": 0.536,
+    "holdout_macro_f1": 0.483,
+    "seconds_per_email": 0.17
+  }
+}

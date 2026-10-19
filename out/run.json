@@ -1,0 +1,55 @@
+{
+  "run_id": "run-20261019-000844",
+  "config_version": "0.4.0",
+  "config_hash": "484786fa8ba5",
+  "routing_rules": [
+    "guarantee",
+    "medical",
+    "disappointed",
+    "cancel"
+  ],
+  "started_at": "2026-10-19T00:08:44",
+  "finished_at": "2026-10-19T00:10:50",
+  "wall_seconds": 126.0,
+  "host": "Meets-MacBook-Pro.local",
+  "python": "3.12.8",
+  "sklearn": "1.7.2",
+  "streamlit": "1.54.0",
+  "numpy": "2.3.4",
+  "pandas": "2.3.3",
+  "embed_model": "nomic-embed-text",
+  "draft_model": "llama3.2",
+  "draft_options": {
+    "temperature": 0,
+    "seed": 7,
+    "num_predict": 260
+  },
+  "system_prompt": "You write first drafts of replies for AlgaeCal Customer Care.\nRules:\n- Use ONLY the facts in the POLICY NOTES. If the notes do not cover it, say the team will check and come back, do not guess.\n- Never promise a refund amount. Never give medical advice; suggest the customer confirm with their doctor or pharmacist when health comes up.\n- Plain, warm, short. Under 140 words. No bullet points. No exclamation marks.\n- Answer the actual question first. Do not open with thanks for reaching out.\n- Sign off as \"AlgaeCal Customer Care\".",
+  "kb_docs": 7,
+  "kb_chunks": 56,
+  "dense_index": true,
+  "emails": 110,
+  "window": [
+    "2026-08-03 07:02",
+    "2026-10-11 09:56"
+  ],
+  "timing_seconds": {
+    "index_load": 0.01,
+    "embed_all": 1.0,
+    "classify_all": 0.001,
+    "draft_total": 114.6
+  },
+  "routes": {
+    "draft_reply": 76,
+    "consultant_call": 34
+  },
+  "drafted": 76,
+  "flagged": 7,
+  "qa_below_100": 13,
+  "confidence_bands": {
+    "high": 67,
+    "medium": 41,
+    "low": 2
+  },
+  "train_set_accuracy_optimistic": 0.982
+}

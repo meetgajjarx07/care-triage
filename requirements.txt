@@ -1,0 +1,13 @@
+pandas
+scikit-learn
+joblib
+rank_bm25
+numpy
+streamlit
+altair
+ollama
+pyyaml
+fastapi
+uvicorn
+httpx
+pytest

@@ -1,0 +1,79 @@
+# Care Triage configuration. One file, read by the pipeline, the API and the
+# dashboard, so a threshold is never defined in two places. Edit, then rerun
+# `make run` (or `python app/pipeline.py`); the Configuration page shows the
+# values in force and the hash of this file is stamped into out/run.json.
+
+version: "0.4.0"
+owner: "Khushi Gor"
+environment: "local"          # shown in the header; "local" means laptop + Ollama
+
+models:
+  embed: nomic-embed-text      # 768-d, Ollama
+  draft: llama3.2              # 3B, Ollama
+  draft_options:
+    temperature: 0
+    seed: 7
+    num_predict: 260
+
+classifier:
+  C: 4
+  class_weight: balanced
+  max_iter: 5000
+
+# categorical confidence from the top-1 probability of the category model.
+# thresholds were checked on 5-fold out-of-fold predictions (models/eval.json):
+# high is right 88% of the time, medium 79%, low 52%.
+confidence_bands:
+  high: 0.55
+  medium: 0.35
+
+retrieval:
+  k: 4
+  rrf_k: 60                    # reciprocal rank fusion constant 1/(rrf_k + rank)
+  category_boost: 0.0166667    # = 1/60, worth one first-place vote
+  low_evidence_quantile: 0.10  # weakest share of best-fused-score flagged as content gaps
+
+draft_qa:
+  max_words: 140
+  support_thresholds:          # cosine, nomic; sentence counts as supported / weak / unsupported
+    supported: 0.72
+    weak: 0.62
+
+# routing rules, evaluated top to bottom; first match wins, otherwise draft_reply.
+# `body_regex` is case-insensitive. `sentiment` is optional.
+routing_rules:
+  - id: guarantee
+    name: Guarantee claim with scan results
+    when: {category: guarantee_claim}
+    action: consultant_call
+    short: "Guarantee claim: scan review"
+    reason: "guarantee claim with scan results: a person reviews the reports and calls"
+  - id: medical
+    name: Medical context in a safety question
+    when: {category: safety_concern, body_regex: "doctor|cardiologist|palpitat|kidney|warfarin|stopp?ed|eGFR"}
+    action: consultant_call
+    short: "Medical context"
+    reason: "medical context: route to a consultant, do not auto reply"
+  - id: disappointed
+    name: Unhappy about results
+    when: {category: results_question, sentiment: negative}
+    action: consultant_call
+    short: "Unhappy with results"
+    reason: "disappointed about results: a call retains more of these than an email"
+  - id: cancel
+    name: Cancel intent on a subscription
+    when: {category: subscription_billing, body_regex: "cancel|stop sending|not working"}
+    action: consultant_call
+    short: "Cancel intent"
+    reason: "cancel intent: offer a call before processing"
+
+default_route:
+  action: draft_reply
+  reason: "covered by the knowledge base, draft for human review"
+
+# what the Configuration page checks and what Model facts calls the monitoring plan
+monitoring:
+  critical_qa_fail_rate_max: 0.20     # share of drafts with a critical QA fail, per run
+  low_band_share_max: 0.25            # share of emails in the low confidence band
+  correction_rate_max: 0.15           # reviewer corrections / reviewed drafts, per week
+  run_age_days_max: 7

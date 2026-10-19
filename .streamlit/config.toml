@@ -1,0 +1,66 @@
+# Carbon Design System, Gray 10 theme, IBM Plex. Fonts are served from
+# app/static/fonts so the demo renders the same with no internet.
+[theme]
+base = "light"
+primaryColor = "#0f62fe"
+backgroundColor = "#f4f4f4"
+secondaryBackgroundColor = "#ffffff"
+textColor = "#161616"
+linkColor = "#0f62fe"
+linkUnderline = false
+borderColor = "#e0e0e0"
+dataframeBorderColor = "#e0e0e0"
+dataframeHeaderBackgroundColor = "#e0e0e0"
+showWidgetBorder = true
+baseRadius = "none"
+buttonRadius = "none"
+baseFontSize = 14
+font = "IBM Plex Sans"
+headingFont = "IBM Plex Sans"
+codeFont = "IBM Plex Mono"
+codeFontSize = "12px"
+chartCategoricalColors = ["#0f62fe", "#6929c4", "#005d5d", "#9f1853", "#1192e8", "#fa4d56", "#198038", "#b28600"]
+chartSequentialColors = ["#edf5ff", "#d0e2ff", "#a6c8ff", "#78a9ff", "#4589ff", "#0f62fe", "#0043ce", "#002d9c", "#001d6c", "#001141"]
+redColor = "#da1e28"
+greenColor = "#24a148"
+yellowColor = "#f1c21b"
+blueColor = "#0043ce"
+grayColor = "#8d8d8d"
+
+[[theme.fontFaces]]
+family = "IBM Plex Sans"
+url = "app/static/fonts/IBMPlexSans-300.woff2"
+weight = 300
+[[theme.fontFaces]]
+family = "IBM Plex Sans"
+url = "app/static/fonts/IBMPlexSans-400.woff2"
+weight = 400
+[[theme.fontFaces]]
+family = "IBM Plex Sans"
+url = "app/static/fonts/IBMPlexSans-500.woff2"
+weight = 500
+[[theme.fontFaces]]
+family = "IBM Plex Sans"
+url = "app/static/fonts/IBMPlexSans-600.woff2"
+weight = 600
+[[theme.fontFaces]]
+family = "IBM Plex Mono"
+url = "app/static/fonts/IBMPlexMono-400.woff2"
+weight = 400
+[[theme.fontFaces]]
+family = "IBM Plex Mono"
+url = "app/static/fonts/IBMPlexMono-500.woff2"
+weight = 500
+
+[theme.sidebar]
+backgroundColor = "#ffffff"
+secondaryBackgroundColor = "#f4f4f4"
+textColor = "#525252"
+
+[server]
+runOnSave = true
+headless = true
+enableStaticServing = true
+
+[browser]
+gatherUsageStats = false

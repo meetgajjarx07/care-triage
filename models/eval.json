@@ -1,0 +1,2476 @@
+{
+  "trained_at": "2026-10-18T18:26:02",
+  "embed_model": "nomic-embed-text",
+  "embed_dim": 768,
+  "classifier": "LogisticRegression(C=4, class_weight=balanced, max_iter=5000)",
+  "split": "stratified 25% holdout, random_state=7; CV = RepeatedStratifiedKFold(5x4, random_state=1)",
+  "sklearn": "1.7.2",
+  "python": "3.12.8",
+  "embed_seconds_all": 1.31,
+  "category": {
+    "labels": [
+      "guarantee_claim",
+      "results_question",
+      "safety_concern",
+      "dosage_question",
+      "shipping_issue",
+      "subscription_billing",
+      "positive_feedback"
+    ],
+    "train_n": 82,
+    "test_n": 28,
+    "holdout": [
+      {
+        "id": "E038",
+        "true": "safety_concern",
+        "pred": "safety_concern",
+        "conf": 0.272
+      },
+      {
+        "id": "E100",
+        "true": "positive_feedback",
+        "pred": "positive_feedback",
+        "conf": 0.384
+      },
+      {
+        "id": "E012",
+        "true": "guarantee_claim",
+        "pred": "results_question",
+        "conf": 0.486
+      },
+      {
+        "id": "E009",
+        "true": "guarantee_claim",
+        "pred": "guarantee_claim",
+        "conf": 0.412
+      },
+      {
+        "id": "E077",
+        "true": "shipping_issue",
+        "pred": "shipping_issue",
+        "conf": 0.555
+      },
+      {
+        "id": "E030",
+        "true": "results_question",
+        "pred": "results_question",
+        "conf": 0.526
+      },
+      {
+        "id": "E086",
+        "true": "subscription_billing",
+        "pred": "subscription_billing",
+        "conf": 0.613
+      },
+      {
+        "id": "E055",
+        "true": "dosage_question",
+        "pred": "dosage_question",
+        "conf": 0.322
+      },
+      {
+        "id": "E003",
+        "true": "guarantee_claim",
+        "pred": "guarantee_claim",
+        "conf": 0.336
+      },
+      {
+        "id": "E093",
+        "true": "subscription_billing",
+        "pred": "subscription_billing",
+        "conf": 0.34
+      },
+      {
+        "id": "E091",
+        "true": "subscription_billing",
+        "pred": "subscription_billing",
+        "conf": 0.466
+      },
+      {
+        "id": "E066",
+        "true": "shipping_issue",
+        "pred": "shipping_issue",
+        "conf": 0.321
+      },
+      {
+        "id": "E071",
+        "true": "shipping_issue",
+        "pred": "shipping_issue",
+        "conf": 0.391
+      },
+      {
+        "id": "E085",
+        "true": "subscription_billing",
+        "pred": "subscription_billing",
+        "conf": 0.514
+      },
+      {
+        "id": "E022",
+        "true": "results_question",
+        "pred": "results_question",
+        "conf": 0.331
+      },
+      {
+        "id": "E032",
+        "true": "safety_concern",
+        "pred": "safety_concern",
+        "conf": 0.441
+      },
+      {
+        "id": "E053",
+        "true": "dosage_question",
+        "pred": "dosage_question",
+        "conf": 0.435
+      },
+      {
+        "id": "E020",
+        "true": "results_question",
+        "pred": "results_question",
+        "conf": 0.435
+      },
+      {
+        "id": "E023",
+        "true": "results_question",
+        "pred": "results_question",
+        "conf": 0.468
+      },
+      {
+        "id": "E067",
+        "true": "shipping_issue",
+        "pred": "shipping_issue",
+        "conf": 0.539
+      },
+      {
+        "id": "E080",
+        "true": "subscription_billing",
+        "pred": "subscription_billing",
+        "conf": 0.443
+      },
+      {
+        "id": "E034",
+        "true": "safety_concern",
+        "pred": "safety_concern",
+        "conf": 0.395
+      },
+      {
+        "id": "E013",
+        "true": "guarantee_claim",
+        "pred": "results_question",
+        "conf": 0.31
+      },
+      {
+        "id": "E036",
+        "true": "safety_concern",
+        "pred": "safety_concern",
+        "conf": 0.392
+      },
+      {
+        "id": "E054",
+        "true": "dosage_question",
+        "pred": "dosage_question",
+        "conf": 0.434
+      },
+      {
+        "id": "E047",
+        "true": "dosage_question",
+        "pred": "dosage_question",
+        "conf": 0.526
+      },
+      {
+        "id": "E102",
+        "true": "positive_feedback",
+        "pred": "positive_feedback",
+        "conf": 0.415
+      },
+      {
+        "id": "E099",
+        "true": "positive_feedback",
+        "pred": "safety_concern",
+        "conf": 0.394
+      }
+    ],
+    "confusion": [
+      [
+        2,
+        2,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        4,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        4,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        4,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        4,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        5,
+        0
+      ],
+      [
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        2
+      ]
+    ],
+    "per_class": {
+      "guarantee_claim": {
+        "precision": 1.0,
+        "recall": 0.5,
+        "f1": 0.667,
+        "support": 4
+      },
+      "results_question": {
+        "precision": 0.667,
+        "recall": 1.0,
+        "f1": 0.8,
+        "support": 4
+      },
+      "safety_concern": {
+        "precision": 0.8,
+        "recall": 1.0,
+        "f1": 0.889,
+        "support": 4
+      },
+      "dosage_question": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "support": 4
+      },
+      "shipping_issue": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "support": 4
+      },
+      "subscription_billing": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "support": 5
+      },
+      "positive_feedback": {
+        "precision": 1.0,
+        "recall": 0.667,
+        "f1": 0.8,
+        "support": 3
+      }
+    },
+    "cv_folds": [
+      0.727,
+      0.818,
+      0.591,
+      0.864,
+      0.818,
+      0.909,
+      0.727,
+      0.773,
+      0.773,
+      0.727,
+      0.682,
+      0.864,
+      0.818,
+      0.636,
+      0.727,
+      0.773,
+      0.773,
+      0.636,
+      0.773,
+      0.909
+    ],
+    "cv_mean": 0.766,
+    "cv_std": 0.085,
+    "tfidf_cv_folds": [
+      0.591,
+      0.636,
+      0.455,
+      0.636,
+      0.545,
+      0.545,
+      0.545,
+      0.545,
+      0.682,
+      0.727,
+      0.727,
+      0.545,
+      0.591,
+      0.409,
+      0.5,
+      0.5,
+      0.636,
+      0.682,
+      0.682,
+      0.682
+    ],
+    "tfidf_cv_mean": 0.593,
+    "tfidf_cv_std": 0.088,
+    "class_counts": {
+      "subscription_billing": 18,
+      "dosage_question": 16,
+      "shipping_issue": 16,
+      "safety_concern": 16,
+      "results_question": 15,
+      "guarantee_claim": 15,
+      "positive_feedback": 14
+    },
+    "oof": {
+      "note": "5-fold out-of-fold predictions on all rows (StratifiedKFold, random_state=3)",
+      "acc": 0.727,
+      "macro_f1": 0.723,
+      "confusion": [
+        [
+          11,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          2,
+          12,
+          1,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          9,
+          4,
+          1,
+          1,
+          0
+        ],
+        [
+          1,
+          0,
+          4,
+          10,
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          1,
+          15,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          0,
+          0,
+          1,
+          15,
+          0
+        ],
+        [
+          0,
+          2,
+          1,
+          0,
+          2,
+          1,
+          8
+        ]
+      ],
+      "per_class": {
+        "guarantee_claim": {
+          "precision": 0.688,
+          "recall": 0.733,
+          "f1": 0.71,
+          "support": 15
+        },
+        "results_question": {
+          "precision": 0.632,
+          "recall": 0.8,
+          "f1": 0.706,
+          "support": 15
+        },
+        "safety_concern": {
+          "precision": 0.6,
+          "recall": 0.562,
+          "f1": 0.581,
+          "support": 16
+        },
+        "dosage_question": {
+          "precision": 0.667,
+          "recall": 0.625,
+          "f1": 0.645,
+          "support": 16
+        },
+        "shipping_issue": {
+          "precision": 0.75,
+          "recall": 0.938,
+          "f1": 0.833,
+          "support": 16
+        },
+        "subscription_billing": {
+          "precision": 0.882,
+          "recall": 0.833,
+          "f1": 0.857,
+          "support": 18
+        },
+        "positive_feedback": {
+          "precision": 1.0,
+          "recall": 0.571,
+          "f1": 0.727,
+          "support": 14
+        }
+      },
+      "rows": [
+        {
+          "id": "E050",
+          "true": "dosage_question",
+          "pred": "dosage_question",
+          "conf": 0.498,
+          "p_true": 0.498
+        },
+        {
+          "id": "E064",
+          "true": "shipping_issue",
+          "pred": "shipping_issue",
+          "conf": 0.306,
+          "p_true": 0.306
+        },
+        {
+          "id": "E022",
+          "true": "results_question",
+          "pred": "results_question",
+          "conf": 0.33,
+          "p_true": 0.33
+        },
+        {
+          "id": "E099",
+          "true": "positive_feedback",
+          "pred": "safety_concern",
+          "conf": 0.405,
+          "p_true": 0.153
+        },
+        {
+          "id": "E034",
+          "true": "safety_concern",
+          "pred": "safety_concern",
+          "conf": 0.422,
+          "p_true": 0.422
+        },
+        {
+          "id": "E023",
+          "true": "results_question",
+          "pred": "results_question",
+          "conf": 0.502,
+          "p_true": 0.502
+        },
+        {
+          "id": "E027",
+          "true": "results_question",
+          "pred": "results_question",
+          "conf": 0.314,
+          "p_true": 0.314
+        },
+        {
+          "id": "E042",
+          "true": "safety_concern",
+          "pred": "subscription_billing",
+          "conf": 0.426,
+          "p_true": 0.074
+        },
+        {
+          "id": "E066",
+          "true": "shipping_issue",
+          "pred": "shipping_issue",
+          "conf": 0.358,
+          "p_true": 0.358
+        },
+        {
+          "id": "E075",
+          "true": "shipping_issue",
+          "pred": "shipping_issue",
+          "conf": 0.536,
+          "p_true": 0.536
+        },
+        {
+          "id": "E105",
+          "true": "positive_feedback",
+          "pred": "positive_feedback",
+          "conf": 0.335,
+          "p_true": 0.335
+        },
+        {
+          "id": "E100",
+          "true": "positive_feedback",
+          "pred": "positive_feedback",
+          "conf": 0.324,
+          "p_true": 0.324
+        },
+        {
+          "id": "E070",
+          "true": "shipping_issue",
+          "pred": "shipping_issue",
+          "conf": 0.547,
+          "p_true": 0.547
+        },
+        {
+          "id": "E012",
+          "true": "guarantee_claim",
+          "pred": "results_question",
+          "conf": 0.443,
+          "p_true": 0.331
+        },
+        {
+          "id": "E074",
+          "true": "shipping_issue",
+          "pred": "dosage_question",
+          "conf": 0.349,
+          "p_true": 0.191
+        },
+        {
+          "id": "E010",
+          "true": "guarantee_claim",
+          "pred": "guarantee_claim",
+          "conf": 0.295,
+          "p_true": 0.295
+        },
+        {
+          "id": "E029",
+          "true": "results_question",
+          "pred": "results_question",
+          "conf": 0.458,
+          "p_true": 0.458
+        },
+        {
+          "id": "E077",
+          "true": "shipping_issue",
+          "pred": "shipping_issue",
+          "conf": 0.629,
+          "p_true": 0.629
+        },
+        {
+          "id": "E011",
+          "true": "guarantee_claim",
+          "pred": "guarantee_claim",
+          "conf": 0.343,
+          "p_true": 0.343
+        },
+        {
+          "id": "E028",
+          "true": "results_question",
+          "pred": "guarantee_claim",
+          "conf": 0.299,
+          "p_true": 0.231
+        },
+        {
+          "id": "E058",
+          "true": "dosage_question",
+          "pred": "dosage_question",
+          "conf": 0.413,
+          "p_true": 0.413
+        },
+        {
+          "id": "E078",
+          "true": "shipping_issue",
+          "pred": "shipping_issue",
+          "conf": 0.603,
+          "p_true": 0.603
+        },
+        {
+          "id": "E033",
+          "true": "safety_concern",
+          "pred": "dosage_question",
+          "conf": 0.327,
+          "p_true": 0.312
+        },
+        {
+          "id": "E019",
+          "true": "results_question",
+          "pred": "guarantee_claim",
+          "conf": 0.353,
+          "p_true": 0.241
+        },
+        {
+          "id": "E017",
+          "true": "results_question",
+          "pred": "results_question",
+          "conf": 0.517,
+          "p_true": 0.517
+        },
+        {
+          "id": "E072",
+          "true": "shipping_issue",
+          "pred": "shipping_issue",
+          "conf": 0.532,
+          "p_true": 0.532
+        },
+        {
+          "id": "E106",
+          "true": "positive_feedback",
+          "pred": "positive_feedback",
+          "conf": 0.255,
+          "p_true": 0.255
+        },
+        {
+          "id": "E073",
+          "true": "shipping_issue",
+          "pred": "shipping_issue",
+          "conf": 0.567,
+          "p_true": 0.567
+        },
+        {
+          "id": "E061",
+          "true": "dosage_question",
+          "pred": "safety_concern",
+          "conf": 0.261,
+          "p_true": 0.241
+        },
+        {
+          "id": "E005",
+          "true": "guarantee_claim",
+          "pred": "results_question",
+          "conf": 0.416,
+          "p_true": 0.367
+        },
+        {
+          "id": "E006",
+          "true": "guarantee_claim",
+          "pred": "guarantee_claim",
+          "conf": 0.513,
+          "p_true": 0.513
+        },
+        {
+          "id": "E094",
+          "true": "subscription_billing",
+          "pred": "guarantee_claim",
+          "conf": 0.252,
+          "p_true": 0.118
+        },
+        {
+          "id": "E032",
+          "true": "safety_concern",
+          "pred": "safety_concern",
+          "conf": 0.542,
+          "p_true": 0.542
+        },
+        {
+          "id": "E036",
+          "true": "safety_concern",
+          "pred": "safety_concern",
+          "conf": 0.439,
+          "p_true": 0.439
+        },
+        {
+          "id": "E109",
+          "true": "positive_feedback",
+          "pred": "shipping_issue",
+          "conf": 0.317,
+          "p_true": 0.263
+        },
+        {
+          "id": "E054",
+          "true": "dosage_question",
+          "pred": "dosage_question",
+          "conf": 0.488,
+          "p_true": 0.488
+        },
+        {
+          "id": "E071",
+          "true": "shipping_issue",
+          "pred": "shipping_issue",
+          "conf": 0.392,
+          "p_true": 0.392
+        },
+        {
+          "id": "E081",
+          "true": "subscription_billing",
+          "pred": "shipping_issue",
+          "conf": 0.296,
+          "p_true": 0.257
+        },
+        {
+          "id": "E059",
+          "true": "dosage_question",
+          "pred": "dosage_question",
+          "conf": 0.584,
+          "p_true": 0.584
+        },
+        {
+          "id": "E057",
+          "true": "dosage_question",
+          "pred": "dosage_question",
+          "conf": 0.354,
+          "p_true": 0.354
+        },
+        {
+          "id": "E038",
+          "true": "safety_concern",
+          "pred": "shipping_issue",
+          "conf": 0.235,
+          "p_true": 0.231
+        },
+        {
+          "id": "E095",
+          "true": "subscription_billing",
+          "pred": "subscription_billing",
+          "conf": 0.398,
+          "p_true": 0.398
+        },
+        {
+          "id": "E031",
+          "true": "safety_concern",
+          "pred": "safety_concern",
+          "conf": 0.57,
+          "p_true": 0.57
+        },
+        {
+          "id": "E055",
+          "true": "dosage_question",
+          "pred": "safety_concern",
+          "conf": 0.355,
+          "p_true": 0.232
+        },
+        {
+          "id": "E018",
+          "true": "results_question",
+          "pred": "results_question",
+          "conf": 0.305,
+          "p_true": 0.305
+        },
+        {
+          "id": "E041",
+          "true": "safety_concern",
+          "pred": "dosage_question",
+          "conf": 0.568,
+          "p_true": 0.133
+        },
+        {
+          "id": "E047",
+          "true": "dosage_question",
+          "pred": "dosage_question",
+          "conf": 0.685,
+          "p_true": 0.685
+        },
+        {
+          "id": "E108",
+          "true": "positive_feedback",
+          "pred": "positive_feedback",
+          "conf": 0.337,
+          "p_true": 0.337
+        },
+        {
+          "id": "E025",
+          "true": "results_question",
+          "pred": "safety_concern",
+          "conf": 0.244,
+          "p_true": 0.167
+        },
+        {
+          "id": "E104",
+          "true": "positive_feedback",
+          "pred": "positive_feedback",
+          "conf": 0.489,
+          "p_true": 0.489
+        },
+        {
+          "id": "E046",
+          "true": "safety_concern",
+          "pred": "safety_concern",
+          "conf": 0.347,
+          "p_true": 0.347
+        },
+        {
+          "id": "E060",
+          "true": "dosage_question",
+          "pred": "dosage_question",
+          "conf": 0.386,
+          "p_true": 0.386
+        },
+        {
+          "id": "E016",
+          "true": "results_question",
+          "pred": "results_question",
+          "conf": 0.537,
+          "p_true": 0.537
+        },
+        {
+          "id": "E026",
+          "true": "results_question",
+          "pred": "results_question",
+          "conf": 0.356,
+          "p_true": 0.356
+        },
+        {
+          "id": "E107",
+          "true": "positive_feedback",
+          "pred": "positive_feedback",
+          "conf": 0.47,
+          "p_true": 0.47
+        },
+        {
+          "id": "E068",
+          "true": "shipping_issue",
+          "pred": "shipping_issue",
+          "conf": 0.491,
+          "p_true": 0.491
+        },
+        {
+          "id": "E091",
+          "true": "subscription_billing",
+          "pred": "subscription_billing",
+          "conf": 0.424,
+          "p_true": 0.424
+        },
+        {
+          "id": "E096",
+          "true": "subscription_billing",
+          "pred": "subscription_billing",
+          "conf": 0.461,
+          "p_true": 0.461
+        },
+        {
+          "id": "E083",
+          "true": "subscription_billing",
+          "pred": "subscription_billing",
+          "conf": 0.324,
+          "p_true": 0.324
+        },
+        {
+          "id": "E065",
+          "true": "shipping_issue",
+          "pred": "shipping_issue",
+          "conf": 0.677,
+          "p_true": 0.677
+        },
+        {
+          "id": "E021",
+          "true": "results_question",
+          "pred": "results_question",
+          "conf": 0.297,
+          "p_true": 0.297
+        },
+        {
+          "id": "E040",
+          "true": "safety_concern",
+          "pred": "dosage_question",
+          "conf": 0.443,
+          "p_true": 0.323
+        },
+        {
+          "id": "E082",
+          "true": "subscription_billing",
+          "pred": "subscription_billing",
+          "conf": 0.569,
+          "p_true": 0.569
+        },
+        {
+          "id": "E020",
+          "true": "results_question",
+          "pred": "results_question",
+          "conf": 0.474,
+          "p_true": 0.474
+        },
+        {
+          "id": "E092",
+          "true": "subscription_billing",
+          "pred": "subscription_billing",
+          "conf": 0.444,
+          "p_true": 0.444
+        },
+        {
+          "id": "E045",
+          "true": "safety_concern",
+          "pred": "safety_concern",
+          "conf": 0.373,
+          "p_true": 0.373
+        },
+        {
+          "id": "E052",
+          "true": "dosage_question",
+          "pred": "dosage_question",
+          "conf": 0.454,
+          "p_true": 0.454
+        },
+        {
+          "id": "E024",
+          "true": "results_question",
+          "pred": "results_question",
+          "conf": 0.397,
+          "p_true": 0.397
+        },
+        {
+          "id": "E103",
+          "true": "positive_feedback",
+          "pred": "subscription_billing",
+          "conf": 0.28,
+          "p_true": 0.178
+        },
+        {
+          "id": "E008",
+          "true": "guarantee_claim",
+          "pred": "guarantee_claim",
+          "conf": 0.248,
+          "p_true": 0.248
+        },
+        {
+          "id": "E076",
+          "true": "shipping_issue",
+          "pred": "shipping_issue",
+          "conf": 0.561,
+          "p_true": 0.561
+        },
+        {
+          "id": "E079",
+          "true": "subscription_billing",
+          "pred": "subscription_billing",
+          "conf": 0.718,
+          "p_true": 0.718
+        },
+        {
+          "id": "E093",
+          "true": "subscription_billing",
+          "pred": "subscription_billing",
+          "conf": 0.362,
+          "p_true": 0.362
+        },
+        {
+          "id": "E067",
+          "true": "shipping_issue",
+          "pred": "shipping_issue",
+          "conf": 0.603,
+          "p_true": 0.603
+        },
+        {
+          "id": "E088",
+          "true": "subscription_billing",
+          "pred": "subscription_billing",
+          "conf": 0.434,
+          "p_true": 0.434
+        },
+        {
+          "id": "E030",
+          "true": "results_question",
+          "pred": "results_question",
+          "conf": 0.507,
+          "p_true": 0.507
+        },
+        {
+          "id": "E062",
+          "true": "dosage_question",
+          "pred": "shipping_issue",
+          "conf": 0.262,
+          "p_true": 0.218
+        },
+        {
+          "id": "E002",
+          "true": "guarantee_claim",
+          "pred": "guarantee_claim",
+          "conf": 0.492,
+          "p_true": 0.492
+        },
+        {
+          "id": "E080",
+          "true": "subscription_billing",
+          "pred": "subscription_billing",
+          "conf": 0.529,
+          "p_true": 0.529
+        },
+        {
+          "id": "E049",
+          "true": "dosage_question",
+          "pred": "guarantee_claim",
+          "conf": 0.242,
+          "p_true": 0.203
+        },
+        {
+          "id": "E069",
+          "true": "shipping_issue",
+          "pred": "shipping_issue",
+          "conf": 0.456,
+          "p_true": 0.456
+        },
+        {
+          "id": "E110",
+          "true": "positive_feedback",
+          "pred": "results_question",
+          "conf": 0.386,
+          "p_true": 0.235
+        },
+        {
+          "id": "E013",
+          "true": "guarantee_claim",
+          "pred": "results_question",
+          "conf": 0.323,
+          "p_true": 0.32
+        },
+        {
+          "id": "E001",
+          "true": "guarantee_claim",
+          "pred": "guarantee_claim",
+          "conf": 0.51,
+          "p_true": 0.51
+        },
+        {
+          "id": "E015",
+          "true": "guarantee_claim",
+          "pred": "guarantee_claim",
+          "conf": 0.311,
+          "p_true": 0.311
+        },
+        {
+          "id": "E004",
+          "true": "guarantee_claim",
+          "pred": "guarantee_claim",
+          "conf": 0.414,
+          "p_true": 0.414
+        },
+        {
+          "id": "E044",
+          "true": "safety_concern",
+          "pred": "safety_concern",
+          "conf": 0.538,
+          "p_true": 0.538
+        },
+        {
+          "id": "E086",
+          "true": "subscription_billing",
+          "pred": "subscription_billing",
+          "conf": 0.671,
+          "p_true": 0.671
+        },
+        {
+          "id": "E014",
+          "true": "guarantee_claim",
+          "pred": "results_question",
+          "conf": 0.482,
+          "p_true": 0.222
+        },
+        {
+          "id": "E048",
+          "true": "dosage_question",
+          "pred": "dosage_question",
+          "conf": 0.427,
+          "p_true": 0.427
+        },
+        {
+          "id": "E089",
+          "true": "subscription_billing",
+          "pred": "subscription_billing",
+          "conf": 0.418,
+          "p_true": 0.418
+        },
+        {
+          "id": "E003",
+          "true": "guarantee_claim",
+          "pred": "guarantee_claim",
+          "conf": 0.355,
+          "p_true": 0.355
+        },
+        {
+          "id": "E051",
+          "true": "dosage_question",
+          "pred": "safety_concern",
+          "conf": 0.385,
+          "p_true": 0.342
+        },
+        {
+          "id": "E087",
+          "true": "subscription_billing",
+          "pred": "subscription_billing",
+          "conf": 0.715,
+          "p_true": 0.715
+        },
+        {
+          "id": "E097",
+          "true": "positive_feedback",
+          "pred": "results_question",
+          "conf": 0.356,
+          "p_true": 0.258
+        },
+        {
+          "id": "E063",
+          "true": "shipping_issue",
+          "pred": "shipping_issue",
+          "conf": 0.427,
+          "p_true": 0.427
+        },
+        {
+          "id": "E084",
+          "true": "subscription_billing",
+          "pred": "guarantee_claim",
+          "conf": 0.344,
+          "p_true": 0.298
+        },
+        {
+          "id": "E037",
+          "true": "safety_concern",
+          "pred": "safety_concern",
+          "conf": 0.414,
+          "p_true": 0.414
+        },
+        {
+          "id": "E102",
+          "true": "positive_feedback",
+          "pred": "positive_feedback",
+          "conf": 0.364,
+          "p_true": 0.364
+        },
+        {
+          "id": "E035",
+          "true": "safety_concern",
+          "pred": "results_question",
+          "conf": 0.408,
+          "p_true": 0.15
+        },
+        {
+          "id": "E085",
+          "true": "subscription_billing",
+          "pred": "subscription_billing",
+          "conf": 0.52,
+          "p_true": 0.52
+        },
+        {
+          "id": "E101",
+          "true": "positive_feedback",
+          "pred": "shipping_issue",
+          "conf": 0.618,
+          "p_true": 0.155
+        },
+        {
+          "id": "E039",
+          "true": "safety_concern",
+          "pred": "dosage_question",
+          "conf": 0.283,
+          "p_true": 0.238
+        },
+        {
+          "id": "E043",
+          "true": "safety_concern",
+          "pred": "safety_concern",
+          "conf": 0.496,
+          "p_true": 0.496
+        },
+        {
+          "id": "E053",
+          "true": "dosage_question",
+          "pred": "dosage_question",
+          "conf": 0.326,
+          "p_true": 0.326
+        },
+        {
+          "id": "E098",
+          "true": "positive_feedback",
+          "pred": "positive_feedback",
+          "conf": 0.552,
+          "p_true": 0.552
+        },
+        {
+          "id": "E056",
+          "true": "dosage_question",
+          "pred": "safety_concern",
+          "conf": 0.46,
+          "p_true": 0.263
+        },
+        {
+          "id": "E007",
+          "true": "guarantee_claim",
+          "pred": "guarantee_claim",
+          "conf": 0.44,
+          "p_true": 0.44
+        },
+        {
+          "id": "E009",
+          "true": "guarantee_claim",
+          "pred": "guarantee_claim",
+          "conf": 0.556,
+          "p_true": 0.556
+        },
+        {
+          "id": "E090",
+          "true": "subscription_billing",
+          "pred": "subscription_billing",
+          "conf": 0.364,
+          "p_true": 0.364
+        }
+      ]
+    }
+  },
+  "sentiment": {
+    "labels": [
+      "negative",
+      "neutral",
+      "positive"
+    ],
+    "train_n": 82,
+    "test_n": 28,
+    "holdout": [
+      {
+        "id": "E100",
+        "true": "positive",
+        "pred": "positive",
+        "conf": 0.508
+      },
+      {
+        "id": "E092",
+        "true": "neutral",
+        "pred": "neutral",
+        "conf": 0.568
+      },
+      {
+        "id": "E025",
+        "true": "neutral",
+        "pred": "neutral",
+        "conf": 0.82
+      },
+      {
+        "id": "E073",
+        "true": "neutral",
+        "pred": "neutral",
+        "conf": 0.712
+      },
+      {
+        "id": "E024",
+        "true": "negative",
+        "pred": "negative",
+        "conf": 0.616
+      },
+      {
+        "id": "E059",
+        "true": "neutral",
+        "pred": "neutral",
+        "conf": 0.553
+      },
+      {
+        "id": "E053",
+        "true": "neutral",
+        "pred": "neutral",
+        "conf": 0.688
+      },
+      {
+        "id": "E034",
+        "true": "neutral",
+        "pred": "neutral",
+        "conf": 0.507
+      },
+      {
+        "id": "E086",
+        "true": "negative",
+        "pred": "negative",
+        "conf": 0.776
+      },
+      {
+        "id": "E056",
+        "true": "neutral",
+        "pred": "neutral",
+        "conf": 0.717
+      },
+      {
+        "id": "E103",
+        "true": "positive",
+        "pred": "negative",
+        "conf": 0.39
+      },
+      {
+        "id": "E013",
+        "true": "negative",
+        "pred": "positive",
+        "conf": 0.451
+      },
+      {
+        "id": "E022",
+        "true": "positive",
+        "pred": "positive",
+        "conf": 0.588
+      },
+      {
+        "id": "E070",
+        "true": "negative",
+        "pred": "negative",
+        "conf": 0.694
+      },
+      {
+        "id": "E078",
+        "true": "negative",
+        "pred": "negative",
+        "conf": 0.725
+      },
+      {
+        "id": "E075",
+        "true": "neutral",
+        "pred": "negative",
+        "conf": 0.524
+      },
+      {
+        "id": "E055",
+        "true": "neutral",
+        "pred": "neutral",
+        "conf": 0.681
+      },
+      {
+        "id": "E088",
+        "true": "negative",
+        "pred": "negative",
+        "conf": 0.791
+      },
+      {
+        "id": "E105",
+        "true": "positive",
+        "pred": "positive",
+        "conf": 0.407
+      },
+      {
+        "id": "E074",
+        "true": "negative",
+        "pred": "neutral",
+        "conf": 0.418
+      },
+      {
+        "id": "E067",
+        "true": "neutral",
+        "pred": "neutral",
+        "conf": 0.457
+      },
+      {
+        "id": "E050",
+        "true": "neutral",
+        "pred": "neutral",
+        "conf": 0.514
+      },
+      {
+        "id": "E058",
+        "true": "neutral",
+        "pred": "neutral",
+        "conf": 0.756
+      },
+      {
+        "id": "E095",
+        "true": "negative",
+        "pred": "negative",
+        "conf": 0.927
+      },
+      {
+        "id": "E014",
+        "true": "neutral",
+        "pred": "neutral",
+        "conf": 0.573
+      },
+      {
+        "id": "E012",
+        "true": "neutral",
+        "pred": "neutral",
+        "conf": 0.448
+      },
+      {
+        "id": "E054",
+        "true": "neutral",
+        "pred": "neutral",
+        "conf": 0.815
+      },
+      {
+        "id": "E009",
+        "true": "negative",
+        "pred": "negative",
+        "conf": 0.67
+      }
+    ],
+    "confusion": [
+      [
+        7,
+        1,
+        1
+      ],
+      [
+        1,
+        14,
+        0
+      ],
+      [
+        1,
+        0,
+        3
+      ]
+    ],
+    "per_class": {
+      "negative": {
+        "precision": 0.778,
+        "recall": 0.778,
+        "f1": 0.778,
+        "support": 9
+      },
+      "neutral": {
+        "precision": 0.933,
+        "recall": 0.933,
+        "f1": 0.933,
+        "support": 15
+      },
+      "positive": {
+        "precision": 0.75,
+        "recall": 0.75,
+        "f1": 0.75,
+        "support": 4
+      }
+    },
+    "cv_folds": [
+      0.864,
+      0.773,
+      0.818,
+      0.864,
+      0.818,
+      0.773,
+      0.818,
+      0.864,
+      0.818,
+      0.864,
+      0.909,
+      0.864,
+      0.818,
+      0.591,
+      0.864,
+      0.682,
+      0.864,
+      0.909,
+      0.727,
+      0.727
+    ],
+    "cv_mean": 0.811,
+    "cv_std": 0.078,
+    "tfidf_cv_folds": [
+      0.591,
+      0.727,
+      0.773,
+      0.682,
+      0.545,
+      0.455,
+      0.591,
+      0.636,
+      0.682,
+      0.682,
+      0.682,
+      0.682,
+      0.591,
+      0.591,
+      0.545,
+      0.591,
+      0.727,
+      0.727,
+      0.636,
+      0.636
+    ],
+    "tfidf_cv_mean": 0.639,
+    "tfidf_cv_std": 0.075,
+    "class_counts": {
+      "neutral": 57,
+      "negative": 36,
+      "positive": 17
+    },
+    "oof": {
+      "note": "5-fold out-of-fold predictions on all rows (StratifiedKFold, random_state=3)",
+      "acc": 0.864,
+      "macro_f1": 0.851,
+      "confusion": [
+        [
+          30,
+          5,
+          1
+        ],
+        [
+          4,
+          51,
+          2
+        ],
+        [
+          2,
+          1,
+          14
+        ]
+      ],
+      "per_class": {
+        "negative": {
+          "precision": 0.833,
+          "recall": 0.833,
+          "f1": 0.833,
+          "support": 36
+        },
+        "neutral": {
+          "precision": 0.895,
+          "recall": 0.895,
+          "f1": 0.895,
+          "support": 57
+        },
+        "positive": {
+          "precision": 0.824,
+          "recall": 0.824,
+          "f1": 0.824,
+          "support": 17
+        }
+      },
+      "rows": [
+        {
+          "id": "E050",
+          "true": "neutral",
+          "pred": "neutral",
+          "conf": 0.663,
+          "p_true": 0.663
+        },
+        {
+          "id": "E064",
+          "true": "negative",
+          "pred": "negative",
+          "conf": 0.563,
+          "p_true": 0.563
+        },
+        {
+          "id": "E022",
+          "true": "positive",
+          "pred": "positive",
+          "conf": 0.696,
+          "p_true": 0.696
+        },
+        {
+          "id": "E099",
+          "true": "positive",
+          "pred": "positive",
+          "conf": 0.406,
+          "p_true": 0.406
+        },
+        {
+          "id": "E034",
+          "true": "neutral",
+          "pred": "neutral",
+          "conf": 0.566,
+          "p_true": 0.566
+        },
+        {
+          "id": "E023",
+          "true": "neutral",
+          "pred": "positive",
+          "conf": 0.592,
+          "p_true": 0.316
+        },
+        {
+          "id": "E027",
+          "true": "positive",
+          "pred": "positive",
+          "conf": 0.733,
+          "p_true": 0.733
+        },
+        {
+          "id": "E042",
+          "true": "negative",
+          "pred": "negative",
+          "conf": 0.775,
+          "p_true": 0.775
+        },
+        {
+          "id": "E066",
+          "true": "negative",
+          "pred": "neutral",
+          "conf": 0.482,
+          "p_true": 0.397
+        },
+        {
+          "id": "E075",
+          "true": "neutral",
+          "pred": "negative",
+          "conf": 0.622,
+          "p_true": 0.235
+        },
+        {
+          "id": "E105",
+          "true": "positive",
+          "pred": "negative",
+          "conf": 0.487,
+          "p_true": 0.331
+        },
+        {
+          "id": "E100",
+          "true": "positive",
+          "pred": "positive",
+          "conf": 0.514,
+          "p_true": 0.514
+        },
+        {
+          "id": "E070",
+          "true": "negative",
+          "pred": "negative",
+          "conf": 0.665,
+          "p_true": 0.665
+        },
+        {
+          "id": "E012",
+          "true": "neutral",
+          "pred": "neutral",
+          "conf": 0.444,
+          "p_true": 0.444
+        },
+        {
+          "id": "E074",
+          "true": "negative",
+          "pred": "neutral",
+          "conf": 0.507,
+          "p_true": 0.313
+        },
+        {
+          "id": "E010",
+          "true": "neutral",
+          "pred": "neutral",
+          "conf": 0.431,
+          "p_true": 0.431
+        },
+        {
+          "id": "E029",
+          "true": "negative",
+          "pred": "negative",
+          "conf": 0.4,
+          "p_true": 0.4
+        },
+        {
+          "id": "E077",
+          "true": "neutral",
+          "pred": "neutral",
+          "conf": 0.631,
+          "p_true": 0.631
+        },
+        {
+          "id": "E011",
+          "true": "negative",
+          "pred": "negative",
+          "conf": 0.767,
+          "p_true": 0.767
+        },
+        {
+          "id": "E028",
+          "true": "neutral",
+          "pred": "neutral",
+          "conf": 0.671,
+          "p_true": 0.671
+        },
+        {
+          "id": "E058",
+          "true": "neutral",
+          "pred": "neutral",
+          "conf": 0.777,
+          "p_true": 0.777
+        },
+        {
+          "id": "E078",
+          "true": "negative",
+          "pred": "negative",
+          "conf": 0.723,
+          "p_true": 0.723
+        },
+        {
+          "id": "E033",
+          "true": "negative",
+          "pred": "neutral",
+          "conf": 0.433,
+          "p_true": 0.354
+        },
+        {
+          "id": "E019",
+          "true": "negative",
+          "pred": "negative",
+          "conf": 0.586,
+          "p_true": 0.586
+        },
+        {
+          "id": "E017",
+          "true": "positive",
+          "pred": "neutral",
+          "conf": 0.396,
+          "p_true": 0.337
+        },
+        {
+          "id": "E072",
+          "true": "negative",
+          "pred": "negative",
+          "conf": 0.73,
+          "p_true": 0.73
+        },
+        {
+          "id": "E106",
+          "true": "positive",
+          "pred": "positive",
+          "conf": 0.543,
+          "p_true": 0.543
+        },
+        {
+          "id": "E073",
+          "true": "neutral",
+          "pred": "neutral",
+          "conf": 0.718,
+          "p_true": 0.718
+        },
+        {
+          "id": "E061",
+          "true": "neutral",
+          "pred": "neutral",
+          "conf": 0.748,
+          "p_true": 0.748
+        },
+        {
+          "id": "E005",
+          "true": "negative",
+          "pred": "neutral",
+          "conf": 0.604,
+          "p_true": 0.303
+        },
+        {
+          "id": "E006",
+          "true": "neutral",
+          "pred": "negative",
+          "conf": 0.644,
+          "p_true": 0.264
+        },
+        {
+          "id": "E094",
+          "true": "neutral",
+          "pred": "neutral",
+          "conf": 0.379,
+          "p_true": 0.379
+        },
+        {
+          "id": "E032",
+          "true": "neutral",
+          "pred": "neutral",
+          "conf": 0.677,
+          "p_true": 0.677
+        },
+        {
+          "id": "E036",
+          "true": "negative",
+          "pred": "negative",
+          "conf": 0.395,
+          "p_true": 0.395
+        },
+        {
+          "id": "E109",
+          "true": "positive",
+          "pred": "positive",
+          "conf": 0.421,
+          "p_true": 0.421
+        },
+        {
+          "id": "E054",
+          "true": "neutral",
+          "pred": "neutral",
+          "conf": 0.88,
+          "p_true": 0.88
+        },
+        {
+          "id": "E071",
+          "true": "neutral",
+          "pred": "neutral",
+          "conf": 0.66,
+          "p_true": 0.66
+        },
+        {
+          "id": "E081",
+          "true": "negative",
+          "pred": "negative",
+          "conf": 0.763,
+          "p_true": 0.763
+        },
+        {
+          "id": "E059",
+          "true": "neutral",
+          "pred": "neutral",
+          "conf": 0.526,
+          "p_true": 0.526
+        },
+        {
+          "id": "E057",
+          "true": "neutral",
+          "pred": "neutral",
+          "conf": 0.579,
+          "p_true": 0.579
+        },
+        {
+          "id": "E038",
+          "true": "neutral",
+          "pred": "neutral",
+          "conf": 0.471,
+          "p_true": 0.471
+        },
+        {
+          "id": "E095",
+          "true": "negative",
+          "pred": "negative",
+          "conf": 0.913,
+          "p_true": 0.913
+        },
+        {
+          "id": "E031",
+          "true": "negative",
+          "pred": "negative",
+          "conf": 0.473,
+          "p_true": 0.473
+        },
+        {
+          "id": "E055",
+          "true": "neutral",
+          "pred": "neutral",
+          "conf": 0.762,
+          "p_true": 0.762
+        },
+        {
+          "id": "E018",
+          "true": "neutral",
+          "pred": "neutral",
+          "conf": 0.533,
+          "p_true": 0.533
+        },
+        {
+          "id": "E041",
+          "true": "neutral",
+          "pred": "neutral",
+          "conf": 0.785,
+          "p_true": 0.785
+        },
+        {
+          "id": "E047",
+          "true": "neutral",
+          "pred": "neutral",
+          "conf": 0.738,
+          "p_true": 0.738
+        },
+        {
+          "id": "E108",
+          "true": "positive",
+          "pred": "positive",
+          "conf": 0.568,
+          "p_true": 0.568
+        },
+        {
+          "id": "E025",
+          "true": "neutral",
+          "pred": "neutral",
+          "conf": 0.845,
+          "p_true": 0.845
+        },
+        {
+          "id": "E104",
+          "true": "positive",
+          "pred": "positive",
+          "conf": 0.628,
+          "p_true": 0.628
+        },
+        {
+          "id": "E046",
+          "true": "neutral",
+          "pred": "neutral",
+          "conf": 0.695,
+          "p_true": 0.695
+        },
+        {
+          "id": "E060",
+          "true": "neutral",
+          "pred": "neutral",
+          "conf": 0.842,
+          "p_true": 0.842
+        },
+        {
+          "id": "E016",
+          "true": "neutral",
+          "pred": "neutral",
+          "conf": 0.592,
+          "p_true": 0.592
+        },
+        {
+          "id": "E026",
+          "true": "neutral",
+          "pred": "neutral",
+          "conf": 0.712,
+          "p_true": 0.712
+        },
+        {
+          "id": "E107",
+          "true": "positive",
+          "pred": "positive",
+          "conf": 0.664,
+          "p_true": 0.664
+        },
+        {
+          "id": "E068",
+          "true": "negative",
+          "pred": "negative",
+          "conf": 0.566,
+          "p_true": 0.566
+        },
+        {
+          "id": "E091",
+          "true": "negative",
+          "pred": "negative",
+          "conf": 0.841,
+          "p_true": 0.841
+        },
+        {
+          "id": "E096",
+          "true": "neutral",
+          "pred": "neutral",
+          "conf": 0.543,
+          "p_true": 0.543
+        },
+        {
+          "id": "E083",
+          "true": "neutral",
+          "pred": "negative",
+          "conf": 0.493,
+          "p_true": 0.443
+        },
+        {
+          "id": "E065",
+          "true": "neutral",
+          "pred": "neutral",
+          "conf": 0.627,
+          "p_true": 0.627
+        },
+        {
+          "id": "E021",
+          "true": "neutral",
+          "pred": "neutral",
+          "conf": 0.632,
+          "p_true": 0.632
+        },
+        {
+          "id": "E040",
+          "true": "neutral",
+          "pred": "neutral",
+          "conf": 0.755,
+          "p_true": 0.755
+        },
+        {
+          "id": "E082",
+          "true": "neutral",
+          "pred": "neutral",
+          "conf": 0.392,
+          "p_true": 0.392
+        },
+        {
+          "id": "E020",
+          "true": "neutral",
+          "pred": "neutral",
+          "conf": 0.776,
+          "p_true": 0.776
+        },
+        {
+          "id": "E092",
+          "true": "neutral",
+          "pred": "neutral",
+          "conf": 0.612,
+          "p_true": 0.612
+        },
+        {
+          "id": "E045",
+          "true": "negative",
+          "pred": "neutral",
+          "conf": 0.457,
+          "p_true": 0.42
+        },
+        {
+          "id": "E052",
+          "true": "neutral",
+          "pred": "neutral",
+          "conf": 0.834,
+          "p_true": 0.834
+        },
+        {
+          "id": "E024",
+          "true": "negative",
+          "pred": "negative",
+          "conf": 0.575,
+          "p_true": 0.575
+        },
+        {
+          "id": "E103",
+          "true": "positive",
+          "pred": "negative",
+          "conf": 0.404,
+          "p_true": 0.316
+        },
+        {
+          "id": "E008",
+          "true": "neutral",
+          "pred": "neutral",
+          "conf": 0.62,
+          "p_true": 0.62
+        },
+        {
+          "id": "E076",
+          "true": "negative",
+          "pred": "negative",
+          "conf": 0.466,
+          "p_true": 0.466
+        },
+        {
+          "id": "E079",
+          "true": "negative",
+          "pred": "negative",
+          "conf": 0.77,
+          "p_true": 0.77
+        },
+        {
+          "id": "E093",
+          "true": "negative",
+          "pred": "negative",
+          "conf": 0.53,
+          "p_true": 0.53
+        },
+        {
+          "id": "E067",
+          "true": "neutral",
+          "pred": "negative",
+          "conf": 0.473,
+          "p_true": 0.451
+        },
+        {
+          "id": "E088",
+          "true": "negative",
+          "pred": "negative",
+          "conf": 0.784,
+          "p_true": 0.784
+        },
+        {
+          "id": "E030",
+          "true": "neutral",
+          "pred": "neutral",
+          "conf": 0.806,
+          "p_true": 0.806
+        },
+        {
+          "id": "E062",
+          "true": "neutral",
+          "pred": "neutral",
+          "conf": 0.511,
+          "p_true": 0.511
+        },
+        {
+          "id": "E002",
+          "true": "neutral",
+          "pred": "positive",
+          "conf": 0.466,
+          "p_true": 0.378
+        },
+        {
+          "id": "E080",
+          "true": "negative",
+          "pred": "negative",
+          "conf": 0.791,
+          "p_true": 0.791
+        },
+        {
+          "id": "E049",
+          "true": "neutral",
+          "pred": "neutral",
+          "conf": 0.603,
+          "p_true": 0.603
+        },
+        {
+          "id": "E069",
+          "true": "neutral",
+          "pred": "neutral",
+          "conf": 0.712,
+          "p_true": 0.712
+        },
+        {
+          "id": "E110",
+          "true": "positive",
+          "pred": "positive",
+          "conf": 0.787,
+          "p_true": 0.787
+        },
+        {
+          "id": "E013",
+          "true": "negative",
+          "pred": "positive",
+          "conf": 0.457,
+          "p_true": 0.172
+        },
+        {
+          "id": "E001",
+          "true": "negative",
+          "pred": "negative",
+          "conf": 0.668,
+          "p_true": 0.668
+        },
+        {
+          "id": "E015",
+          "true": "negative",
+          "pred": "negative",
+          "conf": 0.87,
+          "p_true": 0.87
+        },
+        {
+          "id": "E004",
+          "true": "neutral",
+          "pred": "neutral",
+          "conf": 0.643,
+          "p_true": 0.643
+        },
+        {
+          "id": "E044",
+          "true": "neutral",
+          "pred": "neutral",
+          "conf": 0.561,
+          "p_true": 0.561
+        },
+        {
+          "id": "E086",
+          "true": "negative",
+          "pred": "negative",
+          "conf": 0.79,
+          "p_true": 0.79
+        },
+        {
+          "id": "E014",
+          "true": "neutral",
+          "pred": "neutral",
+          "conf": 0.445,
+          "p_true": 0.445
+        },
+        {
+          "id": "E048",
+          "true": "neutral",
+          "pred": "neutral",
+          "conf": 0.825,
+          "p_true": 0.825
+        },
+        {
+          "id": "E089",
+          "true": "neutral",
+          "pred": "neutral",
+          "conf": 0.817,
+          "p_true": 0.817
+        },
+        {
+          "id": "E003",
+          "true": "negative",
+          "pred": "negative",
+          "conf": 0.757,
+          "p_true": 0.757
+        },
+        {
+          "id": "E051",
+          "true": "neutral",
+          "pred": "neutral",
+          "conf": 0.733,
+          "p_true": 0.733
+        },
+        {
+          "id": "E087",
+          "true": "neutral",
+          "pred": "neutral",
+          "conf": 0.801,
+          "p_true": 0.801
+        },
+        {
+          "id": "E097",
+          "true": "positive",
+          "pred": "positive",
+          "conf": 0.714,
+          "p_true": 0.714
+        },
+        {
+          "id": "E063",
+          "true": "negative",
+          "pred": "negative",
+          "conf": 0.667,
+          "p_true": 0.667
+        },
+        {
+          "id": "E084",
+          "true": "negative",
+          "pred": "negative",
+          "conf": 0.717,
+          "p_true": 0.717
+        },
+        {
+          "id": "E037",
+          "true": "neutral",
+          "pred": "neutral",
+          "conf": 0.723,
+          "p_true": 0.723
+        },
+        {
+          "id": "E102",
+          "true": "positive",
+          "pred": "positive",
+          "conf": 0.59,
+          "p_true": 0.59
+        },
+        {
+          "id": "E035",
+          "true": "neutral",
+          "pred": "neutral",
+          "conf": 0.646,
+          "p_true": 0.646
+        },
+        {
+          "id": "E085",
+          "true": "neutral",
+          "pred": "neutral",
+          "conf": 0.823,
+          "p_true": 0.823
+        },
+        {
+          "id": "E101",
+          "true": "positive",
+          "pred": "positive",
+          "conf": 0.352,
+          "p_true": 0.352
+        },
+        {
+          "id": "E039",
+          "true": "negative",
+          "pred": "negative",
+          "conf": 0.558,
+          "p_true": 0.558
+        },
+        {
+          "id": "E043",
+          "true": "neutral",
+          "pred": "neutral",
+          "conf": 0.746,
+          "p_true": 0.746
+        },
+        {
+          "id": "E053",
+          "true": "neutral",
+          "pred": "neutral",
+          "conf": 0.589,
+          "p_true": 0.589
+        },
+        {
+          "id": "E098",
+          "true": "positive",
+          "pred": "positive",
+          "conf": 0.817,
+          "p_true": 0.817
+        },
+        {
+          "id": "E056",
+          "true": "neutral",
+          "pred": "neutral",
+          "conf": 0.74,
+          "p_true": 0.74
+        },
+        {
+          "id": "E007",
+          "true": "negative",
+          "pred": "negative",
+          "conf": 0.707,
+          "p_true": 0.707
+        },
+        {
+          "id": "E009",
+          "true": "negative",
+          "pred": "negative",
+          "conf": 0.707,
+          "p_true": 0.707
+        },
+        {
+          "id": "E090",
+          "true": "negative",
+          "pred": "negative",
+          "conf": 0.772,
+          "p_true": 0.772
+        }
+      ]
+    }
+  },
+  "llm_zero_shot": {
+    "model": "llama3.2",
+    "holdout_acc": 0.536,
+    "holdout_macro_f1": 0.483,
+    "seconds_per_email": 0.17,
+    "holdout": [
+      {
+        "id": "E038",
+        "true": "safety_concern",
+        "pred": "guarantee_claim"
+      },
+      {
+        "id": "E100",
+        "true": "positive_feedback",
+        "pred": "positive_feedback"
+      },
+      {
+        "id": "E012",
+        "true": "guarantee_claim",
+        "pred": "guarantee_claim"
+      },
+      {
+        "id": "E009",
+        "true": "guarantee_claim",
+        "pred": "guarantee_claim"
+      },
+      {
+        "id": "E077",
+        "true": "shipping_issue",
+        "pred": "shipping_issue"
+      },
+      {
+        "id": "E030",
+        "true": "results_question",
+        "pred": "guarantee_claim"
+      },
+      {
+        "id": "E086",
+        "true": "subscription_billing",
+        "pred": "results_question"
+      },
+      {
+        "id": "E055",
+        "true": "dosage_question",
+        "pred": "results_question"
+      },
+      {
+        "id": "E003",
+        "true": "guarantee_claim",
+        "pred": "guarantee_claim"
+      },
+      {
+        "id": "E093",
+        "true": "subscription_billing",
+        "pred": "subscription_billing"
+      },
+      {
+        "id": "E091",
+        "true": "subscription_billing",
+        "pred": "shipping_issue"
+      },
+      {
+        "id": "E066",
+        "true": "shipping_issue",
+        "pred": "shipping_issue"
+      },
+      {
+        "id": "E071",
+        "true": "shipping_issue",
+        "pred": "shipping_issue"
+      },
+      {
+        "id": "E085",
+        "true": "subscription_billing",
+        "pred": "results_question"
+      },
+      {
+        "id": "E022",
+        "true": "results_question",
+        "pred": "positive_feedback"
+      },
+      {
+        "id": "E032",
+        "true": "safety_concern",
+        "pred": "results_question"
+      },
+      {
+        "id": "E053",
+        "true": "dosage_question",
+        "pred": "results_question"
+      },
+      {
+        "id": "E020",
+        "true": "results_question",
+        "pred": "results_question"
+      },
+      {
+        "id": "E023",
+        "true": "results_question",
+        "pred": "results_question"
+      },
+      {
+        "id": "E067",
+        "true": "shipping_issue",
+        "pred": "shipping_issue"
+      },
+      {
+        "id": "E080",
+        "true": "subscription_billing",
+        "pred": "subscription_billing"
+      },
+      {
+        "id": "E034",
+        "true": "safety_concern",
+        "pred": "results_question"
+      },
+      {
+        "id": "E013",
+        "true": "guarantee_claim",
+        "pred": "guarantee_claim"
+      },
+      {
+        "id": "E036",
+        "true": "safety_concern",
+        "pred": "results_question"
+      },
+      {
+        "id": "E054",
+        "true": "dosage_question",
+        "pred": "results_question"
+      },
+      {
+        "id": "E047",
+        "true": "dosage_question",
+        "pred": "results_question"
+      },
+      {
+        "id": "E102",
+        "true": "positive_feedback",
+        "pred": "positive_feedback"
+      },
+      {
+        "id": "E099",
+        "true": "positive_feedback",
+        "pred": "positive_feedback"
+      }
+    ]
+  }
+}

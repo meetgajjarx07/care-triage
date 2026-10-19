@@ -1,0 +1,283 @@
+"""
+Hand written synthetic support emails for the demo.
+
+I wrote these myself to sound like the people who actually buy a bone
+supplement: mostly women in their 60s and 70s, a lot of them on a phone.
+Nothing here is a real customer. This script only stamps dates, shuffles
+and writes emails.csv. The labels are mine, so the classifier is learning
+my judgement, not AlgaeCal's.
+
+Columns: id, received_at, from_name, subject, body, category, sentiment, cancel_intent
+"""
+import csv, random
+from datetime import datetime, timedelta
+
+random.seed(11)
+
+# (category, sentiment, cancel_intent, name, subject, body)
+E = []
+def add(cat, sent, cancel, name, subj, body):
+    E.append((cat, sent, cancel, name, subj, body.strip()))
+
+# ---------------- guarantee claims ----------------
+add("guarantee_claim","negative",1,"Marilyn Okafor","Guarantee refund",
+"""I started the bone builder pack in Feb 2025 right after my dexa. Had my second dexa last Tuesday at the same place (Mercy imaging) and my spine went from -2.6 to -2.7 and hip is the same -2.1. So nothing improved. I have every order email. I would like the refund you advertise please. I am not continuing after this.""")
+add("guarantee_claim","neutral",0,"Judith Lindqvist","Re: Your Stronger Bones For Life Guarantee",
+"""Hello, I want to make a claim under the guarantee. Both scans attached (the first one is from March 2025, the follow up is from this month, same clinic, I asked them to use the same machine like your website says). Hip did not change and spine went down slightly. Please tell me what else you need from me. Judith""")
+add("guarantee_claim","negative",1,"Carol Dempsey","REFUND",
+"""18 months. 18 months of taking 6 pills a day and my numbers are WORSE. My doctor is putting me on Prolia now which is exactly what I was trying to avoid. I want my money back for all of it as your guarantee says, I have the scans. Please dont send me the standard email about how everyone is different.""")
+add("guarantee_claim","neutral",0,"Roberta Nguyen","claim question",
+"""My follow up dexa showed my spine improved 2.1% but my left hip dropped 1.4%. Does that count for the guarantee or not? The wording on your site says hip or spine so i am guessing not but i wanted to ask before i decide what to do.""")
+add("guarantee_claim","negative",0,"Diane Whitcombe","guarantee - different machine",
+"""My clinic replaced their DEXA machine between my two scans and the tech told me the numbers are not directly comparable. My results show a small decrease. Do I still qualify? I did everything else right, 14 months on both products, never missed. This feels like a technicality that lets you out of it.""")
+add("guarantee_claim","neutral",0,"Pat Sorensen","Scans for refund",
+"""Attaching the two reports. First dexa 2/14/2025 second 9/30/2026. Both at Kaiser Fremont. Numbers are basically flat (spine -3.1 to -3.1, hip -2.4 to -2.3). I'll be honest I am not sure flat counts as "no increase". The hip is up 0.1. Can someone look and tell me.""")
+add("guarantee_claim","negative",1,"Ellen Marchetti","I want to claim the guarantee and cancel",
+"""Please cancel my monthly order effective now and tell me how to submit for the money back guarantee. 13 months on algaecal plus and strontium, scan last week shows no change at all. I spent over $1100 with you. The scan reports are PDFs, do I email them here or is there a form.""")
+add("guarantee_claim","neutral",0,"Beverly Hartigan","bought on amazon - guarantee?",
+"""Hi there. I have been buying the bone builder pack through your Amazon store for about a year because of the delivery. My scan did not improve. Does the guarantee still apply if I bought from Amazon rather than your website? I have the Amazon order history.""")
+add("guarantee_claim","negative",0,"Francine Doyle","Follow up on claim #? no response",
+"""I emailed 9 days ago with my DEXA results for the refund and have heard nothing back except the automatic reply. Can someone please confirm you received it and what the timeline is. Order emails are under this address. Thank you.""")
+add("guarantee_claim","neutral",0,"Linda Castellano","Did not take strontium whole time",
+"""Honest question. I took AlgaeCal Plus for the full 12 months but I stopped the Strontium Boost after about 4 months because it upset my stomach. My scan shows no improvement. I'm assuming this means I don't qualify for the guarantee since it says both products. Is there any partial refund or is that it?""")
+add("guarantee_claim","negative",1,"Sharon Pruitt","money back",
+"""No improvement on my scan after a year. Want my money back as promised. Also stop my subscription. Sharon""")
+add("guarantee_claim","neutral",0,"Gloria Esposito","baseline scan was 6 weeks old",
+"""When I started in May 2025 my last scan was about 6 weeks old not 30 days. I just had my next scan and it is slightly down. Reading your terms I think my guarantee period only started from this scan? So I need to wait for another one? Please confirm because that is 2 more years and another $2000.""")
+add("guarantee_claim","negative",0,"Maureen Fitzgerald","Fwd: DEXA results",
+"""Forwarding my radiology report as requested by the lady on the phone yesterday. She said to put GUARANTEE CLAIM in the subject, hopefully this reaches the right person. Both scans at Hoag. T score spine -2.9 -> -3.0.
+
+---------- Forwarded message ---------
+From: Hoag Imaging <noreply@hoag.org>
+Subject: Your results are ready""")
+add("guarantee_claim","neutral",0,"Ann-Marie Kowalczyk","two scans, one at a different clinic",
+"""We moved from Ohio to Arizona in the middle of my program so the follow up scan is at a different clinic. Results show a tiny decrease. I understand the same clinic rule but moving is not something I could control. Will you consider the claim anyway?""")
+add("guarantee_claim","negative",1,"Theresa Blanchard","this is my third email",
+"""Third email about my refund. I was told 12 business days and it has been 19. I have both scans, the RMA number you gave me is 44-something, I can look it up. Please just process it. I have already cancelled the subscription.""")
+
+# ---------------- results / scan questions ----------------
+add("results_question","neutral",0,"Nancy Oyelaran","When should I get my next scan",
+"""I began the Bone Builder Pack in June. My doctor says insurance will only pay for a DEXA every 2 years. Should I pay for one at 6 months out of pocket or just wait? What do most of your customers do?""")
+add("results_question","positive",0,"Kathleen Brennan","Good news and a question",
+"""My scan came back and my spine T score improved from -2.8 to -2.4 after 14 months! My doctor was surprised. My question is, do I keep taking the full dose now or can I go to a maintenance dose? I'm 71 and the cost adds up.""")
+add("results_question","neutral",0,"Susan Takahashi","how to read my report",
+"""I got my DEXA report but I honestly can't tell if it's better or worse. It has a BMD number in g/cm2 and a T score and a Z score. Which one do I compare? Can one of your consultants look at it with me? I'd rather talk on the phone than email.""")
+add("results_question","negative",0,"Joan Petrakis","6 months no change",
+"""I paid out of pocket for a 6 month scan ($250) and it shows no change. Not worse but not better. I am disappointed. Is 6 months too early to see anything? Your ads say 6 months.""")
+add("results_question","neutral",0,"Barbara Lindgren","Z score vs T score",
+"""The radiologist report lists my Z score as improved but my T score as the same. Which one matters for your guarantee? Which one should I be watching? Thanks, Barb""")
+add("results_question","neutral",0,"Helen Marsh","same machine question",
+"""I'm due for my follow up scan. The clinic I used is 90 minutes away now and there is one much closer. How much does it really matter if I use a different machine? Will the results be meaningless?""")
+add("results_question","positive",0,"Dolores Ferreira","hip improved!!",
+"""Just wanted to tell someone, my hip went from osteoporosis to osteopenia on my scan this week. 16 months on AlgaeCal Plus and Strontium. Spine is about the same. Is it normal for one to improve and not the other?""")
+add("results_question","neutral",0,"Margaret Oduya","expected improvement",
+"""Realistic question. What percentage improvement do most people see in a year? I've seen 1% to 4% on your site and 7% over 7 years in the study. I'm at -3.2 in my spine and trying to figure out if this is enough or if I should also do the medication my doctor wants.""")
+add("results_question","negative",0,"Rita Castellanos","scan went down",
+"""Had my scan today. Spine -2.4 to -2.6 after 11 months. I did take everything as directed. I'm not asking for a refund yet because its not 12 months and I want to understand first. Why would it go down? I also walk every day and lift weights twice a week.""")
+add("results_question","neutral",0,"Phyllis Grant","Fosamax AND algaecal",
+"""My doctor has me on Fosamax and I added AlgaeCal Plus on my own. If my next scan improves how do I know which one did it? Does your guarantee still apply if I'm on a prescription too?""")
+add("results_question","neutral",0,"Christine Lalonde","dexa in canada",
+"""I'm in Ontario and our health system schedules DEXA scans, I can't just book one. My last one was 8 months ago. Does that mess up the guarantee timing? I don't want to wait to start.""")
+add("results_question","positive",0,"Virginia Park","Thank you + how long to continue",
+"""My bone density is up 3.1% in the spine and 1.8% in the hip after 18 months. I'm thrilled. How long do people usually stay on the program? Forever? My daughter is 52 and asking if she should start now as prevention.""")
+add("results_question","neutral",0,"Donna Reyes","trabecular bone score",
+"""My new DEXA report includes something called TBS (trabecular bone score) which my old one didn't have. The TBS improved but the BMD was flat. Does AlgaeCal have any data on TBS? Does it count for anything in the guarantee?""")
+add("results_question","negative",0,"Arlene Goodwin","unsure if this is working",
+"""9 months in. My back still hurts, I don't feel any different. I know the scan is the only real measure but I'm $800 in and I have doubts. What should I expect to feel if anything?""")
+add("results_question","neutral",0,"Yvonne Castle","scan every year?",
+"""Your website says to scan every year. My doctor says every 2 years is standard. If I go every 2 years am I still covered by the guarantee between those scans?""")
+
+# ---------------- safety concerns ----------------
+add("safety_concern","negative",0,"Lorraine Bauer","Prop 65 lead warning???",
+"""I just read that there is a California Proposition 65 notice about LEAD in AlgaeCal. I have been taking this for two years. Nobody told me. Please explain exactly what is going on and how much lead is in each capsule. I am very upset.""")
+add("safety_concern","neutral",0,"Janet Kowalski","Strontium and heart",
+"""My cardiologist asked me what I'm taking and when I said strontium he frowned and mentioned the European drug that was pulled for heart problems. Is yours the same thing? I have a-fib. I'd like a straight answer, not marketing.""")
+add("safety_concern","negative",0,"Peggy Ruiz","constipation",
+"""Since starting algaecal plus three weeks ago I am badly constipated. Never had this problem before. Is this common? I take 2 in the morning and 2 at night with food like the box says. Do I stop?""")
+add("safety_concern","neutral",0,"Irene Sandoval","warfarin and vitamin K",
+"""I take warfarin. I just noticed AlgaeCal Plus has vitamin K2 in it. My pharmacist said to ask you how much and whether this is a problem. I have been taking it for 2 weeks already.""")
+add("safety_concern","neutral",0,"Louise Thibodeau","strontium makes the scan look better?",
+"""I was reading on a forum that strontium is heavier than calcium so it makes the DEXA read higher without actually making the bone stronger. Is that true? If so how do I know if my improvement is real? I'd appreciate an honest answer, I'm not trying to start a fight.""")
+add("safety_concern","negative",0,"Mary Ellen Grimes","heart palpitations",
+"""started strontium boost 10 days ago and i have been getting heart palpitations at night. i have stopped it. is this a known side effect. i am 68 and otherwise healthy.""")
+add("safety_concern","neutral",0,"Alice Brightwater","kidney stones history",
+"""I had a kidney stone in 2019. My doctor is nervous about any calcium supplement. Is AlgaeCal different in that respect? Do you have any studies on kidney stone risk specifically? I'd like to show her something.""")
+add("safety_concern","neutral",0,"Deborah Voss","Third party testing",
+"""Can you send me the actual heavy metal test results for the lot number on my box? Lot is 2435A on the bottom. My son is a chemist and wants to see the numbers not a statement that it is tested.""")
+add("safety_concern","negative",0,"Gail Ferraro","nausea",
+"""The capsules make me nauseous every single time even with food. I'm on day 12. I want this to work but I can't keep this up. Any suggestions before I give up on it.""")
+add("safety_concern","neutral",0,"Rosemary Achebe","Prolia and algaecal together",
+"""I get Prolia injections twice a year. Is there any issue taking AlgaeCal Plus and Strontium Boost at the same time? My endocrinologist said calcium is fine but she had never heard of strontium citrate.""")
+add("safety_concern","neutral",0,"Wendy Lamontagne","Levothyroxine timing",
+"""I take levothyroxine first thing in the morning. How far apart do I need to take AlgaeCal? I read 4 hours somewhere else. If I take AlgaeCal at lunch and dinner is that okay?""")
+add("safety_concern","negative",0,"Carolyn Steadman","Lead notice - cancelling until I hear back",
+"""I saw the lead notice posted on a facebook group. I have paused my subscription until I hear from you directly. I need to know: what was the amount, which product, which lots, and is my current box affected. If I don't get a specific answer I will cancel permanently.""")
+add("safety_concern","neutral",0,"Edith Molina","blood test for strontium",
+"""Is there a blood test to check my strontium levels? I want to make sure it isn't building up. My doctor didn't know what to order.""")
+add("safety_concern","neutral",0,"Shirley Pak","Allergic to shellfish - is algae ok",
+"""I have a severe shellfish allergy. Is marine algae a risk? Is it processed in the same facility as fish or shellfish? Your Triple Power is fish oil so I'm wondering about cross contamination.""")
+add("safety_concern","negative",0,"Norma Jean Hatfield","Stomach problems and my doctor said stop",
+"""My doctor told me to stop taking the strontium because of my kidney function (eGFR 48). I have 5 unopened boxes from the 6 month pack. Can I return the strontium and keep the AlgaeCal Plus? I am disappointed, I was hoping to avoid the shots.""")
+add("safety_concern","neutral",0,"Beatrice Lund","is it vegan",
+"""Are the capsules vegan? Is the vitamin D3 from lichen or from lanolin (sheep)? My daughter-in-law is strict vegan and wants to start but needs to know.""")
+
+# ---------------- dosage / usage ----------------
+add("dosage_question","neutral",0,"Evelyn Marchand","all 4 at once?",
+"""Can I take all four AlgaeCal Plus capsules at once in the morning? I take a lot of pills and it is easier to do them together. Or is it important to split them?""")
+add("dosage_question","neutral",0,"Betty Osei","Strontium timing",
+"""The box says to take Strontium Boost at a different time from the calcium. How many hours apart? I take calcium with breakfast and dinner. Is bedtime right for the strontium or is that too close to dinner?""")
+add("dosage_question","neutral",0,"Ruth Anne Halloran","Missed a week",
+"""I was in the hospital for a week and did not take anything. Do I need to make up the doses or do I just start again? Does this affect my guarantee?""")
+add("dosage_question","neutral",0,"Jean Whitford","capsules too big",
+"""I have trouble swallowing large pills (I had a stroke). Can I open the capsules and put the powder in yogurt or juice? Does it still work the same way?""")
+add("dosage_question","neutral",0,"Marian Delacroix","with coffee?",
+"""Is it okay to take AlgaeCal with my morning coffee or does caffeine block the calcium? I read conflicting things.""")
+add("dosage_question","neutral",0,"Loretta Simmons","already take a multivitamin",
+"""My Centrum Silver has 220 mg calcium and 1000 IU D3. If I add AlgaeCal Plus am I getting too much? I don't want to overdo the vitamin D either.""")
+add("dosage_question","neutral",0,"Ingrid Thorsen","Collagen - hot or cold",
+"""Does the collagen powder dissolve in hot coffee or does heat destroy it? Also can I mix it with the Magnesium Relax in the evening or should those be separate.""")
+add("dosage_question","neutral",0,"Harriet Boone","Half dose to save money",
+"""Could I take 2 AlgaeCal Plus a day instead of 4 to make it last two months? I know the guarantee needs the full dose but I'm on a fixed income and just want to know if half does anything at all.""")
+add("dosage_question","neutral",0,"Marjorie Sutton","omega 3 dose",
+"""Triple Power says 1 tablespoon but your blood test instructions said 2 tablespoons for 90 days. Which is it? One bottle is going to last 2 weeks at 2 tablespoons.""")
+add("dosage_question","neutral",0,"Elaine Brooks","D3 Complete plus AlgaeCal Plus - too much D?",
+"""AlgaeCal Plus already has vitamin D in it. If I also take D3 Complete am I doubling up? My last blood test had vitamin D at 62 ng/ml which my doctor said was fine.""")
+add("dosage_question","neutral",0,"Vera Castillo","Travel",
+"""Going to Portugal for 5 weeks. Can I take the capsules out of the boxes and put them in a pill organizer? Do they need to stay cool?""")
+add("dosage_question","neutral",0,"Ada Lindstrom","how long before meals",
+"""Do I take it before, with, or after eating? Box says with food. Does a piece of toast count or does it need to be a real meal.""")
+add("dosage_question","neutral",0,"Dorothy Nkemelu","Magnesium Relax makes me groggy",
+"""The Magnesium Relax works great for sleep but I'm groggy in the morning. Can I take 1 capsule instead of 2? Does that defeat the purpose?""")
+add("dosage_question","neutral",0,"Frances Albright","taking strontium with calcium by mistake",
+"""I have been taking the strontium at the same time as the calcium for 3 months because I didn't read the instructions carefully. Have I wasted 3 months? Does it count toward the 6 months for the guarantee?""")
+add("dosage_question","neutral",0,"Muriel Osterberg","Switching from basic to plus",
+"""I've been on the basic AlgaeCal for a year, do I just switch to Plus and start the 4 a day right away or taper? And do I need strontium to see results or is Plus enough on its own?""")
+add("dosage_question","neutral",0,"Claudia Bergeron","expiration date",
+"""Found an unopened box in my cupboard with a best by of 03/2026. Is it still okay to take? Does it lose potency?""")
+
+# ---------------- shipping ----------------
+add("shipping_issue","negative",0,"Patricia Hollingsworth","Where is my order",
+"""Order placed on the 2nd, today is the 14th, tracking has said "label created" for 9 days. I am going to run out on Friday. This has never happened before. Please advise.""")
+add("shipping_issue","negative",0,"Grace Mbeki","Wrong item received",
+"""I ordered the Bone Builder Pack and received a box of Collagen. Order number 7718204. I don't want to pay to ship it back, I'm 76 and don't drive anymore. Please send the correct item.""")
+add("shipping_issue","neutral",0,"Joyce Tremblay","Canadian delivery time",
+"""I'm in Winnipeg. Ordered on Monday. Website says 3-7 business days for Canada but tracking shows it sitting in Vancouver since Wednesday. Is this normal or should I worry?""")
+add("shipping_issue","negative",0,"Eleanor Vasquez","box arrived crushed, bottles fine?",
+"""Package arrived crushed on one side and the fish oil bottle was leaking slightly. The capsule boxes seem okay. Do I need to do anything or is the fish oil still fine to use? Photo attached.""")
+add("shipping_issue","neutral",0,"Lillian Osgood","PO box",
+"""Do you ship to a PO box? My mail gets stolen at my building so I'd rather have it go to the post office.""")
+add("shipping_issue","negative",0,"Doreen Fallon","UK customs charge",
+"""I'm in Manchester. I was charged 38 pounds in customs/VAT on delivery which was not mentioned when I ordered. Your site said free shipping. This makes the product nearly 50% more expensive than I thought. Is this normal?""")
+add("shipping_issue","neutral",0,"Maxine Kirby","Change delivery address",
+"""I'm staying at my daughter's in Florida for the winter. My next subscription ships in 10 days. How do I change the shipping address for just the next 3 shipments and then back again in April?""")
+add("shipping_issue","negative",0,"Hazel Winterbourne","Delivered but not here",
+"""UPS says delivered 2:14pm yesterday. Nothing on my porch, nothing with neighbours, no photo in the UPS app. I'm out of AlgaeCal tomorrow. What do we do.""")
+add("shipping_issue","neutral",0,"Opal Richardson","Hawaii shipping",
+"""Moving to Hawaii next month. Will my subscription still work there and how long does shipping take? I don't want a gap.""")
+add("shipping_issue","negative",0,"Thelma Guerrero","Second time a box is missing",
+"""For the second shipment in a row my 3 month pack came with only 2 boxes of AlgaeCal Plus. The packing slip says 3. Last time you sent the missing one and that was fine but it should not happen twice.""")
+add("shipping_issue","neutral",0,"Constance Delgado","Australia",
+"""Do you ship to Australia and roughly how long? Also is the price in USD or AUD?""")
+add("shipping_issue","negative",0,"Sylvia Mortensen","Hot weather / melted?",
+"""The package sat in my mailbox in Phoenix for 2 days at 110 degrees. The capsules look fine but I'm worried about the vitamin D and K. Are they still good? Should I throw them out?""")
+add("shipping_issue","neutral",0,"Geraldine Foy","Tracking number",
+"""I never received a tracking number for my order last week. Can you send it? Order was around the 9th under this email.""")
+add("shipping_issue","negative",0,"Faye Ostrowski","late again",
+"""Third month in a row the shipment arrives after I have run out. Can the ship date be moved a week earlier permanently? I shouldn't have to email every month.""")
+add("shipping_issue","neutral",0,"Bernadette Quinn","Express shipping option",
+"""Is there an express shipping option? I only see standard at checkout. I'm in Chicago and I'm willing to pay for it this once.""")
+add("shipping_issue","negative",0,"Agnes Whitley","Package returned to sender",
+"""Tracking says "returned to sender - address incomplete" but my address is correct and I've received 8 shipments there before. Apt number is 4B. What happens now, do I get charged again?""")
+
+# ---------------- subscription / billing ----------------
+add("subscription_billing","negative",1,"Dorothy Kincaid","Cancel my subscription",
+"""Please cancel my subscription. The price went up from $71 to $81 a month without me really noticing until I looked at my statement. I can't afford it on my pension. I appreciate the product but this is too much.""")
+add("subscription_billing","negative",1,"Lois Brandt","CANCEL",
+"""Cancel my auto ship immediately. I did not agree to a price increase. Confirm by email.""")
+add("subscription_billing","negative",0,"Anita Sorrentino","charged twice",
+"""I was charged $112 twice on October 3rd. Two charges, one shipment. Please refund one. Card ending 4471.""")
+add("subscription_billing","neutral",0,"Edna Pulaski","Pause for 2 months",
+"""I have 2 extra boxes built up. Can I pause my subscription for 2 months and then resume? I don't want to lose my discount.""")
+add("subscription_billing","neutral",0,"Myrna Castellanos","update credit card",
+"""My card was replaced due to fraud. How do I update it before the next shipment? I tried the website but it keeps logging me out.""")
+add("subscription_billing","negative",1,"Darlene Ashworth","Cancel - not working for me",
+"""After a year my scan is unchanged and I've decided to go with what my doctor recommends. Please cancel my subscription. I'll contact you separately about the guarantee once I get the written report.""")
+add("subscription_billing","neutral",0,"Violet Hamm","Switch to 3 month",
+"""Can I switch from monthly to the 3 month subscribe and save? Is it cheaper? And does it still count the same for the guarantee.""")
+add("subscription_billing","negative",1,"Joanne Petrie","why did my price change",
+"""My subscription was $91 for the bone builder pack. Last charge was $103. Nothing in the reminder email explained why. If this is the new price I need to cancel, I'm sorry.""")
+add("subscription_billing","neutral",0,"Estelle Mahoney","Debit card",
+"""Trying to set up subscribe and save and it says credit card only. I only have a debit card. Is there any way around this? I would like the discount.""")
+add("subscription_billing","negative",1,"Celia Vanderberg","cancel please - too expensive after increase",
+"""I love the product and my scan improved but with the large price increase of late and everything else going up I have to stop. Please cancel after my next shipment. Thank you for the years of good service.""")
+add("subscription_billing","neutral",0,"Ramona Fuentes","Subscribe and save in Canada",
+"""I'm in Alberta. The site says subscribe and save is only for US addresses? Is that still true? What is the cheapest way for a Canadian to buy monthly.""")
+add("subscription_billing","negative",0,"Pauline Ostrander","points disappeared",
+"""I had 1200 reward points and now my account shows zero. I didn't use them. Did they expire? Nobody warned me. That's $60.""")
+add("subscription_billing","negative",1,"Wilma Jorgensen","stop sending",
+"""stop sending me the product. i have been trying to cancel on your website for 20 minutes and cant find where. i want this stopped before the next charge on the 22nd""")
+add("subscription_billing","neutral",0,"Kay Whitmore","skip one month",
+"""I'd like to skip November only. Is there a skip button or do I have to pause and remember to unpause?""")
+add("subscription_billing","negative",1,"Lucille Marsh","Cancelling - moving to Costco calcium",
+"""I'm going to be honest, I can't justify $100 a month for a supplement anymore. Costco calcium is $15. I know it's not the same thing but my scan was only up 1% and I'm not sure that's worth $1200 a year. Please cancel.""")
+add("subscription_billing","neutral",0,"Olive Brannigan","Referral points",
+"""I referred my sister and she ordered last week ($135) but I haven't received the 400 points. She used the link from the email I think. How long does it take?""")
+add("subscription_billing","negative",0,"Georgia Tolliver","charged after I cancelled",
+"""I cancelled on the phone on Sept 28 and was charged on Oct 5 anyway and a box is on its way. I don't want it. Please refund and tell me what to do with the box.""")
+add("subscription_billing","neutral",0,"Henrietta Blum","change product in subscription",
+"""I want to drop the strontium from my monthly order and keep just the AlgaeCal Plus. My doctor's advice. How do I change it without cancelling the whole thing and losing my rate.""")
+
+# ---------------- positive ----------------
+add("positive_feedback","positive",0,"Marlene Kaminski","Thank you",
+"""I just want to say thank you. My scan came back today and I have gone from -3.1 to -2.6 in my spine over two years. My doctor asked what I was doing. I told her. I know it's expensive but I would rather this than the medication. Marlene, 74, Wisconsin""")
+add("positive_feedback","positive",0,"Sandra Oyelowo","Bone health consultant was wonderful",
+"""I spoke with Jenna (I think) on the phone yesterday for 40 minutes about my scan and my program. She was patient and did not try to sell me anything. Please pass on my thanks. That kind of service is rare.""")
+add("positive_feedback","positive",0,"Rosalind Fairweather","no side effects at all",
+"""I've tried four different calcium supplements over the years and every one of them gave me stomach problems. Three months on AlgaeCal and nothing. I don't know if my bones are better yet but at least I can take it. That's something.""")
+add("positive_feedback","positive",0,"Bonnie Lightfoot","Collagen",
+"""Wasn't expecting much from the collagen but my nails have stopped splitting and my hairdresser noticed my hair. Nice surprise. Thought you'd like to know.""")
+add("positive_feedback","positive",0,"Judy Steinberg","Fast shipping",
+"""Ordered Tuesday, arrived Thursday. In rural Vermont that never happens. Thanks.""")
+add("positive_feedback","positive",0,"Carmen Villanueva","mi madre",
+"""My mother is 82 and has been on AlgaeCal for 3 years, her last two scans have been stable which her doctor says is a win at her age. She asked me to write and say thank you. She doesn't do email.""")
+add("positive_feedback","positive",0,"Ethel Marchbanks","Reorder",
+"""Just reordered the 6 month pack. 5 years with you now. Keep doing what you do.""")
+add("positive_feedback","positive",0,"Trudy Nakamura","Your FAQ answered everything",
+"""Just wanted to say I had about ten questions before ordering and your FAQ page answered every one of them including the strontium scan thing which I appreciated you being upfront about. Ordered the bone builder pack.""")
+add("positive_feedback","positive",0,"Lynda Prescott","refund was easy",
+"""I returned the Magnesium Relax because it didn't agree with me and the refund came in 8 days no fuss. Keeping the AlgaeCal Plus. Appreciate a company that does what it says.""")
+add("positive_feedback","positive",0,"Alma Rutherford","Sleep",
+"""The Bone and Sleep bundle. I've slept through the night for the first time in years. Could be the magnesium could be coincidence but I'm not stopping.""")
+add("positive_feedback","positive",0,"Norma Fielding","Facebook group",
+"""Your facebook community has been a lifeline since my diagnosis. Hearing from other women going through the same thing has helped more than the pills honestly. Thank you for running it.""")
+add("positive_feedback","positive",0,"Peg Sullivan","Doctor approved",
+"""Took your ingredient list to my endocrinologist expecting pushback and she said it looked reasonable and to go ahead. First supplement she's ever okayed. Starting next week.""")
+add("positive_feedback","positive",0,"Inez Castellano","Thanks for the reminder email",
+"""Just wanted to say the email before each shipment is genuinely useful. I was able to push my delivery back a week while I was away. Most companies just charge you.""")
+add("positive_feedback","positive",0,"Gwendolyn Harte","Hip improved 4%",
+"""Hip improved 4.2% in 13 months. I'm 69. Over the moon. I've already told three friends.""")
+
+# -------- dates: ten weeks, Aug 3 to Oct 11 2026. cancel / billing emails lean
+# toward the last four weeks, which is roughly when the price increase showed
+# up in customers' statements. everything else is spread evenly.
+start = datetime(2026, 8, 3, 6, 0)
+rows = []
+for i, (cat, sent, cancel, name, subj, body) in enumerate(E):
+    if cat == "subscription_billing" or cancel:
+        week = random.choices(range(10), weights=[1,1,1,1,2,2,4,6,7,7])[0]
+    else:
+        week = random.randrange(10)
+    ts = start + timedelta(days=week*7 + random.randrange(7), hours=random.randrange(14), minutes=random.randrange(60))
+    rows.append([f"E{i+1:03d}", ts.strftime("%Y-%m-%d %H:%M"), name, subj, body, cat, sent, cancel])
+
+rows.sort(key=lambda r: r[1])
+with open("emails.csv", "w", newline="") as f:
+    w = csv.writer(f)
+    w.writerow(["id","received_at","from_name","subject","body","category","sentiment","cancel_intent"])
+    w.writerows(rows)
+
+from collections import Counter
+print(len(rows), "emails")
+print(Counter(r[5] for r in rows))
+print(Counter(r[6] for r in rows))
+print("cancel intent:", sum(r[7] for r in rows))

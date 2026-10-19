@@ -1,0 +1,37 @@
+# Changelog
+
+All dates are 2026. Versions follow the `version` field in `config/triage.yaml`, which is stamped into `out/run.json` on every run.
+
+## 0.4.0 (2026-10-18)
+
+- Visual language moved to IBM Carbon conventions with IBM Plex Sans and Plex Mono served from `app/static/fonts`.
+- One configuration file, `config/triage.yaml`, now holds the models, classifier settings, confidence band thresholds, retrieval constants, QA limits and the routing rules. `app/config.py` merges it over defaults and validates it. The pipeline, the dashboard and the API read the same object.
+- Routing rules are data. `route()` evaluates the YAML top to bottom; behaviour is identical to 0.3.0 and `tests/test_parity.py` replays the last run to prove it.
+- New pages: Configuration (status checks, values in force, exports), Model facts (an AI fact sheet built from `models/eval.json` and `out/run.json`), Activity (every review decision, filterable, exportable).
+- `app/api.py`: a FastAPI service with `/health`, `/config`, `/emails`, `/emails/{id}`, `/triage` and `/reviews`, so the dashboard is one client of the pipeline rather than the pipeline itself.
+- `tests/`: 30 offline tests covering config validation, routing, QA rules, retrieval, API and parity. No Ollama needed.
+- `Makefile` with `setup`, `train`, `run`, `eval`, `all`, `app`, `api`, `test`, `lint`, `clean`.
+- `docs/`: architecture, runbook and decision records.
+- `out/run.json` gains `config_version`, `config_hash` and `routing_rules`; each trace's route stage gains `rule_id`.
+
+## 0.3.0 (2026-10-18)
+
+- Review loop on the Inbox: approve, edit then approve, discard, correct category or sentiment with a reason. Decisions append to `out/reviews.jsonl`. Corrections do not retrain the live model, and the page says so.
+- Provenance banner on every draft: which policy sections it was based on, which model wrote it, how long it took.
+- Draft QA scorecard: seven deterministic rules taken from the system prompt, three of them critical. A critical fail zeroes the score.
+- Sentence support: each draft sentence scored against the retrieved notes and the customer email by embedding similarity, shown as highlighting.
+- Confidence bands (high, medium, low) with named escalation reasons.
+- Model quality rebuilt on out-of-fold predictions: confusion matrix, per class precision and recall, reliability diagram with expected calibration error, most confident mistakes, a pass/fail check list at the top.
+- Overview funnel: received, classified by band, routed by reason, QA result, review status.
+
+## 0.2.0 (2026-10-17)
+
+- Per email trace view: every stage's input, output and timing, a latency waterfall, class probabilities, retrieved chunks with BM25 and dense ranks, the routing rule, the raw JSON record.
+- Run log page: run id, timings, library versions, the drafting system prompt, stdout of the last run.
+- Retrieval evaluation (`app/eval_retrieval.py`): hit@k and MRR for BM25, dense, hybrid and the boosted pipeline, plus the low-evidence email list.
+
+## 0.1.0 (2026-10-17)
+
+- First end to end pipeline: embed with nomic-embed-text, classify category and sentiment with logistic regression, retrieve policy chunks with BM25 plus dense fusion, route with four rules, draft with llama3.2, check numbers and instruction words against the notes.
+- 110 hand written, hand labelled emails and a seven document knowledge base paraphrased from public pages.
+- First Streamlit dashboard with Overview, Inbox, Model quality and Knowledge base.
