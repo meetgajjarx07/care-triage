@@ -1,5 +1,4 @@
 """The nine pages. Each is a function st.Page can run."""
-import json
 import re
 
 import altair as alt
@@ -7,13 +6,12 @@ import numpy as np
 import pandas as pd
 import streamlit as st
 
-from ui import (G90, G80, G70, G60, G40, G20, G10, CORAL, CORAL10, YELLOW, YELLOW10, INK, INK2, GREY, GREY2, LINE, LINE2, PAPER,
-                OK, OKBG, WARN, WARNBG, CRIT, CRITBG, INFO, INFOBG, SUPPORTED, WEAK, BAND_HIGH, BAND_MED, BLUE, PURPLE, TEAL, MAGENTA,
-                LABELS, ROUTE_LABEL, STAGES, h, page_header, footer, section, stats, tag, kv, table, route_tag, band_tag, status_tag,
-                qa_tag, sentiment_dot, fmt_ms, support_class, faithfulness, highlight_draft, rel_time, notification, empty_state,
+from ui import (G90, G70, G60, G40, CORAL, YELLOW, INK, GREY, GREY2, LINE2, PAPER,
+                OK, CRIT, INFO, SUPPORTED, WEAK, BAND_HIGH, BAND_MED, BLUE, PURPLE, LABELS, ROUTE_LABEL, STAGES, h, page_header, footer, section, stats, tag, kv, table, route_tag, band_tag, status_tag,
+                qa_tag, sentiment_dot, fmt_ms, faithfulness, highlight_draft, rel_time, notification, empty_state,
                 no_run_notice, has_run, flash, status_list, system_checks, monitoring_rows, load_text,
                 load_results, load_trace, load_json, load_log, load_reviews, add_review, review_status, corrections,
-                KB, ROOT, OUT, MODELS, DOCS, APP_VERSION, APP_NAME)
+                ROOT, OUT, MODELS, APP_VERSION, APP_NAME)
 from config import CFG, config_hash, CONFIG_PATH
 from draft import QA_CHECKS
 
@@ -60,7 +58,6 @@ def _draft_block(r, tr, run, key):
     """draft card with provenance banner, support highlighting toggle and QA scorecard"""
     S = tr.get("stages", {})
     C = S.get("check") or {}
-    D = S.get("draft") or {}
     support = C.get("support", [])
     qa = C.get("qa")
     show = st.toggle("Highlight sentence support", value=True, key=f"hl_{key}", help=f"Each sentence of the draft is compared with the retrieved notes and the customer email by embedding similarity. Underlined green ≥ {SUPPORTED}, yellow ≥ {WEAK}, red below. Hover a sentence for the closest source.")
@@ -136,7 +133,6 @@ def overview():
     acc_rate = (status == "approved").sum() / max(reviewed, 1)
     oof = ev.get("category", {}).get("oof", {}).get("acc", float("nan"))
     ho = metrics.get("category", {}).get("holdout_acc", float("nan"))
-    last_wk = df[df.week == df.week.max()]
     stats([
         ("Emails", n, "", f"{df.received_at.min():%d %b} to {df.received_at.max():%d %b}"),
         ("Consultant calls", calls, "", f"{calls/n:.0%} of volume, no auto draft"),
@@ -300,7 +296,7 @@ def inbox():
 def pipeline():
     if not has_run():
         page_header("Pipeline", "", {}); no_run_notice(); return
-    df, run, trace, metrics, ev = load_results(), load_json("run"), load_trace(), load_json("metrics"), load_json("eval")
+    df, run, trace, ev = load_results(), load_json("run"), load_trace(), load_json("eval")
     page_header("Pipeline", "What runs on each email, in order, and what each stage produced. All of it is local: "
                 "two models through Ollama, scikit-learn, and a few rules.", run)
     if not trace:
@@ -413,11 +409,11 @@ def pipeline():
     if S["draft"]:
         D = S["draft"]
         h(f'<div class="stage"><div class="n">05</div><div><div class="h"><span class="name">Draft</span><span class="comp"><code>{D["model"]}</code> · temperature {D["temperature"]} · seed {D["seed"]} · num_predict {D["num_predict"]} · {D["words"]} words</span><span class="ms">{fmt_ms(D["ms"])}</span></div></div></div>')
-        h(f'<div class="stage" style="border-top:0;padding-top:0"><div class="n"></div><div></div></div>')
+        h('<div class="stage" style="border-top:0;padding-top:0"><div class="n"></div><div></div></div>')
         _draft_block(r, t, run, key=f"trace_{sel}")
-        h(f'<div class="stage"><div class="n">06</div><div><div class="h"><span class="name">Check</span><span class="comp"><code>draft_qa()</code> · 7 rules from the system prompt + <code>lexical_check()</code> · sentence support by embedding</span><span class="ms">&lt; 1 ms + embed</span></div>'
-          f'<div class="body"><span class="note">A fail is not proof of an error, it is a reason to read slowly. The grounding check is deliberately narrow: an earlier version that scored every content word flagged 75 of 76 drafts, '
-          f'and asking the 3B model to judge its own drafts missed a real factual error. A person still reads every draft.</span></div></div></div>')
+        h('<div class="stage"><div class="n">06</div><div><div class="h"><span class="name">Check</span><span class="comp"><code>draft_qa()</code> · 7 rules from the system prompt + <code>lexical_check()</code> · sentence support by embedding</span><span class="ms">&lt; 1 ms + embed</span></div>'
+          '<div class="body"><span class="note">A fail is not proof of an error, it is a reason to read slowly. The grounding check is deliberately narrow: an earlier version that scored every content word flagged 75 of 76 drafts, '
+          'and asking the 3B model to judge its own drafts missed a real factual error. A person still reads every draft.</span></div></div></div>')
     else:
         h(f'<div class="stage"><div class="n">05</div><div><div class="h"><span class="name">Draft</span><span class="comp">skipped by router</span><span class="ms">—</span></div>'
           f'<div class="body" style="color:{GREY}">No auto draft for consultant calls. The retrieved policy above is what the consultant sees when they pick up the phone.</div></div></div>')
@@ -685,7 +681,7 @@ def knowledge():
 
 # ================================================================ Run log
 def runlog():
-    run, metrics = load_json("run"), load_json("metrics")
+    run = load_json("run")
     page_header("Run log", "What ran, where, with which versions. Everything needed to reproduce the numbers on the other pages.", run)
     if not run:
         no_run_notice(); return
@@ -878,7 +874,7 @@ def settings():
             else:
                 cols[i % 2].button(f"{name} · not written yet", disabled=True, width="stretch", key=f"dl_{name}")
         api_up = next((c for c in checks if c["name"] == "API service"), {}).get("ok")
-        h(f'<div class="note" style="margin-top:8px">The same data is served by the API: <code>GET /emails</code>, <code>GET /emails/{{id}}</code>, <code>GET /reviews</code>, <code>POST /triage</code>. '
+        h('<div class="note" style="margin-top:8px">The same data is served by the API: <code>GET /emails</code>, <code>GET /emails/{id}</code>, <code>GET /reviews</code>, <code>POST /triage</code>. '
           + ('It is running: <a href="http://localhost:8000/docs" target="_blank">OpenAPI docs</a>.' if api_up else 'Start it with <code>make api</code>; OpenAPI docs at localhost:8000/docs.') + '</div>')
     footer(run)
 

@@ -15,7 +15,7 @@ import altair as alt
 import pandas as pd
 import streamlit as st
 
-from config import CFG, config_hash, CONFIG_PATH
+from config import CFG, config_hash
 
 ROOT = Path(__file__).resolve().parent.parent
 OUT, MODELS, KB, DOCS = ROOT / "out", ROOT / "models", ROOT / "kb", ROOT / "docs"

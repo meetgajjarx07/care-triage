@@ -4,7 +4,23 @@ I built this for the Round 2 video for the Associate Data Scientist role.
 
 At Must IT Services I built an email pipeline for a banking client: inbound emails were classified, scored for sentiment, matched against policy documents with retrieval, and a reply was drafted for an agent to edit. Results went to MongoDB and a Power BI dashboard. I cannot show that code or that data, so this is the same pattern rebuilt from scratch in AlgaeCal's world, on my laptop, in a weekend.
 
-Everything runs locally. No API keys. Ollama provides `nomic-embed-text` for embeddings and `llama3.2` for drafting.
+Everything runs locally. No API keys. Ollama provides `nomic-embed-text` for embeddings and `llama3.2` for drafting. The 30 tests run offline, no Ollama needed: `make test`.
+
+![Overview](dashboard-preview.jpg)
+
+What it does to each email, in order: embed it, classify category and sentiment, pull the matching policy paragraphs, decide by rule whether a person should call instead, draft a reply from those paragraphs only, run seven QA checks, and put it in front of a reviewer. Nothing is sent by the system.
+
+```mermaid
+flowchart LR
+    E[emails] --> C[classify<br/>category, sentiment, confidence band]
+    C --> R[retrieve<br/>BM25 + dense, policy chunks]
+    R --> RO{route<br/>rules in config}
+    RO -->|call| H[Bone Health Consultant]
+    RO -->|draft| D[draft<br/>local 3B model, notes only]
+    D --> Q[QA<br/>7 rules, 3 critical + sentence support]
+    Q --> V[human review<br/>approve, edit, discard, correct]
+    V -.->|corrections become labels| C
+```
 
 ## The dashboard
 
@@ -32,7 +48,15 @@ Everything configurable lives in one file, `config/triage.yaml`: models, classif
 
 There is also a small FastAPI service (`app/api.py`) over the same code, with `/health`, `/config`, `/emails`, `/emails/{id}`, `/triage` and `/reviews`, so the dashboard is one client of the pipeline rather than the pipeline itself. `tests/` has 30 offline tests (routing, QA rules, retrieval, config validation, API, parity) that run without Ollama. `docs/` has the architecture with a data-flow diagram, a runbook, and five decision records. `CHANGELOG.md` tracks the versions.
 
-No logo or trademark is used anywhere. Screenshots: `dashboard-preview.jpg` (Overview), `dashboard-review-E061.jpg` (Inbox review of the failure example), `dashboard-trace.jpg` (Pipeline), `dashboard-quality.jpg` (Model quality), `dashboard-facts.jpg` (Model facts), `dashboard-config.jpg` (Configuration).
+No logo or trademark is used anywhere.
+
+| Inbox, reviewing the draft that made something up | Pipeline trace |
+|---|---|
+| ![Inbox review of E061](dashboard-review-E061.jpg) | ![Pipeline](dashboard-trace.jpg) |
+
+| Model quality | Model facts | Configuration |
+|---|---|---|
+| ![Model quality](dashboard-quality.jpg) | ![Model facts](dashboard-facts.jpg) | ![Configuration](dashboard-config.jpg) |
 
 ## What is in here
 
@@ -93,3 +117,7 @@ Or `make setup`, `make all`, `make app`. `make test` runs the offline tests, `ma
 ## What is made up and what is not
 
 The emails are fiction. I wrote them to sound like the customers I read about in AlgaeCal's reviews and forums. The knowledge base is paraphrased from public pages on algaecal.com and is not an official document. The product names, prices and guarantee terms are as published in October 2026. The trend in the "cancel intent" chart is something I planted in the dates when I wrote the dataset, to show what the dashboard would surface if it were real.
+
+## License
+
+MIT. Fonts are IBM Plex under the SIL Open Font License. See `LICENSE`.

@@ -22,7 +22,7 @@ import sklearn, streamlit  # version stamps only
 from config import CFG, config_hash
 from retrieve import Retriever, EMBED_MODEL, TOP_K
 from draft import route_rule, draft_reply, lexical_check, draft_qa, confidence_band, sentence_support, MODEL as DRAFT_MODEL, DRAFT_OPTIONS, SYSTEM
-from classify import email_text, embed, CATEGORIES, SENTIMENTS
+from classify import email_text, embed
 
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / "out"; OUT.mkdir(exist_ok=True)
@@ -73,7 +73,7 @@ for i, row in df.iterrows():
         qa = draft_qa(d, hits, row["body"])
         try:
             support = sentence_support(d, hits, row["body"], embed)
-        except Exception as e:
+        except Exception:
             support = []
         print(f"{row['id']} {row['pred_category']:<22} drafted in {t_draft:.1f}s  {'FLAG: ' + '; '.join(fl) if fl else 'ok'}")
     drafts.append(d); lat.append(round(t_draft, 1) if t_draft is not None else None); checks.append("; ".join(fl))

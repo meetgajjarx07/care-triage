@@ -156,7 +156,6 @@ def sentence_support(draft, chunks, email_body, embed_fn):
         ctx.append(("customer email", sent))
     if not claims or not ctx:
         return []
-    import numpy as np
     A = embed_fn([f"search_query: {c}" for c in claims])
     B = embed_fn([f"search_document: {t}" for _, t in ctx])
     S = A @ B.T
