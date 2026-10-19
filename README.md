@@ -54,15 +54,11 @@ No logo or trademark is used anywhere.
 
 ## The story, first
 
-For anyone who does not code, `story/index.html` tells the whole project in six scenes: one email, the pile, the question, four steps, the draft that made something up, what changed, and the honest number. Scene three runs the real system: pick an email or write one, press the button, and the four steps fill in from `/triage`. Start the API with `make api` and open http://localhost:8000/story; opened straight from the folder it talks to the same port, and without the API it shows the saved result for Anita and says so. It is also the first page of the dashboard.
+For anyone who does not code, `story/index.html` tells the whole project in six scenes: one email, the pile, the question, four steps, the draft that made something up, what changed, and the honest number. It is a single file with no dependencies; open it in a browser and use the arrow keys. It is also the first page of the dashboard.
 
 | | |
 |---|---|
-| ![The story, title](story-title.jpg) | ![The story, scene three running live](story-live.jpg) |
-
-| | |
-|---|---|
-| ![The story, the one it got wrong](story-twist.jpg) | |
+| ![The story, title](story-title.jpg) | ![The story, the one it got wrong](story-twist.jpg) |
 
 | Inbox replay, ten weeks arriving in thirty seconds | Live triage, one email through every stage |
 |---|---|
