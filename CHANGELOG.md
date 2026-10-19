@@ -4,8 +4,7 @@ All dates are 2026. Versions follow the `version` field in `config/triage.yaml`,
 
 ## 0.6.0 (2026-10-19)
 
-- Walkthrough page, first in the nav: the project in six stops in plain words, built from the run. Stop three reuses the Live triage panel (`live.panel`), stop four shows E061's draft with its failed check.
-- Inbox replay page: the ten-week run played back in 30, 60 or 120 seconds. Emails arrive one at a time with category, route and safety verdict; the four counters, the category bars and the weekly chart fill in as they go. Plain HTML re-rendered per frame, no charts library, so it stays smooth on a laptop. Honest label on the page: same emails and decisions as the run, nothing classified live.
+- Walkthrough page, first in the nav and the default page: the project in six stops in plain words, built from the run. Stop three reuses the Live triage panel (`live.panel`), stop four shows E061's draft with its failed check.
 - Pipeline rerun under the 0.6.0 config: predictions, drafts and QA identical to 0.5.0.
 
 ## 0.5.0 (2026-10-19)

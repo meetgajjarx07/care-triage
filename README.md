@@ -24,13 +24,12 @@ flowchart LR
 
 ## The dashboard
 
-Built like an internal operations product, not a notebook. The visual language is IBM's Carbon Design System (Gray 10 theme, IBM Plex Sans and Mono served locally, square corners, 14px body, 12px labels, one interactive blue, status colours only for status). I went through how Intercom, Zendesk, Gorgias, Langfuse, LangSmith, Phoenix and Evidently lay these things out, and through Carbon's own patterns for data tables, tags, notifications and the UI shell. A fixed header carries the environment, the run id and the reviewer; a left nav has four groups and twelve pages.
+Built like an internal operations product, not a notebook. The visual language is IBM's Carbon Design System (Gray 10 theme, IBM Plex Sans and Mono served locally, square corners, 14px body, 12px labels, one interactive blue, status colours only for status). I went through how Intercom, Zendesk, Gorgias, Langfuse, LangSmith, Phoenix and Evidently lay these things out, and through Carbon's own patterns for data tables, tags, notifications and the UI shell. A fixed header carries the environment, the run id and the reviewer; a left nav has four groups and eleven pages.
 
 Operate
 
 - **Overview**: KPI tiles, a pipeline funnel (received, classified by confidence band, routed by reason, QA result, review status), weekly volume, cancel mentions, a Needs attention queue, and why emails go to a consultant.
 - **Walkthrough** (start here): the project in six stops for someone who does not code: one email and the pile, the question, four steps running live (the Live triage panel), the draft that made something up (E061 with its failed check), what changed, and the honest number. Carbon progress indicator at the top, Next and Back to move. Everything on it comes from the run.
-- **Inbox replay**: the ten-week run played back in half a minute. Emails arrive one at a time with what the system decided about each, the four big counters climb, the category bars and the weekly chart fill in. Same emails, same decisions as the batch run; nothing is classified on this page, and it says so.
 - **Live triage**: paste one customer email, or pick one of five fresh examples, and watch it handled one step at a time, in plain words: what it is about and how sure the system is (with how often that confidence level is right), which policy applies, who should handle it, a first draft, whether the draft is safe (sticks to the policy, no refund promise, no medical advice), and a person's decision. Each step fills in as it finishes. The technical view (timings, model names, probabilities, retrieval ranks, the full scorecard, sentence support) is one click away under "How it decided". Needs Ollama; the page says which model is missing instead of failing half way.
 - **Inbox**: saved views (Needs attention, QA fails, Low confidence, Consultant calls, Pending review, Reviewed), filters, one row per email with band, QA score and review status. Selecting a row shows the email, the prediction, the draft with a provenance banner, sentence-level support highlighting, a seven-check QA scorecard, and the review actions: approve, edit then approve, discard, correct the category or sentiment with a reason. Each decision appends to `out/reviews.jsonl` and raises a toast.
 - **Activity**: every review decision, who made it and when, filterable by action and reviewer, with what reviewers corrected and an export. Empty state points back to the Inbox.
@@ -57,21 +56,17 @@ No logo or trademark is used anywhere.
 |---|---|
 | ![Walkthrough](dashboard-walkthrough.jpg) | ![Walkthrough live](dashboard-walkthrough-live.jpg) |
 
-| Inbox replay, ten weeks arriving in thirty seconds | Live triage, one email through every stage |
+| Live triage, one email through every stage | Inbox, reviewing the draft that made something up |
 |---|---|
-| ![Inbox replay](dashboard-replay.jpg) | ![Live triage](dashboard-live.jpg) |
+| ![Live triage](dashboard-live.jpg) | ![Inbox review of E061](dashboard-review-E061.jpg) |
 
-| Inbox, reviewing the draft that made something up | Pipeline trace |
+| Pipeline trace | Model quality |
 |---|---|
-| ![Inbox review of E061](dashboard-review-E061.jpg) | ![Pipeline](dashboard-trace.jpg) |
+| ![Pipeline](dashboard-trace.jpg) | ![Model quality](dashboard-quality.jpg) |
 
-| Model quality | Model facts |
+| Model facts | Configuration |
 |---|---|
-| ![Model quality](dashboard-quality.jpg) | ![Model facts](dashboard-facts.jpg) |
-
-| Configuration | |
-|---|---|
-| ![Configuration](dashboard-config.jpg) | |
+| ![Model facts](dashboard-facts.jpg) | ![Configuration](dashboard-config.jpg) |
 
 ## What is in here
 
@@ -88,10 +83,9 @@ app/pipeline.py          runs every email through, writes out/results.csv, out/t
 app/eval_retrieval.py    hit@k / MRR for BM25, dense, hybrid and the boosted pipeline -> models/retrieval_eval.json
 app/api.py               FastAPI service over the same code (uvicorn api:app --app-dir app)
 app/dashboard.py         Streamlit entrypoint: UI shell, nav, page routing
-app/views.py             nine of the twelve pages
+app/views.py             nine of the eleven pages
 app/walkthrough.py       the Walkthrough page (six stops)
 app/live.py              the Live triage page and the panel the Walkthrough reuses
-app/replay.py            the Inbox replay page
 app/triage.py            one email through every stage, shared by the Live page and the API
 app/ui.py                Carbon tokens, CSS, Altair theme, data loaders, status checks, small components
 app/static/fonts/        IBM Plex Sans and Mono (OFL), served locally

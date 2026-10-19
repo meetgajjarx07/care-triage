@@ -4,8 +4,8 @@ touches the emails themselves except through the knowledge-base search box.
 
     streamlit run app/dashboard.py
 
-Twelve pages behind a Carbon-style UI shell: Walkthrough (start here); Overview, Inbox replay, Live triage,
-Inbox, Activity (operate); Pipeline, Model quality, Model facts, Knowledge base (understand);
+Eleven pages behind a Carbon-style UI shell: Walkthrough (start here); Overview, Inbox, Live triage,
+Activity (operate); Pipeline, Model quality, Model facts, Knowledge base (understand);
 Configuration, Run log (administer). No logo or trademark is used anywhere.
 """
 import streamlit as st
@@ -13,7 +13,6 @@ import streamlit as st
 from ui import inject_css, load_json, h, shell_header, show_flash, APP_NAME
 import views
 import live
-import replay
 import walkthrough
 
 st.set_page_config(page_title=APP_NAME, page_icon=":material/mark_email_read:", layout="wide", initial_sidebar_state="expanded")
@@ -21,9 +20,8 @@ inject_css()
 st.session_state.setdefault("reviewer", "khushi")
 
 PAGES = {
-    "Walkthrough": st.Page(walkthrough.walkthrough, title="Walkthrough", icon=":material/route:", url_path="walkthrough"),
-    "Overview": st.Page(views.overview, title="Overview", icon=":material/space_dashboard:", default=True),
-    "Inbox replay": st.Page(replay.replay, title="Inbox replay", icon=":material/play_circle:", url_path="replay"),
+    "Walkthrough": st.Page(walkthrough.walkthrough, title="Walkthrough", icon=":material/route:", url_path="walkthrough", default=True),
+    "Overview": st.Page(views.overview, title="Overview", icon=":material/space_dashboard:", url_path="overview"),
     "Live triage": st.Page(live.live, title="Live triage", icon=":material/bolt:", url_path="live"),
     "Inbox": st.Page(views.inbox, title="Inbox", icon=":material/inbox:", url_path="inbox"),
     "Activity": st.Page(views.activity, title="Activity", icon=":material/history:", url_path="activity"),
@@ -35,7 +33,7 @@ PAGES = {
     "Run log": st.Page(views.runlog, title="Run log", icon=":material/terminal:", url_path="runs"),
 }
 NAV = [("Start here", ["Walkthrough"]),
-       ("Operate", ["Overview", "Inbox replay", "Live triage", "Inbox", "Activity"]),
+       ("Operate", ["Overview", "Inbox", "Live triage", "Activity"]),
        ("Understand", ["Pipeline", "Model quality", "Model facts", "Knowledge base"]),
        ("Administer", ["Configuration", "Run log"])]
 st.session_state["pages"] = PAGES
