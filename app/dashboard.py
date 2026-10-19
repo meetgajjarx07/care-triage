@@ -20,7 +20,7 @@ inject_css()
 st.session_state.setdefault("reviewer", "khushi")
 
 PAGES = {
-    "Walkthrough": st.Page(walkthrough.walkthrough, title="Walkthrough", icon=":material/route:", url_path="walkthrough", default=True),
+    "Walkthrough": st.Page(walkthrough.walkthrough, title="Walkthrough", icon=":material/route:", default=True),
     "Overview": st.Page(views.overview, title="Overview", icon=":material/space_dashboard:", url_path="overview"),
     "Live triage": st.Page(live.live, title="Live triage", icon=":material/bolt:", url_path="live"),
     "Inbox": st.Page(views.inbox, title="Inbox", icon=":material/inbox:", url_path="inbox"),
