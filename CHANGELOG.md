@@ -4,7 +4,7 @@ All dates are 2026. Versions follow the `version` field in `config/triage.yaml`,
 
 ## 0.6.0 (2026-10-19)
 
-- The story: `story/index.html`, the project in six scenes for a non-technical reader (one email, the pile, the question, four steps, the draft that made something up, what changed, the honest number). One file, no dependencies, arrow keys. Embedded as the first dashboard page.
+- The story: `story/index.html`, the project in six scenes for a non-technical reader (one email, the pile, the question, four steps, the draft that made something up, what changed, the honest number). One file, arrow keys. Scene three runs the real pipeline through `/triage`, with the saved result as a fallback. The API now serves it at `/story`, allows local browser origins, and returns chunk titles. Embedded as the first dashboard page.
 - Inbox replay page: the ten-week run played back in 30, 60 or 120 seconds. Emails arrive one at a time with category, route and safety verdict; the four counters, the category bars and the weekly chart fill in as they go. Plain HTML re-rendered per frame, no charts library, so it stays smooth on a laptop. Honest label on the page: same emails and decisions as the run, nothing classified live.
 - Pipeline rerun under the 0.6.0 config: predictions, drafts and QA identical to 0.5.0.
 

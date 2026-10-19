@@ -14,7 +14,7 @@
   * { box-sizing: border-box; }
   html, body { height: 100%; margin: 0; }
   body { background: var(--paper); color: var(--ink); font-family: var(--sans); overflow: hidden; }
-  .scene { position: absolute; inset: 0; display: none; padding: 7vh 9vw; flex-direction: column; justify-content: center; }
+  .scene { position: absolute; inset: 0; display: none; padding: 7vh 8vw; flex-direction: column; justify-content: center; }
   .scene.on { display: flex; }
   .kicker { font-size: 15px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin-bottom: 18px; }
   h1 { font-family: var(--serif); font-weight: 400; font-size: clamp(40px, 6.2vw, 92px); line-height: 1.02; margin: 0 0 24px; max-width: 16ch; letter-spacing: -.01em; }
@@ -24,38 +24,55 @@
   .on .fade { opacity: 1; transform: none; }
   .on .d1 { transition-delay: .15s; } .on .d2 { transition-delay: .45s; } .on .d3 { transition-delay: .8s; } .on .d4 { transition-delay: 1.15s; } .on .d5 { transition-delay: 1.5s; } .on .d6 { transition-delay: 1.9s; }
 
-  /* email card */
   .mail { background: var(--card); border: 1px solid var(--line); box-shadow: 0 18px 40px rgba(60,40,20,.08); padding: 26px 30px; max-width: 620px; font-size: 18px; line-height: 1.5; }
   .mail .from { display: flex; justify-content: space-between; color: var(--muted); font-size: 15px; margin-bottom: 6px; }
   .mail .subj { font-family: var(--serif); font-size: 26px; margin-bottom: 12px; }
-  .mail .body { color: var(--ink); }
   .mail mark { background: transparent; color: var(--ink); padding: 0 3px; transition: background .7s ease; }
-  .mail mark.ok { background: var(--ok-soft); }
 
-  /* scene 2: pile */
   .pile { position: relative; height: 46vh; max-width: 720px; }
   .pile .mail { position: absolute; left: 0; top: 0; width: 540px; opacity: 0; transition: opacity .5s ease; }
-  .pile.go .mail { opacity: 1; }
   .count { font-family: var(--serif); font-size: clamp(60px, 9vw, 150px); line-height: 1; color: var(--accent); font-variant-numeric: tabular-nums; }
   .count small { font-family: var(--sans); font-size: 20px; color: var(--muted); margin-left: 14px; }
 
-  /* scene 3: four steps */
-  .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin-top: 10px; }
-  .step { background: var(--card); border: 1px solid var(--line); padding: 22px 22px 20px; min-height: 230px; }
-  .step .n { font-family: var(--serif); font-size: 44px; color: var(--accent); line-height: 1; margin-bottom: 10px; }
-  .step .t { font-family: var(--serif); font-size: 26px; margin-bottom: 10px; }
-  .step .a { font-size: 17px; line-height: 1.45; color: var(--ink); }
-  .step .a small { display: block; color: var(--muted); font-size: 14px; margin-top: 8px; line-height: 1.4; }
-  .never { margin-top: 22px; font-size: 18px; color: var(--muted); }
+  /* scene three, live */
+  .ui { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 18px; }
+  .chip { font: 15px var(--sans); background: var(--card); border: 1px solid var(--line); color: var(--ink); padding: 8px 14px; cursor: pointer; }
+  .chip.on { border-color: var(--ink); background: var(--ink); color: var(--paper); }
+  .btn { font: 600 16px var(--sans); background: var(--accent); color: #fff; border: 0; padding: 11px 20px; cursor: pointer; margin-left: 6px; }
+  .btn:disabled { opacity: .5; cursor: default; }
+  .status { font-size: 14px; color: var(--muted); }
+  .live { display: grid; grid-template-columns: 1fr 1.9fr; gap: 26px; align-items: start; }
+  .live .mail { max-width: none; font-size: 16px; }
+  .live .mail .subj { font-size: 22px; }
+  .live .mail .body { white-space: pre-wrap; }
+  .own { display: none; flex-direction: column; gap: 8px; }
+  .own.on { display: flex; }
+  .own input, .own textarea { font: 16px var(--sans); background: var(--card); border: 1px solid var(--line); padding: 8px 10px; color: var(--ink); width: 100%; }
+  .own textarea { min-height: 150px; resize: vertical; }
+  .steps { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .step { background: var(--card); border: 1px solid var(--line); padding: 16px 18px 14px; min-height: 150px; transition: border-color .3s; }
+  .step .n { font-family: var(--serif); font-size: 32px; color: var(--accent); line-height: 1; margin-bottom: 4px; }
+  .step .t { font-family: var(--serif); font-size: 22px; margin-bottom: 6px; }
+  .step .a { font-size: 16px; line-height: 1.45; color: var(--ink); white-space: pre-wrap; max-height: 200px; overflow: auto; }
+  .step .a b { font-weight: 600; }
+  .step .w { color: var(--muted); font-size: 13px; margin-top: 6px; line-height: 1.4; }
+  .step.pending .n { color: var(--line); } .step.pending .a { color: var(--muted); }
+  .step.busy .a { color: var(--muted); animation: pulse 1.2s ease-in-out infinite; }
+  .step.skip .n { color: var(--muted); }
+  .step.flag { border-color: var(--accent); }
+  .step.ok { border-color: var(--ok); }
+  @keyframes pulse { 0%, 100% { opacity: .45; } 50% { opacity: 1; } }
+  .ticks { list-style: none; margin: 4px 0 0; padding: 0; }
+  .ticks li { font-size: 15px; line-height: 1.5; }
+  .ticks li::before { content: "✓ "; color: var(--ok); font-weight: 700; }
+  .ticks li.bad::before { content: "✕ "; color: var(--accent); }
+  .never { margin-top: 16px; font-size: 16px; color: var(--muted); }
   .never b { color: var(--ink); font-weight: 600; }
 
-  /* scene 4: the twist */
   .twist { display: grid; grid-template-columns: 1.1fr 1fr; gap: 48px; align-items: center; }
   .verdict { font-family: var(--serif); font-size: clamp(30px, 3.4vw, 50px); line-height: 1.15; }
   .verdict em { font-style: italic; color: var(--accent); }
-  .verdict .x { display: inline-block; width: .9em; height: .9em; border-radius: 50%; background: var(--accent); color: #fff; font-family: var(--sans); font-size: .55em; line-height: 1.65em; text-align: center; vertical-align: .08em; margin-right: .3em; }
 
-  /* scene 5: outcome */
   .week { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin: 14px 0 26px; max-width: 980px; }
   .k { background: var(--card); border: 1px solid var(--line); padding: 20px 22px; }
   .k .v { font-family: var(--serif); font-size: 56px; line-height: 1; font-variant-numeric: tabular-nums; }
@@ -64,54 +81,57 @@
   .two { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; max-width: 980px; font-size: 20px; line-height: 1.5; }
   .two b { display: block; font-family: var(--serif); font-size: 26px; font-weight: 400; margin-bottom: 6px; }
 
-  /* nav */
-  .dots { position: absolute; left: 9vw; bottom: 26px; display: flex; gap: 8px; }
+  .dots { position: absolute; left: 8vw; bottom: 26px; display: flex; gap: 8px; }
   .dots i { width: 8px; height: 8px; border-radius: 50%; background: var(--line); }
   .dots i.on { background: var(--accent); }
-  .hint { position: absolute; right: 9vw; bottom: 22px; color: var(--muted); font-size: 13px; }
-  .tag { position: absolute; left: 9vw; top: 22px; color: var(--muted); font-size: 13px; }
+  .hint { position: absolute; right: 8vw; bottom: 22px; color: var(--muted); font-size: 13px; }
+  .tag { position: absolute; left: 8vw; top: 22px; color: var(--muted); font-size: 13px; }
 </style>
 </head>
 <body>
 
 <div class="tag">A rebuild for AlgaeCal, with emails I wrote myself. Nothing here is a real customer.</div>
 
-<!-- 1 -->
 <section class="scene on" id="s1">
   <div class="kicker fade">The project I'm proudest of</div>
   <h1 class="fade d1">One inbox,<br>and the email that <em>made something up</em></h1>
   <p class="lead fade d2">A customer service team, a pile of email, and a system that sorts it before anyone opens it. Told in six scenes.</p>
 </section>
 
-<!-- 2 -->
 <section class="scene" id="s2">
   <div class="kicker fade">Scene one · The pile</div>
-  <div class="pile" id="pile">
-    <div class="mail"><div class="from"><span>Anita Sorrentino</span><span>Fri 09:12</span></div><div class="subj">charged twice</div>
-      <div class="body">I was charged $112 twice on October 3rd. Two charges, one shipment. Please refund one.</div></div>
-  </div>
+  <div class="pile" id="pile"></div>
   <div class="fade d1"><span class="count" id="count">1</span><span class="count"><small>emails in ten weeks, each opened by a person, each reply written from scratch</small></span></div>
 </section>
 
-<!-- 3 -->
 <section class="scene" id="s3">
   <div class="kicker fade">Scene two · The question</div>
   <h1 class="fade d1">Could we sort the pile <em>before</em> a person opens it,<br>and give them a head start on the reply?</h1>
 </section>
 
-<!-- 4 -->
 <section class="scene" id="s4">
-  <div class="kicker fade">Scene three · Four steps, for Anita's email</div>
-  <div class="steps">
-    <div class="step fade d1"><div class="n">1</div><div class="t">Sort it</div><div class="a">Billing. She sounds unhappy.<small>The system learned this from 110 emails a person labelled by hand.</small></div></div>
-    <div class="step fade d2"><div class="n">2</div><div class="t">Find the page</div><div class="a">Subscribe &amp; Save: <em>charged twice or unexpected charge</em>.<small>Three short paragraphs of policy, nothing else.</small></div></div>
-    <div class="step fade d3"><div class="n">3</div><div class="t">Write a first draft</div><div class="a">"To process your refund, I need the order number and the dates of the two charges."<small>From those paragraphs only. It may not promise a refund. It may not give health advice.</small></div></div>
-    <div class="step fade d4"><div class="n">4</div><div class="t">A person decides</div><div class="a">Edit, send, or throw it away.<small>The system never sends anything.</small></div></div>
+  <div class="kicker fade">Scene three · Four steps, running live on this laptop</div>
+  <div class="ui fade d1">
+    <span id="chips"></span>
+    <button class="chip" id="ownChip">Write your own</button>
+    <button class="btn" id="go">Handle this email</button>
+    <span class="status" id="status"></span>
   </div>
-  <div class="never fade d5">Some emails skip the draft on purpose. <b>Scan results, health questions, and anyone cancelling because it didn't work</b> go straight to a person for a phone call.</div>
+  <div class="live fade d2">
+    <div>
+      <div class="mail guard" id="curMail"><div class="from"><span id="mFrom"></span><span>new email</span></div><div class="subj" id="mSubj"></div><div class="body" id="mBody"></div></div>
+      <div class="own guard" id="own"><input id="ownFrom" placeholder="Customer's name"><input id="ownSubj" placeholder="Subject"><textarea id="ownBody" placeholder="Write the email the way a customer would"></textarea></div>
+    </div>
+    <div class="steps">
+      <div class="step pending" id="st1"><div class="n">1</div><div class="t">Sort it</div><div class="a">What is it about, and how does she feel?</div><div class="w"></div></div>
+      <div class="step pending" id="st2"><div class="n">2</div><div class="t">Find the page</div><div class="a">Which paragraphs of policy apply?</div><div class="w"></div></div>
+      <div class="step pending" id="st3"><div class="n">3</div><div class="t">Write a first draft</div><div class="a">From those paragraphs only.</div><div class="w"></div></div>
+      <div class="step pending" id="st4"><div class="n">4</div><div class="t">A person decides</div><div class="a">Is the draft safe to hand over?</div><div class="w"></div></div>
+    </div>
+  </div>
+  <div class="never fade d3">Some emails skip the draft on purpose. <b>Scan results, health questions, and anyone cancelling because it didn't work</b> go straight to a person for a phone call.</div>
 </section>
 
-<!-- 5 -->
 <section class="scene" id="s5">
   <div class="kicker fade">Scene four · The one it got wrong</div>
   <div class="twist">
@@ -124,7 +144,6 @@
   </div>
 </section>
 
-<!-- 6 -->
 <section class="scene" id="s6">
   <div class="kicker fade">Scene five · What changed</div>
   <div class="week">
@@ -139,7 +158,6 @@
   </div>
 </section>
 
-<!-- 7 -->
 <section class="scene" id="s7">
   <div class="kicker fade">Scene six · The honest number</div>
   <h1 class="fade d1">Right about <em>three times in four</em><br>on emails it has never seen.</h1>
@@ -150,8 +168,98 @@
 <div class="hint">→ next · ← back</div>
 
 <script>
+  // ---- the live system. Served by the API at /story this is same-origin; opened from the folder it talks to localhost:8000.
+  const API = (location.protocol.startsWith('http') && location.port === '8000') ? location.origin : 'http://localhost:8000';
+  const LABELS = {guarantee_claim: 'Guarantee claim', results_question: 'Scan & results', safety_concern: 'Safety concern',
+    dosage_question: 'Dosing question', shipping_issue: 'Shipping', subscription_billing: 'Subscription & billing', positive_feedback: 'Positive feedback'};
+  const MOOD = {negative: 'unhappy', neutral: 'calm', positive: 'happy'};
+  const SURE = {high: 'Sure.', medium: 'Fairly sure.', low: 'Not sure, so a person should look twice.'};
+  const CRIT = {grounded: 'Sticks to the policy', no_refund_promise: "Doesn't promise a refund", no_medical_advice: "Doesn't give medical advice"};
+  // fresh emails, none of them in the training set
+  const EX = [
+    ['Charged twice', 'Anita Sorrentino', 'charged twice', 'I was charged $112 twice on October 3rd. Two charges, one shipment. Please refund one. Card ending 4471.'],
+    ['Scan got worse', 'Patricia Nowak', 'my scan went down', 'I have been on the Bone Builder Pack for 14 months, every single day, and my DEXA last week shows my spine went from minus 2.4 to minus 2.6. I have the scan reports. I was promised my bones would get stronger. I would like a refund.'],
+    ['All capsules at once', 'Evelyn Marchand', 'all four capsules in the morning?', 'I take a lot of pills in the morning and it would be much easier to take all four AlgaeCal Plus capsules together with breakfast. Does it still work the same way if I do that, or do I really have to split them up?'],
+    ['Package stuck', 'Harold Benson', 'order not here yet', "Order 7741902 was shipped on the 1st according to your email and the tracking has said 'in transit' for 13 days. I have four days of Plus left. Can you send another one or tell me what is going on?"],
+  ];
+  // the saved result for Anita from the run (email E081), used when the live system is not running
+  const SAVED = {category: 'subscription_billing', sentiment: 'negative', confidence_band: 'medium', route: 'draft_reply',
+    chunks: [{title: 'Subscribe & Save', heading: 'Charged twice or unexpected charge'}, {title: 'Subscribe & Save', heading: 'How it works'}, {title: 'Subscribe & Save', heading: 'Billing details customers ask about'}],
+    draft: 'Anita,\n\nTo process your refund, I need the order number or the last four digits of your card (4471) and the dates of the two charges. I will check on the status of your account and contact you with the outcome.\n\nAlgaeCal Customer Care',
+    qa: {checks: [{key: 'grounded', ok: true}, {key: 'no_refund_promise', ok: true}, {key: 'no_medical_advice', ok: true}]}};
+
+  let cur = 0, own = false, running = false;
+  const $ = id => document.getElementById(id);
+  const esc = s => String(s ?? '').replace(/[&<>]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;'}[c]));
+
+  function pick(k) {
+    cur = k; own = false;
+    [...$('chips').children].forEach((c, j) => c.classList.toggle('on', j === k));
+    $('ownChip').classList.remove('on'); $('own').classList.remove('on'); $('curMail').style.display = '';
+    $('mFrom').textContent = EX[k][1]; $('mSubj').textContent = EX[k][2]; $('mBody').textContent = EX[k][3];
+    resetSteps();
+  }
+  function email() {
+    return own ? {from_name: $('ownFrom').value || 'Customer', subject: $('ownSubj').value || '(no subject)', body: $('ownBody').value}
+               : {from_name: EX[cur][1], subject: EX[cur][2], body: EX[cur][3]};
+  }
+  function step(n, state, a, w = '') {
+    const el = $('st' + n); el.className = 'step ' + state;
+    el.querySelector('.a').innerHTML = a; el.querySelector('.w').textContent = w;
+  }
+  function resetSteps() {
+    step(1, 'pending', 'What is it about, and how does she feel?'); step(2, 'pending', 'Which paragraphs of policy apply?');
+    step(3, 'pending', 'From those paragraphs only.'); step(4, 'pending', 'Is the draft safe to hand over?'); $('status').textContent = '';
+  }
+  async function post(body) {
+    const r = await fetch(API + '/triage', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(body)});
+    if (!r.ok) throw new Error((await r.json()).detail || r.statusText);
+    return r.json();
+  }
+  function fill(r, e, live) {
+    const she = /^(mr|harold|george|john|david)/i.test(e.from_name) ? 'he' : 'she';
+    step(1, 'done', `${LABELS[r.category] || r.category}. And ${she} sounds ${MOOD[r.sentiment] || r.sentiment}.`, SURE[r.confidence_band] + ' It learned this from 110 emails a person labelled by hand.');
+    const groups = new Map();
+    for (const c of r.chunks) { const t = c.title || c.doc.replace(/_/g, ' ').replace('.md', ''); if (!groups.has(t)) groups.set(t, []); if (!groups.get(t).includes(c.heading)) groups.get(t).push(c.heading); }
+    step(2, 'done', [...groups].map(([t, hs]) => `<b>${esc(t)}</b><br>${hs.map(esc).join(' · ')}`).join('<br>'), 'These paragraphs are the only facts the draft may use.');
+    if (r.route !== 'draft_reply') {
+      step(3, 'skip', 'Skipped on purpose. A Bone Health Consultant calls.', r.escalation_reason + '. A rule I wrote, not something the model decided.');
+      step(4, 'skip', 'Nothing to check. The consultant has the policy open when they pick up the phone.');
+      return;
+    }
+    step(3, 'done', esc(r.draft || ''), live ? 'Written just now by a small language model on this laptop. Nobody has read it yet.' : 'Saved draft from the run, because the live system is not running.');
+    const checks = (r.qa?.checks || []).filter(c => CRIT[c.key]);
+    const bad = checks.filter(c => !c.ok);
+    const ul = '<ul class="ticks">' + checks.map(c => `<li class="${c.ok ? '' : 'bad'}">${CRIT[c.key]}</li>`).join('') + '</ul>';
+    step(4, bad.length ? 'flag' : 'ok', (bad.length ? 'Flagged. A person must read this closely.' : 'Looks safe. Now a person reads it, edits it, or throws it away.') + ul);
+  }
+  async function handle() {
+    if (running) return; running = true; $('go').disabled = true;
+    const e = email(); if (own) { $('mFrom').textContent = e.from_name; $('mSubj').textContent = e.subject; $('mBody').textContent = e.body; $('curMail').style.display = ''; $('own').classList.remove('on'); }
+    resetSteps();
+    step(1, 'busy', 'Reading the email…');
+    try {
+      const r1 = await post({...e, draft: false});
+      fill(r1, e, true);
+      if (r1.route === 'draft_reply') {
+        step(3, 'busy', 'Writing a first draft from those paragraphs…'); step(4, 'pending', 'Waiting for the draft.');
+        const r2 = await post({...e, draft: true});
+        fill(r2, e, true);
+      }
+    } catch (err) {
+      $('status').textContent = 'The live system is not running (' + err.message + '). Showing the saved result for Anita.';
+      fill(SAVED, {from_name: 'Anita'}, false);
+    }
+    running = false; $('go').disabled = false;
+  }
+  EX.forEach((x, k) => { const b = document.createElement('button'); b.className = 'chip'; b.textContent = x[0]; b.onclick = () => pick(k); $('chips').appendChild(b); });
+  $('ownChip').onclick = () => { own = true; [...$('chips').children].forEach(c => c.classList.remove('on')); $('ownChip').classList.add('on'); $('own').classList.add('on'); $('curMail').style.display = 'none'; resetSteps(); };
+  $('go').onclick = handle;
+  pick(0);
+
+  // ---- scenes
   const scenes = [...document.querySelectorAll('.scene')];
-  const dots = document.getElementById('dots');
+  const dots = $('dots');
   scenes.forEach(() => dots.appendChild(document.createElement('i')));
   let i = 0, timers = [];
   function show(n) {
@@ -160,17 +268,16 @@
     scenes.forEach((s, k) => s.classList.toggle('on', k === i));
     [...dots.children].forEach((d, k) => d.classList.toggle('on', k === i));
     if (scenes[i].id === 's2') pile();
-    if (scenes[i].id === 's5') timers.push(setTimeout(() => document.getElementById('bad').style.background = 'var(--accent-soft)', 1400));
+    if (scenes[i].id === 's5') { $('bad').style.background = 'transparent'; timers.push(setTimeout(() => $('bad').style.background = 'var(--accent-soft)', 1400)); }
   }
   function pile() {
-    const box = document.getElementById('pile'), count = document.getElementById('count');
+    const box = $('pile'), count = $('count');
     box.innerHTML = '';
-    const names = [['Anita Sorrentino','charged twice','I was charged $112 twice on October 3rd. Two charges, one shipment. Please refund one.'],
-      ['Harold Benson','order not here yet','Tracking has said in transit for 13 days. I have four days of Plus left.'],
-      ['Patricia Nowak','my scan went down','Fourteen months, every single day, and my spine went from minus 2.4 to minus 2.6. I would like a refund.'],
-      ['Evelyn Marchand','all four capsules in the morning?','Does it still work if I take them together with breakfast?'],
-      ['Margaret Holloway','just diagnosed, not sure what to do','My doctor wants me to start Fosamax. Can I take AlgaeCal Plus together with it, or instead?']];
-    let n = 0;
+    const names = [['Anita Sorrentino', 'charged twice', 'I was charged $112 twice on October 3rd. Two charges, one shipment. Please refund one.'],
+      ['Harold Benson', 'order not here yet', 'Tracking has said in transit for 13 days. I have four days of Plus left.'],
+      ['Patricia Nowak', 'my scan went down', 'Fourteen months, every single day, and my spine went from minus 2.4 to minus 2.6. I would like a refund.'],
+      ['Evelyn Marchand', 'all four capsules in the morning?', 'Does it still work if I take them together with breakfast?'],
+      ['Margaret Holloway', 'just diagnosed, not sure what to do', 'My doctor wants me to start Fosamax. Can I take AlgaeCal Plus together with it, or instead?']];
     const total = 110, dur = 5000, t0 = performance.now();
     names.forEach((m, k) => {
       const d = document.createElement('div'); d.className = 'mail';
@@ -187,11 +294,12 @@
     timers.push(setTimeout(() => requestAnimationFrame(tick), 900));
   }
   document.addEventListener('keydown', e => {
+    if (e.target.matches('input, textarea')) return;
     if (['ArrowRight', ' ', 'PageDown', 'Enter'].includes(e.key)) { e.preventDefault(); show(i + 1); }
     if (['ArrowLeft', 'PageUp', 'Backspace'].includes(e.key)) { e.preventDefault(); show(i - 1); }
     if (e.key === 'Home') show(0);
   });
-  document.addEventListener('click', e => { if (e.clientX > window.innerWidth * 0.2) show(i + 1); else show(i - 1); });
+  document.addEventListener('click', e => { if (e.target.closest('.ui, .guard, .steps')) return; if (e.clientX > window.innerWidth * 0.2) show(i + 1); else show(i - 1); });
   show(0);
 </script>
 </body>

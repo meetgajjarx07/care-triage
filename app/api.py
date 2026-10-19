@@ -22,6 +22,8 @@ import httpx
 import joblib
 import pandas as pd
 from fastapi import FastAPI, HTTPException, Query
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse, RedirectResponse
 from pydantic import BaseModel, Field
 
 from classify import email_text, embed
@@ -35,6 +37,21 @@ REVIEWS = OUT / "reviews.jsonl"
 OLLAMA_URL = "http://localhost:11434"
 
 app = FastAPI(title="Care Triage API", version=str(CFG["version"]), description=__doc__)
+# The story page (story/index.html) calls /triage from the browser. It may be opened from the folder
+# or embedded in the dashboard, so any local origin is allowed. Nothing here is exposed beyond the laptop.
+app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["GET", "POST"], allow_headers=["*"])
+STORY = ROOT / "story" / "index.html"
+
+
+@app.get("/", include_in_schema=False)
+def root():
+    return RedirectResponse("/story")
+
+
+@app.get("/story", include_in_schema=False)
+def story_page():
+    """The six-scene story, same origin as /triage so scene three runs live."""
+    return FileResponse(STORY, media_type="text/html")
 
 _state: dict = {}
 
@@ -112,6 +129,7 @@ class TriageRequest(BaseModel):
 
 class Chunk(BaseModel):
     doc: str
+    title: Optional[str] = None
     heading: str
     text: str
     score: float
