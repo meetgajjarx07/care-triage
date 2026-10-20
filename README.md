@@ -150,7 +150,7 @@ There is also a small FastAPI service (`app/api.py`) over the same code, with `/
 
 No logo or trademark is used anywhere.
 
-| Walkthrough, stop 1 | Walkthrough, stop 2 running live |
+| Walkthrough, stop 1, the pile arriving and sorted live | Walkthrough, stop 2, one email through every step |
 |---|---|
 | ![Walkthrough](dashboard-walkthrough.jpg) | ![Walkthrough live](dashboard-walkthrough-live.jpg) |
 | Voice of customer | Live feed, each item run by the real pipeline as it lands |
