@@ -33,8 +33,8 @@ Once: install the requirements and Ollama, then `ollama pull nomic-embed-text` a
 Every time:
 
 1. Start Ollama. Run `streamlit run app/dashboard.py`. The browser opens on the Walkthrough. Set the browser zoom to 125%.
-2. Press Next to stop 2, keep "Charged twice this month" selected, press "Handle this email" once as a warm-up. The first draft loads the model and is slow. Note how long the draft card takes; that is the pause in Part 3.
-3. Delete `out/reviews.jsonl` if it exists and reload, so the review counters start at zero. Press Back to stop 1.
+2. On stop 1 press "Let them arrive" once as a warm-up, so the models are loaded. Press Next to stop 2, keep "Charged twice this month" selected, press "Handle this email" once as a warm-up. The first draft loads the model and is slow. Note how long the draft card takes; that is the pause in Part 3.
+3. Delete `out/reviews.jsonl` if it exists and reload, so the review counters start at zero. On stop 1 press Reset under the feed so it is ready to arrive again. Press Back to stop 1.
 4. If Ollama is not running, stop 2 says so and the other four stops still work. Say the words anyway and point at the step cards, or open any email in the Inbox and show its steps there.
 
 ### Part 1. Who I am, and what I build (0:00)
@@ -48,7 +48,7 @@ Every time:
 
 ### Part 2. The pile (0:49)
 
-**Show.** Switch to the screen. Walkthrough, stop 1. Jean's email on the left, the count and the newest emails on the right, the question underneath. Point at the email, the table, then the question.
+**Show.** Switch to the screen. Walkthrough, stop 1. Jean's email on the left, the count on the right, the question underneath, then the button "Let them arrive". Click it as you say "Now the pile": fourteen emails land one after another and each is sorted, matched to the policy and routed by the real pipeline as it arrives, under a second each. Ask the question over the top of them landing.
 
 **Say.** Picture one email. Jean was charged twice. Now the pile. The question: could we sort it before a person opens it, and give them a head start on the reply?
 
@@ -91,7 +91,7 @@ Every time:
 | Time | On screen | Action |
 |---|---|---|
 | 0:00 | Camera | Part 1: what you build, the bank, why this rebuild. Forty seconds. |
-| 0:49 | Stop 1 | Jean's email, the pile, the question. |
+| 0:49 | Stop 1 | Jean's email, click "Let them arrive", the question over the landing emails. |
 | 1:03 | Stop 2 | Click "Handle this email". Talk through the wait. Point at the ticks. |
 | 1:46 | Stop 3 | Muriel's draft. Hover the sentence, point at the Fail row, then the scorecard. |
 | 2:19 | Stop 4 | The rising-theme notice, the red bars, the drafted public reply. |
@@ -119,7 +119,8 @@ Built like an internal operations product, not a notebook. The visual language i
 Operate
 
 - **Overview**: KPI tiles, a pipeline funnel (received, classified by confidence band, routed by reason, QA result, review status), weekly volume, cancel mentions, a Needs attention queue, and why emails go to a consultant.
-- **Walkthrough** (start here): the project in five stops for someone who does not code: one email, the pile and the question; four steps running live (the Live triage panel); the draft that made something up (E061 with its failed check); the same sorter on reviews; what changed and the honest number. Carbon progress indicator at the top, Next and Back to move. Everything on it comes from the run.
+- **Live feed**: the fictional emails and reviews arrive one by one on a compressed clock and each is run through the real pipeline the moment it lands, on this laptop: read, sorted, policy found, routed, and in the full mode briefed, graded, drafted and checked. Counters, a category chart and a Needs-a-person list grow as it runs. Nothing on the page is replayed from the batch run. Walkthrough stop 1 uses a fourteen-email burst of the same panel.
+- **Walkthrough** (start here): the project in five stops for someone who does not code: one email, the pile arriving and being sorted live, and the question; four steps running live (the Live triage panel); the draft that made something up (E061 with its failed check); the same sorter on reviews; what changed and the honest number. Carbon progress indicator at the top, Next and Back to move. Everything on it comes from the run.
 - **Where the generative model is**: three jobs, each guarded (`app/genai.py`). Step 2: it reads every paragraph the hybrid search found and drops the ones about something else; the search's best match is always kept, because a 3B grader over-rejects (measured: it rejected the 'Charged twice' paragraph for a charged-twice email); if it rejects all of them it rephrases the question once and searches again, and if that also fails the email is marked a content gap (corrective RAG with a guard). Step 3: a two-line brief for whoever handles the email, with the facts copied out of it, each kept only if it appears in the email text. Step 4: the first draft, from the kept paragraphs only. It never routes (step 3 is a rule) and never grades its own draft (step 5 is seven deterministic checks; a 3B model as reviewer was tried and missed a real error). Every step card carries a tag saying which it is.
 - **Live triage**: paste one customer email, or pick one of five fresh examples, and watch it handled one step at a time, in plain words: what it is about and how sure the system is (with how often that confidence level is right), which policy applies, who should handle it, a first draft, whether the draft is safe (sticks to the policy, no refund promise, no medical advice), and a person's decision. Each step fills in as it finishes. The technical view (timings, model names, probabilities, retrieval ranks, the full scorecard, sentence support) is one click away under "How it decided". Needs Ollama; the page says which model is missing instead of failing half way.
 - **Inbox**: saved views (Needs attention, QA fails, Low confidence, Consultant calls, Pending review, Reviewed), filters, one row per email with band, QA score and review status. Selecting a row shows the email, the prediction, the draft with a provenance banner, sentence-level support highlighting, a seven-check QA scorecard, and the review actions: approve, edit then approve, discard, correct the category or sentiment with a reason. Each decision appends to `out/reviews.jsonl` and raises a toast.
@@ -147,8 +148,8 @@ No logo or trademark is used anywhere.
 | Walkthrough, stop 1 | Walkthrough, stop 2 running live |
 |---|---|
 | ![Walkthrough](dashboard-walkthrough.jpg) | ![Walkthrough live](dashboard-walkthrough-live.jpg) |
-| Voice of customer | |
-| ![Voice of customer](dashboard-voice.jpg) | |
+| Voice of customer | Live feed, each item run by the real pipeline as it lands |
+| ![Voice of customer](dashboard-voice.jpg) | ![Live feed](dashboard-feed.jpg) |
 
 | Live triage, one email through every stage | Inbox, reviewing the draft that made something up |
 |---|---|
@@ -185,6 +186,7 @@ app/ui.py                Carbon tokens, CSS, Altair theme, data loaders, status 
 app/static/fonts/        IBM Plex Sans and Mono (OFL), served locally
 .streamlit/config.toml   Streamlit theme: Carbon colours, Plex font faces, square corners
 tests/                   30 offline pytest tests; conftest fakes the embedding call
+app/feed.py              the Live feed page and the panel Walkthrough stop 1 uses
 app/voc.py               reviews: embed, theme (out of fold), stars -> mood, gist + quote (guarded), review rules, public reply, QA
 app/voc_sql.py           the voice_of_customer table in SQLite and the queries behind the page
 app/voc_view.py          the Voice of customer page

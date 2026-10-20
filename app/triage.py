@@ -54,7 +54,7 @@ def _fmt(hits):
              "bm25_rank": x["bm25_rank"], "dense_rank": x["dense_rank"]} for x in hits]
 
 
-def retrieve_graded(ret, subject, body, category):
+def retrieve_graded(ret, subject, body, category, use_genai=None):
     """Hybrid search, then (if config genai.crag) the language model reads each
     paragraph against the email and drops the ones that are about something else.
     Guards: the search's best match is always kept, so the grader can trim noise
@@ -66,7 +66,8 @@ def retrieve_graded(ret, subject, body, category):
     t0 = time.time()
     hits = ret.search(q, k=TOP_K, category=category)
     stage = {"ms": _ms(t0), "k": TOP_K, "query": q[:160], "boost_category": category, "hits": _fmt(hits)}
-    if not GENAI.get("crag") or not hits:
+    on = GENAI.get("crag") if use_genai is None else use_genai
+    if not on or not hits:
         return hits, stage, None
 
     def row(h, g):
@@ -96,15 +97,16 @@ def retrieve_graded(ret, subject, body, category):
     return kept, stage, None
 
 
-def make_brief(subject, body, from_name=""):
+def make_brief(subject, body, from_name="", use_genai=None):
     """Two lines for whoever handles the email, plus the facts pulled out of it,
     each checked against the email text. None when switched off in config."""
-    if not GENAI.get("brief"):
+    on = GENAI.get("brief") if use_genai is None else use_genai
+    if not on:
         return None
     return genai.brief(subject, body, from_name)
 
 
-def triage_email(subject, body, from_name="", draft=True, progress=None, email_id=None):
+def triage_email(subject, body, from_name="", draft=True, progress=None, email_id=None, use_genai=None):
     """Embed, classify, retrieve and grade, brief, route, then draft and check if the
     route allows. Raises whatever Ollama raises if it is down; callers decide how to show that."""
     subject, body = subject.strip(), body.strip()
@@ -135,10 +137,10 @@ def triage_email(subject, body, from_name="", draft=True, progress=None, email_i
                      "confidence": round(conf, 3), "band": confidence_band(conf)}
     tick("classify")
 
-    used, S["retrieve"], override = retrieve_graded(ret, subject, body, category)
+    used, S["retrieve"], override = retrieve_graded(ret, subject, body, category, use_genai)
     tick("retrieve")
 
-    S["brief"] = make_brief(subject, body, from_name)
+    S["brief"] = make_brief(subject, body, from_name, use_genai)
     if S["brief"]:
         tick("brief")
 

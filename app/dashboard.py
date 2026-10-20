@@ -4,7 +4,7 @@ touches the emails themselves except through the knowledge-base search box.
 
     streamlit run app/dashboard.py
 
-Twelve pages behind a Carbon-style UI shell: Walkthrough (start here); Overview, Inbox, Live triage,
+Thirteen pages behind a Carbon-style UI shell: Walkthrough (start here); Overview, Inbox, Live triage,
 Activity (operate); Pipeline, Model quality, Model facts, Knowledge base (understand);
 Configuration, Run log (administer). No logo or trademark is used anywhere.
 """
@@ -15,6 +15,7 @@ import views
 import live
 import walkthrough
 import voc_view
+import feed
 
 st.set_page_config(page_title=APP_NAME, page_icon=":material/mark_email_read:", layout="wide", initial_sidebar_state="expanded")
 inject_css()
@@ -23,6 +24,7 @@ st.session_state.setdefault("reviewer", "khushi")
 PAGES = {
     "Walkthrough": st.Page(walkthrough.walkthrough, title="Walkthrough", icon=":material/route:", default=True),
     "Overview": st.Page(views.overview, title="Overview", icon=":material/space_dashboard:", url_path="overview"),
+    "Live feed": st.Page(feed.feed, title="Live feed", icon=":material/stream:", url_path="feed"),
     "Live triage": st.Page(live.live, title="Live triage", icon=":material/bolt:", url_path="live"),
     "Inbox": st.Page(views.inbox, title="Inbox", icon=":material/inbox:", url_path="inbox"),
     "Voice of customer": st.Page(voc_view.voc, title="Voice of customer", icon=":material/reviews:", url_path="voice"),
@@ -35,7 +37,7 @@ PAGES = {
     "Run log": st.Page(views.runlog, title="Run log", icon=":material/terminal:", url_path="runs"),
 }
 NAV = [("Start here", ["Walkthrough"]),
-       ("Operate", ["Overview", "Inbox", "Voice of customer", "Live triage", "Activity"]),
+       ("Operate", ["Overview", "Live feed", "Inbox", "Voice of customer", "Live triage", "Activity"]),
        ("Understand", ["Pipeline", "Model quality", "Model facts", "Knowledge base"]),
        ("Administer", ["Configuration", "Run log"])]
 st.session_state["pages"] = PAGES

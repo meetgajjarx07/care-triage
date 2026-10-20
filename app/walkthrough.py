@@ -15,6 +15,7 @@ from ui import (G40, G60, G70, G90, CORAL, INK, GREY, LINE, BLUE, CRIT, h, page_
 import live
 import views
 import voc_view
+import feed
 
 # (name, chapter, time stamp in the four-minute video)
 BEATS = [("The pile", "The problem", "0:49"),
@@ -86,11 +87,9 @@ def walkthrough():
         with c2:
             h('<div class="lead">Now picture the pile.</div>')
             stats([("Emails in ten weeks", n, "", "every one opened by a person, every reply written from scratch")])
-            st.write("")
-            newest = df.sort_values("received_at", ascending=False).head(7)
-            table(["Received", "From", "Subject"], [(f"{r.received_at:%d %b %H:%M}", r.from_name, r.subject) for r in newest.itertuples()])
-            st.caption(f"The newest 7 of {n}. All of them are in the Inbox.")
         h('<div class="lead" style="margin-top:18px">Could we sort the pile <b>before</b> a person opens it, and give them a head start on the reply?</div>')
+        h('<div class="plain">Press the button and the first of them arrive. Each one is sorted, matched to the policy and routed by the real pipeline as it lands, on this laptop, in under a second. Nothing is replayed.</div>')
+        feed.panel(key="wt_feed", limit=14, controls=False, full_default=False, reviews_default=False, pause_default=0.4, start_label="Let them arrive")
 
     elif i == 1:
         h('<div class="lead">One new email, handled in front of you.</div>')

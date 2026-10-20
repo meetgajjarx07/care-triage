@@ -101,6 +101,37 @@ def draft_public_reply(title, body, theme, chunks):
     return r["message"]["content"].strip()
 
 
+def theme_model():
+    """Fit the theme model on all labelled reviews (for live use; the batch run reports it out of fold)."""
+    df = pd.read_csv(ROOT / "data" / "reviews.csv")
+    X = embed([review_text(a, b) for a, b in zip(df.title, df.body)])
+    lr_kw = {"C": CFG["classifier"]["C"], "class_weight": CFG["classifier"]["class_weight"], "max_iter": CFG["classifier"]["max_iter"]}
+    return LogisticRegression(**lr_kw).fit(X, df.theme.values)
+
+
+def triage_review(title, body, stars, model, ret=None, llm=True, draft=True, progress=None, review_id=None):
+    """One review through the same steps the batch run uses, with a progress callback per stage."""
+    rec = {"id": review_id or datetime.now().strftime("LIVE-R%H%M%S"), "title": title, "body": body, "stars": int(stars), "live": True, "stages": {}}
+    S = rec["stages"]
+    def tick(name):
+        if progress: progress(name, rec)
+    t0 = time.time(); X = embed([review_text(title, body)]); S["embed"] = {"ms": round(1000 * (time.time() - t0))}; tick("embed")
+    t0 = time.time(); p = model.predict_proba(X)[0]; theme = str(model.classes_[p.argmax()])
+    S["theme"] = {"ms": round(1000 * (time.time() - t0)), "pred": theme, "conf": round(float(p.max()), 3), "probs": {c: round(float(x), 3) for c, x in zip(model.classes_, p)}}
+    S["sentiment"] = {"from": "stars", "value": sentiment_from_stars(int(stars))}; tick("theme")
+    S["read"] = read_review(title, body) if llm else None
+    if S["read"]: tick("read")
+    S["rule"] = review_rule(theme, S["sentiment"]["value"]); tick("rule")
+    S["draft"] = None; S["check"] = None
+    if draft and llm and S["rule"]["action"] == "draft_reply":
+        ret = ret or Retriever()
+        hits = ret.search(f"{title}. {body}", k=TOP_K, category=RV["theme_to_kb"].get(theme))
+        t0 = time.time(); d = draft_public_reply(title, body, theme, hits)
+        S["draft"] = {"ms": round(1000 * (time.time() - t0)), "words": len(d.split()), "text": d}; tick("draft")
+        qa = draft_qa(d, hits, body); S["check"] = {"flags": lexical_check(d, hits, body), "qa": qa}; tick("check")
+    return rec
+
+
 def main():
     use_llm = "--no-llm" not in sys.argv
     started = datetime.now(); t_run = time.time()
