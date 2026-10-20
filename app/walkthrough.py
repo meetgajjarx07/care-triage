@@ -76,7 +76,7 @@ def walkthrough():
           '.stMainBlockContainer, .block-container { max-width: 1400px; margin: 0 auto; }</style>')
 
     name, chap, t = BEATS[i]
-    h(f'<div class="stop"><h2>{i+1}. {name}</h2><span class="t">{chap} · {t} in the video</span></div>')
+    h(f'<div class="stop"><h2>{i+1}. {name}</h2><span class="t">{chap}</span></div>')
 
     n = len(df); calls = int((df.route == "consultant_call").sum()); drafts = n - calls
     dr = df[df.route == "draft_reply"]; flagged = int((dr.qa_score == 0).sum())
@@ -94,7 +94,7 @@ def walkthrough():
             stats([("Emails in ten weeks", n, "", "every one opened by a person, every reply written from scratch")])
         h('<div class="lead" style="margin-top:18px">Could we sort the pile <b>before</b> a person opens it, and give them a head start on the reply?</div>')
         h('<div class="note" style="margin:0 0 8px">Press the button and the first of them arrive. Each one is sorted, matched to the policy and routed by the real pipeline as it lands, on this laptop, under a second each. Nothing is replayed.</div>')
-        feed.panel(key="wt_feed", limit=14, controls=False, full_default=False, reviews_default=False, pause_default=0.4, start_label="Let them arrive")
+        feed.panel(key="wt_feed", limit=14, controls=False, full_default=False, reviews_default=False, pause_default=0.4, start_label="Let them arrive", side="tiles")
 
     elif i == 1:
         h('<div class="lead">One new email, handled in front of you.</div>')
@@ -169,7 +169,4 @@ def walkthrough():
             section("Right about three times in four on emails it has never seen", "out-of-fold, all 110")
             table(["When it says", "It is right"], [("Sure", live._in_n(acc["high"])), ("Fairly sure", live._in_n(acc["medium"])), ("Not sure", live._in_n(acc["low"]))])
             st.caption("Good enough to help, not good enough to trust blindly. So a person always decides. Exact figures on the Model facts page.")
-            a, b = st.columns(2)
-            if a.button("Open the Inbox", width="stretch"): st.switch_page(st.session_state["pages"]["Inbox"])
-            if b.button("Try your own email", width="stretch"): st.switch_page(st.session_state["pages"]["Live triage"])
     footer(run)

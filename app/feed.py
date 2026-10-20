@@ -123,17 +123,21 @@ def _render_stream(ph, items, recs, cur=None, cur_rec=None, cur_done=(), llm=Tru
     ph.markdown(cards, unsafe_allow_html=True)
 
 
-def _render_side(tiles, chart, needs, items, recs):
+def _render_side(tiles, chart, needs, items, recs, side="all", full=True):
     n = len(items); em = [(i, r) for i, r in zip(items, recs) if i["kind"] == "email"]; rv = [(i, r) for i, r in zip(items, recs) if i["kind"] == "review"]
     calls = sum(1 for _, r in em if r["stages"]["route"]["decision"] == "consultant_call")
     drafted = sum(1 for _, r in em if r["stages"].get("draft")) + sum(1 for _, r in rv if r["stages"].get("draft"))
     failed = sum(1 for _, r in em + rv if ((r["stages"].get("check") or {}).get("qa") or {}).get("critical_fail"))
     outreach = sum(1 for _, r in rv if r["stages"]["rule"]["action"] == "consultant_outreach")
     with tiles.container():
-        stats([("Arrived", n, "", f"{len(em)} emails, {len(rv)} reviews"),
-               ("Consultant", calls + outreach, "", f"{calls} calls, {outreach} private outreach"),
-               ("Drafts", drafted, "", "written just now, on this laptop"),
-               ("Failed a check", failed, "", "a person reads these first", "warn" if failed else "ok")])
+        cells = [("Arrived", n, "", f"{len(em)} emails, {len(rv)} reviews" if rv else "sorted, matched to policy, routed"),
+                 ("To a consultant", calls + outreach, "", f"{calls} calls, {outreach} private outreach" if rv else "a person phones, no draft")]
+        if full:
+            cells += [("Drafts", drafted, "", "written just now, on this laptop"),
+                      ("Failed a check", failed, "", "a person reads these first", "warn" if failed else "ok")]
+        stats(cells)
+    if side != "all":
+        return
     with chart.container():
         rows = [{"what": LABELS.get(r["stages"]["classify"]["pred_category"], ""), "kind": "Email"} for _, r in em] + \
                [{"what": voc_view.THEME_LABEL.get(r["stages"]["theme"]["pred"], ""), "kind": "Review"} for _, r in rv]
@@ -155,7 +159,7 @@ def _render_side(tiles, chart, needs, items, recs):
             h('<table class="stab"><thead><tr><th>ID</th><th>Subject</th><th>Why</th></tr></thead><tbody>' + "".join(f"<tr><td>{a}</td><td>{b}</td><td>{c}</td></tr>" for a, b, c in rows) + "</tbody></table>")
 
 
-def panel(key="feed", limit=None, controls=True, full_default=False, reviews_default=True, pause_default=0.6, start_label="Start"):
+def panel(key="feed", limit=None, controls=True, full_default=False, reviews_default=True, pause_default=0.6, start_label="Start", side="all"):
     """The stream and the side counters. The Live feed page uses it with controls;
     Walkthrough stop 1 uses it with one button and a limit, so the pile lands and
     gets sorted in front of the audience without leaving the page."""
@@ -203,14 +207,15 @@ def panel(key="feed", limit=None, controls=True, full_default=False, reviews_def
     with right:
         section("As it happens", "counted from the items processed on this page")
         tiles = st.empty(); chart = st.empty()
-        section("Needs a person", "calls, private outreach, failed checks")
+        if side == "all":
+            section("Needs a person", "calls, private outreach, failed checks")
         needs = st.empty()
 
     def show_clock(it, note=""):
         clock.markdown(f'<div class="clock"><span class="t">{it["at"]:%a %d %b %H:%M}</span><span class="d">{F["i"]} of {len(items)} arrived · {note}</span></div>', unsafe_allow_html=True)
 
     if F["items"]:
-        _render_side(tiles, chart, needs, F["items"], F["recs"])
+        _render_side(tiles, chart, needs, F["items"], F["recs"], side, full)
     if F["i"] < len(items):
         show_clock(items[F["i"]], "running on this laptop, nothing replayed" if F["running"] else "paused")
     else:
@@ -238,7 +243,7 @@ def panel(key="feed", limit=None, controls=True, full_default=False, reviews_def
             notification("error", "The pipeline stopped.", f" {e}"); F["running"] = False; break
         F["items"].append(it); F["recs"].append(rec); F["i"] += 1
         _render_stream(stream_ph, F["items"], F["recs"], llm=full)
-        _render_side(tiles, chart, needs, F["items"], F["recs"])
+        _render_side(tiles, chart, needs, F["items"], F["recs"], side, full)
         time.sleep(pause)
     st.rerun()
 
