@@ -192,6 +192,10 @@ def panel(key="feed", limit=None, controls=True, full_default=False, reviews_def
         notification("error", "Ollama is not running.", " The feed embeds every item with nomic-embed-text, so it needs Ollama even in the fast mode.")
         F["running"] = False
     clock = st.empty()
+    if not F["running"] and not F["items"]:
+        if items:
+            clock.markdown(f'<div class="clock"><span class="t">{items[0]["at"]:%a %d %b %H:%M}</span><span class="d">first of {len(items)} waiting</span></div>', unsafe_allow_html=True)
+        return
     left, right = st.columns([1.55, 1], gap="large")
     with left:
         section("Arriving", "newest first; the blue one is being processed now")

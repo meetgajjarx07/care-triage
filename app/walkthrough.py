@@ -37,6 +37,7 @@ CSS = f"""<style>
 .lead {{ font-size: 28px; line-height: 38px; font-weight: 300; color: {INK}; max-width: 36ch; margin: 0 0 14px; }}
 .lead b {{ font-weight: 400; color: {BLUE}; }}
 .mail .bd.big {{ font-size: 16px; line-height: 24px; }}
+[data-testid="stToggle"] label p {{ white-space: nowrap; }}
 .verdict {{ font-size: 20px; line-height: 28px; color: {CRIT}; margin: 12px 0 8px; }}
 </style>"""
 
@@ -60,15 +61,19 @@ def walkthrough():
     i = st.session_state.setdefault("wt", 0)
     page_header("Walkthrough", "The project in five stops, in the order of the question. Everything on screen comes from the run.", run)
 
-    left, right = st.columns([5, 1.1], gap="large")
+    left, right = st.columns([5, 1.7], gap="large")
     with left:
         _stepper(i)
     with right:
-        a, b = st.columns([1, 1.6])
+        a, b, c = st.columns([1, 1.6, 1.1])
         if a.button("Back", disabled=i == 0, key="wt_back", width="stretch"):
             st.session_state["wt"] = i - 1; st.rerun()
         if b.button("Next", type="primary", disabled=i == len(BEATS) - 1, key="wt_next", width="stretch"):
             st.session_state["wt"] = i + 1; st.rerun()
+        focus = c.toggle("Focus", key="wt_focus", help="Hide the side menu while presenting. The stops, Back and Next stay.")
+    if focus:
+        h('<style>[data-testid="stSidebar"], [data-testid="stSidebarCollapsedControl"] { display: none !important; } '
+          '.stMainBlockContainer, .block-container { max-width: 1400px; margin: 0 auto; }</style>')
 
     name, chap, t = BEATS[i]
     h(f'<div class="stop"><h2>{i+1}. {name}</h2><span class="t">{chap} · {t} in the video</span></div>')
@@ -88,7 +93,7 @@ def walkthrough():
             h('<div class="lead">Now picture the pile.</div>')
             stats([("Emails in ten weeks", n, "", "every one opened by a person, every reply written from scratch")])
         h('<div class="lead" style="margin-top:18px">Could we sort the pile <b>before</b> a person opens it, and give them a head start on the reply?</div>')
-        h('<div class="plain">Press the button and the first of them arrive. Each one is sorted, matched to the policy and routed by the real pipeline as it lands, on this laptop, in under a second. Nothing is replayed.</div>')
+        h('<div class="note" style="margin:0 0 8px">Press the button and the first of them arrive. Each one is sorted, matched to the policy and routed by the real pipeline as it lands, on this laptop, under a second each. Nothing is replayed.</div>')
         feed.panel(key="wt_feed", limit=14, controls=False, full_default=False, reviews_default=False, pause_default=0.4, start_label="Let them arrive")
 
     elif i == 1:
