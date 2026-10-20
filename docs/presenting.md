@@ -1,6 +1,6 @@
 # Presenting the Walkthrough in four minutes
 
-About a minute on camera, then one page of the app, the Walkthrough, which is the page `streamlit run app/dashboard.py` opens on. Five stops, a Next button, one live run. About 490 spoken words: 3:38 at 135 words a minute, 3:46 read slowly to a camera, which leaves room. The shape: who you are and what you build, the bank's inbox, one email and the question, four steps done live, the one the system got wrong, the same sorter on reviews with the SQL behind it, what changed, the honest number, day one.
+About a minute on camera, then one page of the app, the Walkthrough, which is the page `streamlit run app/dashboard.py` opens on. Five stops, a Next button, one live run. About 517 spoken words: 3:50 at 135 words a minute, 3:59 read slowly to a camera, which leaves room. The shape: who you are and what you build, the bank's inbox, one email and the question, four steps done live, the one the system got wrong, the same sorter on reviews with the SQL behind it, what changed, the honest number, day one.
 
 ## Before recording
 
@@ -13,72 +13,74 @@ Every time:
 3. Delete `out/reviews.jsonl` if it exists and reload, so the review counters start at zero. On stop 1 press Reset under the feed so it is ready to arrive again. Press Back to stop 1.
 4. If Ollama is not running, stop 2 says so and the other four stops still work. Say the words anyway and point at the step cards, or open any email in the Inbox and show its steps there.
 
-## Part 1. Who I am, and what I build (0:00)
+## Part 1. Who I am, and the bank (0:00)
 
-**Show.** Camera, about a minute. Look at the lens, not the screen. Calm; this is the part they judge you on as a person.
+**Show.** Camera. Look at the lens. Calm, your own pace.
 
-**Say.** Hi, I'm Khushi Gor. I'm an AI engineer, and I've just finished my master's in computer science at Lakehead. I spent a year and a half at Must IT Services building AI that clients actually ran, mostly in finance: classification and sentiment pipelines, retrieval systems, guarded generation. I started on the OpenAI platform and ended up deploying AI inside the client's own environment.
+**Say.** Hi, I'm Khushi Gor. I'm an AI engineer, and I've just finished my master's in computer science at Lakehead. Before that I worked at Must IT Services for a year and a half, mostly for clients in finance, building AI they could actually run.
 
-**Say.** The project I'm proudest of started with one of them, a bank with an inbox problem. Every email was opened, sorted and answered by hand, and nobody could see the week. I built the system that sorted them, read the mood, found the policy, and drafted the reply for an agent to edit. I can't show you theirs, so I rebuilt it for AlgaeCal in a weekend, from your guarantee, your products and your reviews.
-
-
-## Part 2. The pile (1:01)
-
-**Show.** Switch to the screen. Walkthrough, stop 1. Jean's email on the left, the count on the right, the question, then the button "Let them arrive". Click it as you say "Now the pile": fourteen emails land one after another, each sorted, matched to the policy and routed by the real pipeline as it arrives. Ask the question over the top of them landing.
-
-**Say.** Picture one email. Jean was charged twice. Now the pile. The question: could we sort it before a person opens it, and give them a head start on the reply?
+**Say.** The project I'm most proud of was for a banking client. They had an inbox problem: hundreds of emails, every one opened, sorted and answered by hand. I built a system that sorted those emails before anyone opened them, found the policies that applied, and wrote a first draft of the reply. I can't show you that system, so I rebuilt the same idea for AlgaeCal's customer care.
 
 
-## Part 3. Four steps, live (1:15)
+## Part 2. The pile (0:50)
 
-**Show.** Press Next. Stop 2. "Charged twice this month" is already selected. Click "Handle this email" as you say "Four steps, live". The first three cards fill in under a second; the brief and the draft say "writing" for a few seconds, so keep talking; the last card shows "Looks safe" with green ticks. Point at each card as you reach it. Each one carries a tag: AI model, generative AI, rule, or person.
+**Show.** Screen. Stop 1. Jean's email on the left. Click "Let them arrive" on "110 other emails" and let them land while you ask the question.
 
-**Say.** Four steps, live. One, sort: a small model I trained on labelled emails says what it's about and how she feels. Billing, and unhappy. Two, find the page: search pulls your policy, and a language model throws out the paragraphs that don't answer her. Three, the same model writes a two-line brief and a first draft from those paragraphs only. It can't promise refunds or give health advice. Four, a person decides. Scan results, health questions, anyone cancelling over results skip the draft and go to a Bone Health Consultant.
-
-
-## Part 4. The one it got wrong (1:55)
-
-**Show.** Press Next. Stop 3. Muriel's email on the left, the draft on the right. Hover the highlighted sentence on "taper off", point at the red Fail row, then at the scorecard for the last sentence. Slow down here.
-
-**Say.** The part I'm proudest of went wrong. Muriel asked about switching from basic to Plus. The draft told her to taper off her dose. Nothing in your pages says that. My check, rules, not another model, asks every sentence where it came from. That one had no answer. The draft failed, a person wrote the reply. It never sends, every step is logged, a person has the last word.
+**Say.** Imagine an email from Jean saying she was charged twice this month, and 110 other emails waiting behind it. The question was: could we sort them before someone opens them, and give that person a head start on the reply?
 
 
-## Part 5. Your reviews (2:25)
+## Part 3. Four steps, live (1:08)
 
-**Show.** Press Next. Stop 4. The amber "Price and value is rising" notice and the weekly chart on the left, a two-star review with the model's one-line read and the drafted public reply on the right. Point at the red bars for "climbing", the reply card for the last sentence.
+**Show.** Next. Stop 2. Click "Handle this email" as you say it. Point at each card as it fills: sorted, policy, who handles it, draft, check.
 
-**Say.** Then the same sorter on reviews, a hundred written to match your public ones. One table, shaped for your BigQuery warehouse, and every number on the page is a SQL query I wrote. In my sample it found price complaints climbing in the last three weeks. And a bad review about a scan or a side effect never gets a public reply; a consultant calls.
+**Say.** When I click Handle this email, the system works out what the email is about and how the customer feels. Jean is billing, and unhappy. Then it pulls only the AlgaeCal policies that apply to her email. Then it decides who should handle it. If it's about scan results or someone's health condition, it skips the draft and goes straight to a Bone Health Consultant. Otherwise it writes a short draft from those policies only.
+
+**Say.** I gave the draft rules. It must stay inside AlgaeCal's policies, it must not promise a refund, it must not give medical advice, and it must answer the actual question. And a human makes the final decision. They can approve it, edit it, or throw it away.
 
 
-## Part 6. What changed, and the honest number (2:54)
+## Part 4. The one it got wrong (2:02)
 
-**Show.** Press Next. Stop 5. Four numbers, two short paragraphs, the table of "when it says sure, it is right N in 10".
+**Show.** Next. Stop 3. Hover the highlighted sentence on "tapering", point at the red Fail row. Slow down.
 
-**Say.** What changed: agents get each email sorted with a draft to edit, the team lead gets the week on one screen, and the customer gets a reply a person has checked. The honest number: right about three times in four on emails it has never seen. So a person always decides.
+**Say.** The part I'm most proud of is the time it made something up. Muriel wanted to switch from Basic to Plus, and the draft told her to taper her dose. That is not in any AlgaeCal policy. I'd built a check that asks every sentence of the draft where it came from. That sentence had no answer, so the draft failed, and a person wrote the reply. The system never sends anything on its own.
 
-**Show.** Camera, for the last half minute. Stop recording two seconds after the last word.
 
-**Say.** If I joined, day one would be with your consultants, labelling real emails, because their judgement is what this should learn. Your values page says do the right thing even when it hurts. For me, that's showing you the draft that made something up. Thanks for watching.
+## Part 5. Your reviews (2:35)
+
+**Show.** Next. Stop 4. Point at the red bars, then the reply card.
+
+**Say.** I pointed the same sorter at a hundred reviews, written to match what AlgaeCal's public ones say. Every number on that page is a SQL query, and in my sample it found price complaints climbing. A bad review about a scan or a side effect never gets a public reply; a consultant calls instead.
+
+
+## Part 6. What changed, and the honest number (2:59)
+
+**Show.** Next. Stop 5. Four numbers, the accuracy table.
+
+**Say.** What changed: agents get each email sorted with a draft to edit, the team lead sees the whole week on one screen, and the customer gets a reply a person has checked. The honest number: it was right about three times out of four on emails it had never seen. Useful, but not something to trust blindly, so a person always decides.
+
+**Show.** Camera. Stop recording two seconds after the last word.
+
+**Say.** If I joined, on day one I'd work with your consultants to label real emails, because their judgement is what this system needs to learn. Your values say do the right thing even if it hurts. For me, showing you the draft that invented something is exactly that. Thank you for watching.
 
 ## Shot list
 
 | Time | On screen | Action |
 |---|---|---|
 | 0:00 | Camera | Part 1: who you are, what you build, the bank, why this rebuild. About a minute. |
-| 1:01 | Stop 1 | Jean's email, click "Let them arrive", the question over the landing emails. |
-| 1:15 | Stop 2 | Click "Handle this email". Talk through the wait. Point at the ticks. |
-| 1:55 | Stop 3 | Muriel's draft. Hover the sentence, point at the Fail row, then the scorecard. |
-| 2:25 | Stop 4 | The rising-theme notice, the red bars, the drafted public reply. |
-| 2:54 | Stop 5 | Four numbers, the honest-number table, then camera. |
-| 3:17 | Camera | Last paragraph. Done by about 3:38. |
+| 0:50 | Stop 1 | Jean's email, click "Let them arrive", the question over the landing emails. |
+| 1:08 | Stop 2 | Click "Handle this email". Talk through the wait. Point at the ticks. |
+| 2:02 | Stop 3 | Muriel's draft. Hover the sentence, point at the Fail row, then the scorecard. |
+| 2:35 | Stop 4 | The rising-theme notice, the red bars, the drafted public reply. |
+| 2:59 | Stop 5 | Four numbers, the honest-number table, then camera. |
+| 3:27 | Camera | Last paragraph. Done by about 3:50. |
 
 ## If it runs long
 
 In this order, until the timed run is under 3:45:
 
-1. Part 6: drop "If I joined, day one would be with your consultants, labelling real emails, because their judgement is what this should learn."
-2. Part 1: drop "I started on the OpenAI platform and ended up deploying AI inside the client's own environment."
-3. Part 5: drop "One table, shaped for your BigQuery warehouse, and every number on the page is a SQL query I wrote."
+1. Part 5: drop the whole reviews part and press Next through stop 4 without comment.
+2. Part 3: drop "They can approve it, edit it, or throw it away."
+3. Part 1: drop "and I've just finished my master's in computer science at Lakehead".
 
 ## Plain words
 
