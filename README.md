@@ -1,10 +1,10 @@
 # Customer conversation triage, a demo for AlgaeCal
 
-I built this for the Round 2 video for the Associate Data Scientist role.
+I built this for the Round 2 video for the Associate Data Scientist role. The video is four minutes, told from the Walkthrough page, and the full script, with what is on screen while each line is spoken, is in [the section below](#the-four-minute-video-what-to-show-and-what-to-say) and as a [PDF](docs/presenting.pdf).
 
 At Must IT Services I built an email pipeline for a banking client: inbound emails were classified, scored for sentiment, matched against policy documents with retrieval, and a reply was drafted for an agent to edit. Results went to MongoDB and a Power BI dashboard. I cannot show that code or that data, so this is the same pattern rebuilt from scratch in AlgaeCal's world, on my laptop, in a weekend.
 
-Everything runs locally. No API keys. Ollama provides `nomic-embed-text` for embeddings and `llama3.2` for drafting. The 30 tests run offline, no Ollama needed: `make test`.
+Everything runs locally. No API keys. Ollama provides `nomic-embed-text` for embeddings and `llama3.2` for drafting. The 32 tests run offline, no Ollama needed: `make test`.
 
 ![Overview](dashboard-preview.jpg)
 
@@ -21,6 +21,90 @@ flowchart LR
     Q --> V[human review<br/>approve, edit, discard, correct]
     V -.->|corrections become labels| C
 ```
+
+## The four-minute video: what to show and what to say
+
+The whole video is one page of the app, the Walkthrough, which is the page `streamlit run app/dashboard.py` opens on. Six stops, a Next button, and one live run. About 500 spoken words: 3:36 at a normal pace, 3:52 read slowly to a camera. The shape: one email, the pile it came from, the question, four steps done live, the one the system got wrong, what changed, and an honest number at the end.
+
+### Before recording
+
+Once: install the requirements and Ollama, then `ollama pull nomic-embed-text` and `ollama pull llama3.2` (see [Run it](#run-it) for the exact Windows commands).
+
+Every time:
+
+1. Start Ollama. Run `streamlit run app/dashboard.py`. The browser opens on the Walkthrough. Set the browser zoom to 125%.
+2. Press Next to stop 3, keep "Charged twice this month" selected, press "Handle this email" once as a warm-up. The first draft loads the model and is slow. Note how long the draft card takes; that is the pause in Part 3.
+3. Delete `out/reviews.jsonl` if it exists and reload, so the review counters start at zero. Press Back to stop 1.
+4. If Ollama is not running, stop 3 says so and the other five stops still work. Say the words anyway and point at the step cards, or open any email in the Inbox and show its steps there.
+
+### Part 1. Who I am (0:00)
+
+**Show.** Camera. Look at the lens, not the screen.
+
+**Say.** Hi, I'm Khushi Gor. The project I'm proudest of started in an inbox. I spent a year and a half as an AI engineer at Must IT Services, and this was for a bank. I can't show you their emails, so I rebuilt the same idea for AlgaeCal, with emails I wrote myself.
+
+### Part 2. The pile (0:25)
+
+**Show.** Walkthrough, stop 1. Jean's email is on the left, the count and the newest emails on the right. Say the first three sentences at the email, the next two at the table.
+
+**Say.** Picture one email. Jean was charged twice this month. Someone opens it, works out what it's about, finds the right policy, and writes a reply from scratch. Now picture the pile. Every email, every day, the same way. The team lead only knew what the week looked like if she read it herself.
+
+**Show.** Press Next. Stop 2, the question, big on screen. Pause a beat after you ask it.
+
+**Say.** So the question was simple. Could we sort the pile before a person opens it, and give them a head start on the reply?
+
+### Part 3. Four steps (1:05)
+
+**Show.** Press Next. Stop 3. "Charged twice this month" is already selected. Click "Handle this email" as you say "Here's what I built". The first three step cards fill in under a second. The brief and the draft take a few seconds each and say "writing", so keep talking. The last card shows "Looks safe" with green ticks. Point at each card as you reach it. Each card carries a tag saying whether that step is an AI model, generative AI, a rule, or a person.
+
+**Say.** Here's what I built, in four steps, using Jean's email. One, sort it. The system reads the email and says what it's about and how she feels. Billing, and unhappy. Two, find the page. It pulls the paragraphs of policy that might apply, and a language model throws out any that don't actually answer her question. Three, the same model writes a two-line brief for the agent, and a first draft from those paragraphs only. It can't promise a refund and it can't give health advice. Four, a person decides. Nothing is ever sent by the system.
+
+**Say.** Some emails skip the draft on purpose. Scan results, health questions, anyone cancelling because it didn't work. Those go straight to a person for a phone call. That's a rule I wrote, not something the model decided.
+
+### Part 4. The one it got wrong (1:50)
+
+**Show.** Press Next. Stop 4. Muriel's email is on the left, the draft on the right. Hover the highlighted sentence as you say "taper off", then point at the red Fail row in the scorecard. This is the moment they will remember. Slow down here.
+
+**Say.** Now the part I'm proudest of, which is the part that went wrong. Muriel asked about switching from basic to Plus. The draft told her to taper off her current dose. Nothing in the pages says that. The model made it up, politely. I'd built a check for exactly this, and it's rules, not another model. It reads every sentence and asks, where did this come from? That one had no answer. The draft was marked failed, and a person wrote the reply. That check is why I trust the system, and why it never sends anything on its own.
+
+### Part 5. What changed (2:30)
+
+**Show.** Press Next. Stop 5. Four numbers, the weekly chart, two short paragraphs. Gesture at the agents' paragraph, then the team lead's.
+
+**Say.** For the agents, no more blank screen. Each email arrived sorted, with the policy beside it and a draft to edit. For the team lead, the whole week on one screen. What people write about, how they feel, who needs a call. A minute instead of an afternoon.
+
+### Part 6. The honest number (2:50)
+
+**Show.** Press Next. Stop 6. The table of "when it says sure, it is right N in 10".
+
+**Say.** The honest number: the sorter is right about three times in four on emails it has never seen. Good enough to help, not good enough to trust blindly. So a person always decides.
+
+**Show.** Camera, for the last paragraph. Stop recording two seconds after the last word.
+
+**Say.** If I did this at AlgaeCal, my first month would be with your Bone Health Consultants, labelling real emails, because their judgement is what the system should learn. Your values page says do the right thing even when it hurts. For me, that's showing you the draft that made something up. Thanks for watching.
+
+### Shot list
+
+| Time | On screen | Action |
+|---|---|---|
+| 0:00 | Camera | Part 1. |
+| 0:25 | Stop 1 | Jean's email, then the pile. |
+| 0:55 | Stop 2 | The question. Pause after it. |
+| 1:05 | Stop 3 | Click "Handle this email". Talk through the wait. Point at the ticks. |
+| 1:50 | Stop 4 | Muriel's draft. Hover the sentence, point at the Fail row. |
+| 2:30 | Stop 5 | Four numbers, the chart, two paragraphs. |
+| 2:50 | Stop 6 | The honest number, then camera. |
+| 3:05 | Camera | End of Part 6. |
+
+### If it runs long
+
+In this order, until the timed run is under 3:45: drop "That's a rule I wrote, not something the model decided." from Part 3; drop "and why it never sends anything on its own" from Part 4; shorten "and a first draft from those paragraphs only" to "and a first draft" in Part 3.
+
+### Plain words
+
+Keep these off camera: embedding, classifier, logistic regression, retrieval, RAG, vector, BM25, LLM, cosine, threshold, pipeline, latency, out-of-fold, calibration. Say "the system" or "the sorter". The one AI phrase in the script is "a language model", in Part 3. If someone asks which one, it is llama3.2 running on the laptop with no internet, and the check in Part 4 is rules, not a model. Do not say the system "understands" emails or "knows" the policy. It sorts, finds and drafts. A person decides. Do not apologise for the error in Part 4. It is the point of the story.
+
+If they want more after the video: the Live triage page takes any email typed into it, the Inbox has all 110 emails with every step, and Model facts has the honest numbers, including the ones that are not flattering.
 
 ## The dashboard
 
@@ -108,7 +192,7 @@ ollama pull nomic-embed-text
 ollama pull llama3.2
 pip install -r requirements.txt
 python app/classify.py --llm       # ~1 min
-python app/pipeline.py             # ~2 min, drafts 76 replies locally, scores them
+python app/pipeline.py             # ~12 min, grades paragraphs, writes briefs, drafts 76 replies, scores them
 python app/eval_retrieval.py       # seconds
 streamlit run app/dashboard.py
 ```
@@ -125,7 +209,7 @@ py -3.12 -m venv .venv ; .venv\Scripts\Activate.ps1
 pip install -r requirements.txt
 streamlit run app/dashboard.py          # dashboard only, nothing else needed
 ollama pull nomic-embed-text ; ollama pull llama3.2
-python app/classify.py --llm ; python app/pipeline.py ; python app/eval_retrieval.py   # full rerun, 5 to 10 min on CPU
+python app/classify.py --llm ; python app/pipeline.py ; python app/eval_retrieval.py   # full rerun, 15 to 25 min on CPU
 del out\reviews.jsonl                   # reset the review log
 ```
 
@@ -136,7 +220,7 @@ del out\reviews.jsonl                   # reset the review log
 - Three numbers for one classifier, on purpose. Held-out 89% is one lucky 28-email split. Cross-validated 77% is the planning number. Out-of-fold 73% is what the confusion matrix and calibration use, because every email in it was predicted by a model that never saw it.
 - The model is under-confident (ECE 0.30, points above the diagonal), which is what class_weight=balanced does on 110 rows. Confidence bands (high ≥ 0.55, medium ≥ 0.35, low) were checked on out-of-fold predictions: 88%, 79%, 52% right.
 - With seven short documents, plain BM25 beats the hybrid retriever at top-4 (89% vs 83% on a proxy label). The dense ranks earn their place on wording gaps ("scan got worse" → DEXA page), not on average. The dashboard's check list shows this as a failed check rather than hiding it.
-- Seven deterministic QA rules taken from the system prompt catch more than the grounding check alone: 10 of 76 drafts have a critical fail (7 grounding, 2 refund wording, 1 medical directive), 3 more have a minor fail.
+- Seven deterministic QA rules taken from the system prompt catch more than the grounding check alone: 8 of 76 drafts have a critical fail (6 grounding, 1 refund wording, 1 medical directive), 3 more have a minor fail. Before the generative grading of paragraphs in 0.7.0 it was 10.
 
 - With 110 labels, embeddings + logistic regression (77% cross-validated) beat TF-IDF (59%, and the fold spread is ±9 points either way) and beat llama3.2 zero-shot (54% on the same held-out split). The small supervised model also costs nothing per email.
 - The categories that get confused are the ones that are confused for humans too. "My scan didn't change, cancel my subscription" is a guarantee claim, a results question and a cancellation at once.
