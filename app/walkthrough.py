@@ -18,8 +18,8 @@ import views
 BEATS = [("The pile", "The problem", "1:05"),
          ("The question", "The problem", "1:10"),
          ("Four steps, live", "How I solved it", "1:20"),
-         ("The one it got wrong", "How I solved it", "2:15"),
-         ("What changed", "The outcome", "2:50"),
+         ("The one it got wrong", "How I solved it", "2:05"),
+         ("What changed", "The outcome", "2:40"),
          ("The honest number", "The outcome", "3:05")]
 
 CSS = f"""<style>
