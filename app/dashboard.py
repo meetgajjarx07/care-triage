@@ -37,9 +37,9 @@ PAGES = {
     "Run log": st.Page(views.runlog, title="Run log", icon=":material/terminal:", url_path="runs"),
 }
 NAV = [("Start here", ["Walkthrough"]),
-       ("Operate", ["Overview", "Live feed", "Inbox", "Voice of customer", "Live triage", "Activity"]),
-       ("Understand", ["Pipeline", "Model quality", "Model facts", "Knowledge base"]),
-       ("Administer", ["Configuration", "Run log"])]
+       ("Operate", ["Overview", "Live feed", "Inbox", "Voice of customer"]),
+       ("Understand", ["Model facts"])]
+MORE = ["Live triage", "Activity", "Pipeline", "Model quality", "Knowledge base", "Configuration", "Run log"]
 st.session_state["pages"] = PAGES
 current = st.navigation(list(PAGES.values()), position="hidden")
 run = load_json("run")
@@ -49,6 +49,9 @@ with st.sidebar:
     for sec, names in NAV:
         h(f'<div class="navsec">{sec}</div>')
         for name in names:
+            st.page_link(PAGES[name], label=name, icon=PAGES[name].icon)
+    with st.expander("More", expanded=any(PAGES[n].url_path == current.url_path for n in MORE)):
+        for name in MORE:
             st.page_link(PAGES[name], label=name, icon=PAGES[name].icon)
     # active item: Carbon side nav, 3px blue left border, gray-20 background
     h(f'<style>[data-testid="stSidebar"] [data-testid="stPageLink"] a[href$="/{current.url_path}"] '

@@ -77,6 +77,10 @@ code {{ font-family: {MONO} !important; font-size: 12px !important; background: 
 .shell .user {{ color: #f4f4f4; }}
 
 /* ---------- side nav (Carbon side nav, g10) ---------- */
+[data-testid="stSidebar"] [data-testid="stExpander"] {{ border: 0; margin-top: .5rem; }}
+[data-testid="stSidebar"] [data-testid="stExpander"] summary {{ padding: 0 1rem; font-size: 12px; letter-spacing: 0.32px; color: {GREY}; }}
+[data-testid="stSidebar"] [data-testid="stExpander"] summary:hover {{ color: {INK}; }}
+[data-testid="stSidebar"] [data-testid="stExpander"] > details > div {{ padding: 0; }}
 [data-testid="stSidebar"] {{ background: {LAYER}; border-right: 1px solid {LINE}; min-width: 256px !important; max-width: 256px !important; margin-top: 48px; height: calc(100vh - 48px); }}
 [data-testid="stSidebar"] [data-testid="stSidebarContent"] {{ padding: 0.5rem 0 0 0; }}
 [data-testid="stSidebar"] [data-testid="stSidebarHeader"], [data-testid="stSidebar"] [data-testid="stSidebarCollapseButton"], [data-testid="stSidebarCollapsedControl"] {{ display: none; }}
