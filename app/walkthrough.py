@@ -15,12 +15,12 @@ import live
 import views
 
 # (name, chapter, time stamp in the four-minute video)
-BEATS = [("The pile", "The problem", "0:25"),
-         ("The question", "The problem", "0:55"),
-         ("Four steps, live", "How I solved it", "1:05"),
-         ("The one it got wrong", "How I solved it", "1:50"),
-         ("What changed", "The outcome", "2:30"),
-         ("The honest number", "The outcome", "2:50")]
+BEATS = [("The pile", "The problem", "1:05"),
+         ("The question", "The problem", "1:10"),
+         ("Four steps, live", "How I solved it", "1:20"),
+         ("The one it got wrong", "How I solved it", "2:15"),
+         ("What changed", "The outcome", "2:50"),
+         ("The honest number", "The outcome", "3:05")]
 
 CSS = f"""<style>
 .stepper {{ display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; margin: 2px 0 0; }}
