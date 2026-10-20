@@ -8,13 +8,20 @@ Everything runs locally. No API keys. Ollama provides `nomic-embed-text` for emb
 
 ![Overview](dashboard-preview.jpg)
 
-What it does to each email, in order: embed it, classify category and sentiment, pull the matching policy paragraphs, decide by rule whether a person should call instead, draft a reply from those paragraphs only, run seven QA checks, and put it in front of a reviewer. Nothing is sent by the system.
+What it does to each email, in order: embed it, classify category and sentiment, pull the matching policy paragraphs, have the language model drop the paragraphs that do not answer the email and write a two-line brief, decide by rule whether a person should call instead, draft a reply from the kept paragraphs only, run seven QA checks, and put it in front of a reviewer. Nothing is sent by the system.
+
+The same sorter is pointed at reviews (Voice of customer: seven themes, mood from the stars, a one-line gist with a quoted phrase, a drafted public reply under the same checks, every number a SQL query over one warehouse-shaped table), and a Live feed page lets the emails and reviews arrive one by one with each run through the real pipeline as it lands. In numbers: 110 emails, 104 reviews, 34 consultant calls, 76 drafted email replies of which 8 fail a critical check, 37 drafted public replies of which 7 fail, category accuracy 73% out of fold, theme accuracy 90% out of fold, 38 offline tests.
+
+What is in the app, in the order the sidebar shows it: Walkthrough (the five-stop story the video uses), Overview, Live feed, Inbox, Voice of customer, Model facts, and under More: Live triage, Activity, Pipeline, Model quality, Knowledge base, Configuration, Run log.
 
 ```mermaid
 flowchart LR
     E[emails] --> C[classify<br/>category, sentiment, confidence band]
+    RV[reviews] --> T[theme<br/>7 themes, mood from stars, gist + quote]
+    T --> RO
     C --> R[retrieve<br/>BM25 + dense, policy chunks]
-    R --> RO{route<br/>rules in config}
+    R --> G[grade<br/>language model drops off-topic paragraphs, writes a brief]
+    G --> RO{route<br/>rules in config}
     RO -->|call| H[Bone Health Consultant]
     RO -->|draft| D[draft<br/>local 3B model, notes only]
     D --> Q[QA<br/>7 rules, 3 critical + sentence support]
@@ -176,7 +183,7 @@ app/pipeline.py          runs every email through, writes out/results.csv, out/t
 app/eval_retrieval.py    hit@k / MRR for BM25, dense, hybrid and the boosted pipeline -> models/retrieval_eval.json
 app/api.py               FastAPI service over the same code (uvicorn api:app --app-dir app)
 app/dashboard.py         Streamlit entrypoint: UI shell, nav, page routing
-app/views.py             nine of the eleven pages
+app/views.py             Overview, Inbox, Activity, Pipeline, Model quality, Model facts, Knowledge base, Configuration, Run log
 app/walkthrough.py       the Walkthrough page (five stops)
 app/live.py              the Live triage page and the panel the Walkthrough reuses
 app/triage.py            one email through every stage, shared by the Live page and the API
