@@ -169,54 +169,57 @@ def overview():
     h(f'<div class="note" style="margin-top:6px">Confidence bands on this run are optimistic because the classifier was refit on all {n} labelled emails. '
       f'The honest band accuracy is on the Model facts page, from out-of-fold predictions.</div>')
 
-    c1, c2 = st.columns([3, 2], gap="large")
+    c1, c2, c3 = st.columns([2.3, 1.6, 1.5], gap="large")
     with c1:
         section("Weekly volume by route", "week starting Monday")
         wk = df.groupby(["week", "Route"]).size().reset_index(name="n")
         ch = alt.Chart(wk).mark_bar(size=26).encode(
-            x=alt.X("week:T", title=None, axis=alt.Axis(format="%d %b", labelAngle=0)),
+            x=alt.X("week:T", title=None, scale=alt.Scale(padding=22), axis=alt.Axis(format="%d %b", labelAngle=0)),
             y=alt.Y("n:Q", title=None, axis=alt.Axis(tickMinStep=1)),
-            color=alt.Color("Route:N", scale=alt.Scale(domain=["Draft reply", "Consultant call"], range=[G40, G90]), title=None),
+            color=alt.Color("Route:N", scale=alt.Scale(domain=["Draft reply", "Consultant call"], range=[G40, G90]), title=None, legend=alt.Legend(orient="top", direction="horizontal")),
             order=alt.Order("Route:N", sort="descending"),
             tooltip=[alt.Tooltip("week:T", format="%d %b"), "Route", "n"]).properties(height=200)
         st.altair_chart(ch, width="stretch")
+        busiest = df.groupby("week").size().sort_values(ascending=False)
+        h(f'<div class="note">{len(busiest)} weeks. The busiest, starting {busiest.index[0]:%d %b}, brought {int(busiest.iloc[0])} emails.</div>')
     with c2:
         section("Cancel mentions by week", "regex on the body, not the model")
         cw = df.groupby("week").agg(n=("id", "size"), cancel=("cancel_flag", "sum")).reset_index()
-        base = alt.Chart(cw).encode(x=alt.X("week:T", title=None, axis=alt.Axis(format="%d %b", labelAngle=0)))
+        base = alt.Chart(cw).encode(x=alt.X("week:T", title=None, scale=alt.Scale(padding=22), axis=alt.Axis(format="%d %b", labelAngle=0)))
         bars_ = base.mark_bar(size=26, color=LINE2).encode(y=alt.Y("n:Q", title=None, axis=alt.Axis(tickMinStep=1)), tooltip=["n"])
         line = base.mark_line(color=CORAL, point=alt.OverlayMarkDef(color=CORAL, size=36)).encode(y=alt.Y("cancel:Q"), tooltip=["cancel"])
         st.altair_chart((bars_ + line).properties(height=200), width="stretch")
         h(f'<div class="note">Grey bars are all email that week, the line is emails that mention cancelling: {int(cw.cancel.tail(3).sum())} of {int(cw.n.tail(3).sum())} in the last three weeks.</div>')
 
-    c1, c2 = st.columns([3, 2], gap="large")
-    with c1:
-        section("Needs attention", "consultant calls, QA fails and low confidence, newest first")
-        q = df[(df.route == "consultant_call") | (df.qa_score < 100) | (df.confidence_band == "low")].copy()
-        q = q[~q.id.isin(status[status.isin(["approved", "edited", "discarded"])].index)].sort_values("received_at", ascending=False)
-        why = np.where(q.route == "consultant_call", q.escalation_reason,
-                       np.where(q.qa_score < 100, "QA: " + q.qa_failed.str.replace("; ", ", "), "Low confidence"))
-        view = pd.DataFrame({"ID": q["id"], "Received": q["received_at"].dt.strftime("%d %b %H:%M"), "From": q["from_name"],
-                             "Subject": q["subject"], "Category": q["Category"],
-                             "Action": np.where(q.route == "consultant_call", "Call", "Read draft"), "Why": why})
-        ev_ = st.dataframe(view, hide_index=True, height=330, width="stretch", on_select="rerun", selection_mode="single-row", key="queue",
-                           column_config={"ID": st.column_config.TextColumn(width="small"), "Received": st.column_config.TextColumn(width="small"),
-                                          "Action": st.column_config.TextColumn(width="small"), "Why": st.column_config.TextColumn(width="large")})
-        st.caption(f"{len(view)} open items")
-        if ev_.selection.rows:
-            st.session_state["selected_id"] = view.iloc[ev_.selection.rows[0]]["ID"]
-            b1, b2 = st.columns([1, 1])
-            if b1.button(f"Open {st.session_state['selected_id']} in Inbox", type="primary", width="stretch"): _goto("Inbox")
-            if b2.button("Open trace", width="stretch"): _goto("Pipeline")
-    with c2:
+    with c3:
         section("Why emails go to a consultant", f"{calls} of {n}")
         rs = reasons.reset_index(); rs.columns = ["reason", "n"]
         ch = alt.Chart(rs).mark_bar(size=22).encode(
-            y=alt.Y("reason:N", sort="-x", title=None, axis=alt.Axis(labelLimit=260, labelOverlap=False)),
-            x=alt.X("n:Q", title=None, axis=alt.Axis(tickMinStep=1)),
-            color=alt.condition(alt.datum.reason == "Cancel intent", alt.value(CORAL), alt.value(G70)), tooltip=["reason", "n"]).properties(height=160)
+            y=alt.Y("reason:N", sort="-x", title=None, axis=alt.Axis(labelLimit=200, labelOverlap=False)),
+            x=alt.X("n:Q", title=None, scale=alt.Scale(domain=[0, float(rs.n.max()) * 1.2]), axis=alt.Axis(tickMinStep=1)),
+            color=alt.condition(alt.datum.reason == "Cancel intent", alt.value(CORAL), alt.value(G70)), tooltip=["reason", "n"]).properties(height=200)
         st.altair_chart(ch + ch.mark_text(align="left", dx=4, color=INK).encode(text="n:Q"), width="stretch")
-        h('<div class="note">The cancel group is the one a phone call can still change. The others are routed because a templated reply would be wrong for them, not because the model is unsure.</div>')
+        h('<div class="note">The cancel group is the one a phone call can still change. The others are routed because a templated reply would be wrong for them.</div>')
+
+    section("Needs attention", "consultant calls, QA fails and low confidence, newest first")
+    q = df[(df.route == "consultant_call") | (df.qa_score < 100) | (df.confidence_band == "low")].copy()
+    q = q[~q.id.isin(status[status.isin(["approved", "edited", "discarded"])].index)].sort_values("received_at", ascending=False)
+    why = np.where(q.route == "consultant_call", q.escalation_reason,
+                   np.where(q.qa_score < 100, "QA: " + q.qa_failed.str.replace("; ", ", "), "Low confidence"))
+    view = pd.DataFrame({"ID": q["id"], "Received": q["received_at"].dt.strftime("%d %b %H:%M"), "From": q["from_name"],
+                         "Subject": q["subject"], "Category": q["Category"],
+                         "Action": np.where(q.route == "consultant_call", "Call", "Read draft"), "Why": why})
+    ev_ = st.dataframe(view, hide_index=True, height=330, width="stretch", on_select="rerun", selection_mode="single-row", key="queue",
+                       column_config={"ID": st.column_config.TextColumn(width=62), "Received": st.column_config.TextColumn(width=108),
+                                      "From": st.column_config.TextColumn(width=150), "Subject": st.column_config.TextColumn(width=320),
+                                      "Category": st.column_config.TextColumn(width=150), "Action": st.column_config.TextColumn(width=86),
+                                      "Why": st.column_config.TextColumn(width=340)})
+    st.caption(f"{len(view)} open items")
+    if ev_.selection.rows:
+        st.session_state["selected_id"] = view.iloc[ev_.selection.rows[0]]["ID"]
+        b1, b2, _ = st.columns([1, 1, 4])
+        if b1.button(f"Open {st.session_state['selected_id']} in Inbox", type="primary", width="stretch"): _goto("Inbox")
+        if b2.button("Open trace", width="stretch"): _goto("Pipeline")
     footer(run)
 
 

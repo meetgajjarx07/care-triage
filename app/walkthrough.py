@@ -129,9 +129,9 @@ def walkthrough():
             section("Each week", "calls on top of drafts")
             wk = df.groupby(["week", "Route"]).size().reset_index(name="n")
             ch = alt.Chart(wk).mark_bar(size=26).encode(
-                x=alt.X("week:T", title=None, axis=alt.Axis(format="%d %b", labelAngle=0)),
+                x=alt.X("week:T", title=None, scale=alt.Scale(padding=22), axis=alt.Axis(format="%d %b", labelAngle=0)),
                 y=alt.Y("n:Q", title=None, axis=alt.Axis(tickMinStep=1)),
-                color=alt.Color("Route:N", scale=alt.Scale(domain=["Draft reply", "Consultant call"], range=[G40, G90]), title=None),
+                color=alt.Color("Route:N", scale=alt.Scale(domain=["Draft reply", "Consultant call"], range=[G40, G90]), title=None, legend=alt.Legend(orient="top", direction="horizontal")),
                 order=alt.Order("Route:N", sort="descending"), tooltip=[alt.Tooltip("week:T", format="%d %b"), "Route", "n"]).properties(height=220)
             st.altair_chart(ch, width="stretch")
         with c2:
