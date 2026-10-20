@@ -18,11 +18,11 @@ import voc_view
 import feed
 
 # (name, chapter, time stamp in the four-minute video)
-BEATS = [("The pile", "The problem", "1:02"),
-         ("Four steps, live", "How I solved it", "1:15"),
-         ("The one it got wrong", "How I solved it", "1:55"),
-         ("Your reviews", "How I solved it", "2:26"),
-         ("What changed", "The outcome", "2:53")]
+BEATS = [("The pile", "The problem", "1:05"),
+         ("Four steps, live", "How I solved it", "1:19"),
+         ("The one it got wrong", "How I solved it", "1:59"),
+         ("Your reviews", "How I solved it", "2:29"),
+         ("What changed", "The outcome", "2:57")]
 
 CSS = f"""<style>
 .stepper {{ display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin: 2px 0 0; }}
