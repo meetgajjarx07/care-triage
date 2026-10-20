@@ -65,4 +65,4 @@ Restart the dashboard and the API so they drop their caches. The review log is a
 
 ## Reviews
 
-`python app/voc.py` runs the review set (about ten minutes with the local model; `--no-llm` for themes and rules only, in seconds) and writes `out/voc_results.csv`, `out/voc_trace.jsonl` and `out/voc_run.json`. The Voice of customer page and Walkthrough stop 6 read those. `scripts/make_reviews.py` regenerates `data/reviews.csv` if the fictional set is edited.
+`python app/voc.py` runs the review set (about ten minutes with the local model; `--no-llm` for themes and rules only, in seconds) and writes `out/voc_results.csv`, `out/voc_trace.jsonl` and `out/voc_run.json`. The Voice of customer page and Walkthrough stop 4 read those. `scripts/make_reviews.py` regenerates `data/reviews.csv` if the fictional set is edited.

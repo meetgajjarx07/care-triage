@@ -1,9 +1,9 @@
-"""Walkthrough: the project told in seven stops, inside the Carbon shell.
+"""Walkthrough: the project told in five stops, inside the Carbon shell.
 
-The stops follow the Round 2 question in order: the problem (1, 2), how it
-was solved (3, 4), the outcome (5, 6, 7). Every stop has the same shape: a
+The stops follow the Round 2 question in order: the problem (1), how it
+was solved (2, 3, 4), the outcome (5). Every stop has the same shape: a
 stepper and the Next button at the top, one line of narrative, one piece of
-evidence from the run. Stop three is the Live triage panel; stop four is the
+evidence from the run. Stop two is the Live triage panel; stop three is the
 real E061 draft with its failed check. Nothing on screen is a mock-up.
 """
 import altair as alt
@@ -17,16 +17,14 @@ import views
 import voc_view
 
 # (name, chapter, time stamp in the four-minute video)
-BEATS = [("The pile", "The problem", "0:56"),
-         ("The question", "The problem", "1:02"),
-         ("Four steps, live", "How I solved it", "1:10"),
-         ("The one it got wrong", "How I solved it", "1:50"),
-         ("What changed", "The outcome", "2:25"),
-         ("Your reviews", "The outcome", "2:37"),
-         ("The honest number", "The outcome", "3:12")]
+BEATS = [("The pile", "The problem", "0:49"),
+         ("Four steps, live", "How I solved it", "1:03"),
+         ("The one it got wrong", "How I solved it", "1:46"),
+         ("Your reviews", "How I solved it", "2:19"),
+         ("What changed", "The outcome", "2:50")]
 
 CSS = f"""<style>
-.stepper {{ display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin: 2px 0 0; }}
+.stepper {{ display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin: 2px 0 0; }}
 .sp {{ border-top: 2px solid {LINE}; padding: 8px 6px 0 0; }}
 .sp .c {{ font-size: 11px; line-height: 14px; letter-spacing: .32px; text-transform: uppercase; color: {GREY}; }}
 .sp .l {{ font-size: 14px; line-height: 18px; color: {GREY}; margin-top: 2px; }}
@@ -59,7 +57,7 @@ def walkthrough():
     df, run, tr = load_results(), load_json("run"), load_trace()
     h(CSS)
     i = st.session_state.setdefault("wt", 0)
-    page_header("Walkthrough", "The project in seven stops, in the order of the question. Everything on screen comes from the run.", run)
+    page_header("Walkthrough", "The project in five stops, in the order of the question. Everything on screen comes from the run.", run)
 
     left, right = st.columns([5, 1.1], gap="large")
     with left:
@@ -92,19 +90,15 @@ def walkthrough():
             newest = df.sort_values("received_at", ascending=False).head(7)
             table(["Received", "From", "Subject"], [(f"{r.received_at:%d %b %H:%M}", r.from_name, r.subject) for r in newest.itertuples()])
             st.caption(f"The newest 7 of {n}. All of them are in the Inbox.")
+        h('<div class="lead" style="margin-top:18px">Could we sort the pile <b>before</b> a person opens it, and give them a head start on the reply?</div>')
 
     elif i == 1:
-        h('<div class="lead">Could we sort the pile <b>before</b> a person opens it, and give them a head start on the reply?</div>')
-        h('<div class="plain">Three things would have to hold. It says what each email is about and how the customer feels. '
-          'It finds the policy that applies instead of guessing. And it never sends anything on its own: a person always decides.</div>')
-
-    elif i == 2:
         h('<div class="lead">One new email, handled in front of you.</div>')
         h('<div class="plain">Press <b>Handle this email</b> and watch the steps fill in. The language model does three jobs: it throws out weaker policy paragraphs that are about something else, it writes a two-line brief with the facts copied from the email, and it writes the first draft. Rules decide who handles it, and rules check the draft. Some emails skip the draft on purpose: '
           '<b>scan results, health questions, and anyone cancelling because it did not work</b> go straight to a Bone Health Consultant for a phone call.</div>')
         live.panel(key="wt", default_index=2, technical=False)
 
-    elif i == 3:
+    elif i == 2:
         r = df[df.id == "E061"]
         if r.empty:
             notification("warning", "E061 is not in this run.", " The failure example lives in the Inbox under QA fails.")
@@ -120,28 +114,7 @@ def walkthrough():
             with c2:
                 views._draft_block(r, trace, run, "wt061")
 
-    elif i == 4:
-        h('<div class="lead">What changed for the people doing the work.</div>')
-        stats([("Emails", n, "", "sorted before anyone opened them"),
-               ("Consultant calls", calls, "", "a person phones, no draft"),
-               ("Drafts written", drafts, "", f"{dr.draft_seconds.median():.1f} s each, on a laptop"),
-               ("Flagged by the check", flagged, "", "read closely by a person", "warn" if flagged else "ok")])
-        st.write("")
-        c1, c2 = st.columns([1.4, 1], gap="large")
-        with c1:
-            section("Each week", "calls on top of drafts")
-            wk = df.groupby(["week", "Route"]).size().reset_index(name="n")
-            ch = alt.Chart(wk).mark_bar(size=26).encode(
-                x=alt.X("week:T", title=None, scale=alt.Scale(padding=22), axis=alt.Axis(format="%d %b", labelAngle=0)),
-                y=alt.Y("n:Q", title=None, axis=alt.Axis(tickMinStep=1)),
-                color=alt.Color("Route:N", scale=alt.Scale(domain=["Draft reply", "Consultant call"], range=[G40, G90]), title=None, legend=alt.Legend(orient="top", direction="horizontal")),
-                order=alt.Order("Route:N", sort="descending"), tooltip=[alt.Tooltip("week:T", format="%d %b"), "Route", "n"]).properties(height=220)
-            st.altair_chart(ch, width="stretch")
-        with c2:
-            h('<div class="plain"><b>For the agents.</b> No more blank screen. Each email arrives sorted, with the policy attached and a draft to edit.</div>')
-            h('<div class="plain"><b>For the team lead.</b> The whole week on one screen: what people write about, how they feel, who needs a call. A minute instead of an afternoon.</div>')
-
-    elif i == 5:
+    elif i == 3:
         vdf, vrun, vtr = voc_view.load_voc()
         if vdf.empty:
             notification("warning", "No review run found.", " Run <code>python app/voc.py</code>; the Voice of customer page explains.")
@@ -176,16 +149,22 @@ def walkthrough():
                 h('<div class="mail draft"><div class="hd"><span class="s">Public reply, draft</span><span class="m">' + (views.qa_tag(qa["score"], qa["critical_fail"]) if qa else "") + f'</span></div><div class="bd">{r.draft}</div></div>')
                 h('<div class="note" style="margin-top:6px">Checked by the same seven rules as the email drafts. A scan result or a side effect in a review never gets a public reply; a consultant reaches out instead.</div>')
 
-    elif i == 6:
+    elif i == 4:
         acc = live._band_words()
-        h('<div class="lead">Right about <b>three times in four</b> on emails it has never seen.</div>')
+        h('<div class="lead">What changed, and the honest number.</div>')
+        stats([("Emails", n, "", "sorted before anyone opened them"),
+               ("Consultant calls", calls, "", "a person phones, no draft"),
+               ("Drafts written", drafts, "", f"{dr.draft_seconds.median():.1f} s each, on a laptop"),
+               ("Flagged by the check", flagged, "", "read closely by a person", "warn" if flagged else "ok")])
+        st.write("")
         c1, c2 = st.columns([1, 1], gap="large")
         with c1:
-            table(["When it says", "It is right"], [("Sure", live._in_n(acc["high"])), ("Fairly sure", live._in_n(acc["medium"])), ("Not sure", live._in_n(acc["low"]))])
-            st.caption("From out-of-fold predictions on all 110 labelled emails. The exact figures are on the Model facts page.")
+            h('<div class="plain"><b>For the agents.</b> No more blank screen. Each email arrives sorted, with the policy attached and a draft to edit.</div>')
+            h('<div class="plain"><b>For the team lead.</b> The whole week on one screen: what people write about, how they feel, who needs a call, what the reviews say.</div>')
         with c2:
-            h('<div class="plain">Good enough to help. Not good enough to trust blindly. So a person always decides, and the first month of doing this for real '
-              'would be spent with the people who answer the phone, labelling real emails, because their judgement is what the system should learn.</div>')
+            section("Right about three times in four on emails it has never seen", "out-of-fold, all 110")
+            table(["When it says", "It is right"], [("Sure", live._in_n(acc["high"])), ("Fairly sure", live._in_n(acc["medium"])), ("Not sure", live._in_n(acc["low"]))])
+            st.caption("Good enough to help, not good enough to trust blindly. So a person always decides. Exact figures on the Model facts page.")
             a, b = st.columns(2)
             if a.button("Open the Inbox", width="stretch"): st.switch_page(st.session_state["pages"]["Inbox"])
             if b.button("Try your own email", width="stretch"): st.switch_page(st.session_state["pages"]["Live triage"])

@@ -24,7 +24,7 @@ flowchart LR
 
 ## The four-minute video: what to show and what to say
 
-The whole video is you on camera for a minute, then one page of the app, the Walkthrough, which is the page `streamlit run app/dashboard.py` opens on. Seven stops, a Next button, one live run. About 505 spoken words: 3:44 at 135 words a minute, 3:53 read slowly to a camera. The shape: who you are and what you did for clients, the problem at the bank, why you rebuilt it here, one email and the pile, the question, four steps done live, the one the system got wrong and what responsible AI looks like, what changed, the same sorter on reviews, the honest number, and day one.
+Forty seconds on camera, then one page of the app, the Walkthrough, which is the page `streamlit run app/dashboard.py` opens on. Five stops, a Next button, one live run. About 471 spoken words: 3:29 at 135 words a minute, 3:37 read slowly to a camera, which leaves room. The shape: what you build and the bank's inbox, one email and the question, four steps done live, the one the system got wrong, the same sorter on reviews with the SQL behind it, what changed, the honest number, day one.
 
 ### Before recording
 
@@ -33,97 +33,82 @@ Once: install the requirements and Ollama, then `ollama pull nomic-embed-text` a
 Every time:
 
 1. Start Ollama. Run `streamlit run app/dashboard.py`. The browser opens on the Walkthrough. Set the browser zoom to 125%.
-2. Press Next to stop 3, keep "Charged twice this month" selected, press "Handle this email" once as a warm-up. The first draft loads the model and is slow. Note how long the draft card takes; that is the pause in Part 3.
+2. Press Next to stop 2, keep "Charged twice this month" selected, press "Handle this email" once as a warm-up. The first draft loads the model and is slow. Note how long the draft card takes; that is the pause in Part 3.
 3. Delete `out/reviews.jsonl` if it exists and reload, so the review counters start at zero. Press Back to stop 1.
-4. If Ollama is not running, stop 3 says so and the other five stops still work. Say the words anyway and point at the step cards, or open any email in the Inbox and show its steps there.
+4. If Ollama is not running, stop 2 says so and the other four stops still work. Say the words anyway and point at the step cards, or open any email in the Inbox and show its steps there.
 
-### Part 1. Who I am, and the problem at the bank (0:00)
+### Part 1. Who I am, and what I build (0:00)
 
-**Show.** Camera. Look at the lens, not the screen. This first minute is all you, so let it be calm and unhurried.
+**Show.** Camera. Look at the lens, not the screen. Forty seconds, calm.
 
-**Say.** Hi, I'm Khushi Gor. For a year and a half I was an AI engineer at Must IT Services. Our clients were mostly in finance, and my job was making AI they could actually run. I started on the OpenAI platform and ended up building AI that ran inside the client's own walls, so their data never left.
+**Say.** Hi, I'm Khushi Gor. I'm an AI engineer. For a year and a half at Must IT Services I built AI for clients, mostly in finance: classification and sentiment pipelines, retrieval systems, guarded generation. I took them from the OpenAI platform to deployments inside the client's own walls, where the data never leaves.
 
-**Say.** One client, a bank, had a problem that lived in an inbox. Every email was opened, sorted and answered by hand. I built them a system that sorted the emails, read the mood, found the policy, and drafted a reply for an agent to edit.
-
-**Say.** I can't show you theirs. So I studied your guarantee, your products and your reviews, and built a small version for your inbox.
+**Say.** One client, a bank, had an inbox problem. Every email was sorted and answered by hand. I built the system that sorted them, read the mood, found the policy, and drafted the reply for an agent. I can't show you theirs, so I rebuilt it for AlgaeCal in a weekend, from your guarantee, your products and your reviews.
 
 
-### Part 2. The pile, and the question (0:56)
+### Part 2. The pile (0:49)
 
-**Show.** Switch to the screen. Walkthrough, stop 1. Jean's email is on the left, the count and the newest emails on the right. Point at the email, then at the table.
+**Show.** Switch to the screen. Walkthrough, stop 1. Jean's email on the left, the count and the newest emails on the right, the question underneath. Point at the email, the table, then the question.
 
-**Say.** Picture one email. Jean was charged twice this month. Now picture the pile.
-
-**Show.** Press Next. Stop 2, the question, big on screen. Pause a beat after you ask it.
-
-**Say.** Could we sort the pile before a person opens it, and give them a head start on the reply?
+**Say.** Picture one email. Jean was charged twice. Now the pile. The question: could we sort it before a person opens it, and give them a head start on the reply?
 
 
-### Part 3. Four steps, live (1:10)
+### Part 3. Four steps, live (1:03)
 
-**Show.** Press Next. Stop 3. "Charged twice this month" is already selected. Click "Handle this email" as you say "Here's what I built". The first three step cards fill in under a second. The brief and the draft take a few seconds each and say "writing", so keep talking. The last card shows "Looks safe" with green ticks. Point at each card as you reach it; each one carries a tag saying whether that step is an AI model, generative AI, a rule, or a person.
+**Show.** Press Next. Stop 2. "Charged twice this month" is already selected. Click "Handle this email" as you say "Four steps, live". The first three cards fill in under a second; the brief and the draft say "writing" for a few seconds, so keep talking; the last card shows "Looks safe" with green ticks. Point at each card as you reach it. Each one carries a tag: AI model, generative AI, rule, or person.
 
-**Say.** Here's what I built, in four steps. One, sort it: what it's about, how she feels. Billing, and unhappy. Two, find the page. It pulls your policy, and a language model throws out the paragraphs that don't answer her. Three, the same model writes a two-line brief and a first draft, from your policy only. It can't promise refunds or give health advice. Four, a person decides.
+**Say.** Four steps, live. One, sort: a small model I trained on labelled emails says what it's about and how she feels. Billing, and unhappy. Two, find the page: search pulls your policy, and a language model throws out the paragraphs that don't answer her. Three, the same model writes a two-line brief and a first draft from those paragraphs only. It can't promise refunds or give health advice. Four, a person decides.
 
-**Say.** Scan results, health questions, anyone cancelling because it didn't work: those skip the draft and go straight to a Bone Health Consultant.
-
-
-### Part 4. The one it got wrong (1:50)
-
-**Show.** Press Next. Stop 4. Muriel's email is on the left, the draft on the right. Hover the highlighted sentence as you say "taper off", then point at the red Fail row in the scorecard. On the last two sentences, gesture at the scorecard: that is the log and the guardrails they are hearing about. Slow down here.
-
-**Say.** Now the part I'm proudest of, because it went wrong. Muriel asked about switching from basic to Plus. The draft told her to taper off her dose. Nothing in your pages says that. A check I built, rules, not another model, asks every sentence where it came from. That one had no answer. The draft failed, a person wrote the reply. That's responsible AI in practice. It never sends, every step is logged, and a person has the last word.
+**Say.** Scan results, health questions, anyone cancelling over results skip the draft and go to a Bone Health Consultant. That's a rule I wrote, not the model.
 
 
-### Part 5. What changed (2:25)
+### Part 4. The one it got wrong (1:46)
 
-**Show.** Press Next. Stop 5. Four numbers, the weekly chart, two short paragraphs. Gesture at the agents' paragraph, then the team lead's.
+**Show.** Press Next. Stop 3. Muriel's email on the left, the draft on the right. Hover the highlighted sentence on "taper off", point at the red Fail row, then at the scorecard for the last two sentences. Slow down here.
 
-**Say.** For the agents, no more blank screen. Each email arrives sorted, with a draft to edit. For the team lead, the whole week on one screen.
-
-
-### Part 6. Your reviews (2:37)
-
-**Show.** Press Next. Stop 6. The themes-by-week chart on the left with the amber "Price and value is rising" notice above it; a two-star review on the right with the model's one-line read and the drafted public reply marked QA 100. Point at the tall red bars for "climbing", at the notice for "the week it happens", and at the reply card for the last sentence.
-
-**Say.** Then I pointed the same sorter at reviews, a hundred written to match what your public ones say. Same four steps, and every number on the page is a SQL query, shaped for your warehouse. It found price complaints climbing in the last three weeks. The business should hear that the week it happens, not at quarter end. And a bad review about a scan or a side effect never gets a public reply; a consultant calls instead.
+**Say.** The part I'm proudest of went wrong. Muriel asked about switching from basic to Plus. The draft told her to taper off her dose. Nothing in your pages says that. My check, rules, not another model, asks every sentence where it came from. That one had no answer. The draft failed, a person wrote the reply. It never sends, every step is logged, a person has the last word. That's responsible AI in practice.
 
 
-### Part 7. The honest number, and day one (3:12)
+### Part 5. Your reviews (2:19)
 
-**Show.** Press Next. Stop 7. The table of "when it says sure, it is right N in 10".
+**Show.** Press Next. Stop 4. The amber "Price and value is rising" notice and the weekly chart on the left, a two-star review with the model's one-line read and the drafted public reply on the right. Point at the red bars for "climbing", the notice for "the week it happens", the reply card for the last sentence.
 
-**Say.** The honest number: it's right about three times in four on emails it has never seen. So a person always decides.
+**Say.** Then the same sorter on reviews, a hundred written to match your public ones. One table, shaped for your BigQuery warehouse, and every number on the page is a SQL query I wrote. It found price complaints climbing in the last three weeks. The business hears that the week it happens. And a bad review about a scan or a side effect never gets a public reply; a consultant calls.
+
+
+### Part 6. What changed, and the honest number (2:50)
+
+**Show.** Press Next. Stop 5. Four numbers, two short paragraphs, the table of "when it says sure, it is right N in 10".
+
+**Say.** What changed: agents get each email sorted with a draft to edit, and the team lead gets the week on one screen. The honest number: right about three times in four on emails it has never seen. So a person always decides.
 
 **Show.** Camera, for the last paragraph. Stop recording two seconds after the last word.
 
-**Say.** I learned your world in a weekend. On day one I'd sit with your consultants and label real emails, because their judgement is what this should learn. Your values page says do the right thing even when it hurts. For me, that's showing you the draft that made something up. Thanks for watching.
+**Say.** On day one I'd sit with your consultants and label real emails, because their judgement is what this should learn. Your values page says do the right thing even when it hurts. For me, that's showing you the draft that made something up. Thanks for watching.
 
 ### Shot list
 
 | Time | On screen | Action |
 |---|---|---|
-| 0:00 | Camera | Part 1: who you are, the clients, the bank, why this rebuild. A minute, all camera. |
-| 0:56 | Stop 1 | Jean's email, then the pile. |
-| 1:02 | Stop 2 | The question. Pause after it. |
-| 1:10 | Stop 3 | Click "Handle this email". Talk through the wait. Point at the ticks. |
-| 1:50 | Stop 4 | Muriel's draft. Hover the sentence, point at the Fail row, then the scorecard. |
-| 2:25 | Stop 5 | Four numbers, the chart, two paragraphs. |
-| 2:37 | Stop 6 | The rising-theme notice, the red bars, the drafted public reply. |
-| 3:12 | Stop 7 | The honest number, then camera. |
-| 3:21 | Camera | Last paragraph. Done by about 3:44. |
+| 0:00 | Camera | Part 1: what you build, the bank, why this rebuild. Forty seconds. |
+| 0:49 | Stop 1 | Jean's email, the pile, the question. |
+| 1:03 | Stop 2 | Click "Handle this email". Talk through the wait. Point at the ticks. |
+| 1:46 | Stop 3 | Muriel's draft. Hover the sentence, point at the Fail row, then the scorecard. |
+| 2:19 | Stop 4 | The rising-theme notice, the red bars, the drafted public reply. |
+| 2:50 | Stop 5 | Four numbers, the honest-number table, then camera. |
+| 3:09 | Camera | Last paragraph. Done by about 3:29. |
 
 ### If it runs long
 
 In this order, until the timed run is under 3:45:
 
-1. Part 7: drop "On day one I'd sit with your consultants and label real emails, because their judgement is what this should learn."
-2. Part 6: drop "Same four steps, and every number on the page is a SQL query, shaped for your warehouse."
-3. Part 1: drop "I started on the OpenAI platform and ended up building AI that ran inside the client's own walls, so their data never left."
+1. Part 6: drop "On day one I'd sit with your consultants and label real emails, because their judgement is what this should learn."
+2. Part 3: drop "That's a rule I wrote, not the model."
+3. Part 5: drop "The business hears that the week it happens."
 
 ### Plain words
 
-Keep these off camera: embedding, classifier, logistic regression, retrieval, RAG, vector, BM25, LLM, cosine, threshold, pipeline, latency, out-of-fold, calibration. Say "the system" or "the sorter". The one AI phrase in the script is "a language model", in Part 3. If someone asks which one, it is llama3.2 running on the laptop with no internet, and the check in Part 4 is rules, not a model. Do not say the system "understands" emails or "knows" the policy. It sorts, finds and drafts. A person decides. Do not apologise for the error in Part 4. It is the point of the story.
+Keep these off camera: embedding, classifier, logistic regression, retrieval, RAG, vector, BM25, LLM, cosine, threshold, pipeline, latency, out-of-fold, calibration. Say "the system" or "the sorter". The AI phrases in the script are "a small model I trained" and "a language model", both in Part 3. If someone asks which one, it is llama3.2 running on the laptop with no internet, and the check in Part 4 is rules, not a model. Do not say the system "understands" emails or "knows" the policy. It sorts, finds and drafts. A person decides. Do not apologise for the error in Part 4. It is the point of the story.
 
 If they want more after the video: the Live triage page takes any email typed into it, the Inbox has all 110 emails with every step, and Model facts has the honest numbers, including the ones that are not flattering.
 
@@ -134,7 +119,7 @@ Built like an internal operations product, not a notebook. The visual language i
 Operate
 
 - **Overview**: KPI tiles, a pipeline funnel (received, classified by confidence band, routed by reason, QA result, review status), weekly volume, cancel mentions, a Needs attention queue, and why emails go to a consultant.
-- **Walkthrough** (start here): the project in six stops for someone who does not code: one email and the pile, the question, four steps running live (the Live triage panel), the draft that made something up (E061 with its failed check), what changed, and the honest number. Carbon progress indicator at the top, Next and Back to move. Everything on it comes from the run.
+- **Walkthrough** (start here): the project in five stops for someone who does not code: one email, the pile and the question; four steps running live (the Live triage panel); the draft that made something up (E061 with its failed check); the same sorter on reviews; what changed and the honest number. Carbon progress indicator at the top, Next and Back to move. Everything on it comes from the run.
 - **Where the generative model is**: three jobs, each guarded (`app/genai.py`). Step 2: it reads every paragraph the hybrid search found and drops the ones about something else; the search's best match is always kept, because a 3B grader over-rejects (measured: it rejected the 'Charged twice' paragraph for a charged-twice email); if it rejects all of them it rephrases the question once and searches again, and if that also fails the email is marked a content gap (corrective RAG with a guard). Step 3: a two-line brief for whoever handles the email, with the facts copied out of it, each kept only if it appears in the email text. Step 4: the first draft, from the kept paragraphs only. It never routes (step 3 is a rule) and never grades its own draft (step 5 is seven deterministic checks; a 3B model as reviewer was tried and missed a real error). Every step card carries a tag saying which it is.
 - **Live triage**: paste one customer email, or pick one of five fresh examples, and watch it handled one step at a time, in plain words: what it is about and how sure the system is (with how often that confidence level is right), which policy applies, who should handle it, a first draft, whether the draft is safe (sticks to the policy, no refund promise, no medical advice), and a person's decision. Each step fills in as it finishes. The technical view (timings, model names, probabilities, retrieval ranks, the full scorecard, sentence support) is one click away under "How it decided". Needs Ollama; the page says which model is missing instead of failing half way.
 - **Inbox**: saved views (Needs attention, QA fails, Low confidence, Consultant calls, Pending review, Reviewed), filters, one row per email with band, QA score and review status. Selecting a row shows the email, the prediction, the draft with a provenance banner, sentence-level support highlighting, a seven-check QA scorecard, and the review actions: approve, edit then approve, discard, correct the category or sentiment with a reason. Each decision appends to `out/reviews.jsonl` and raises a toast.
@@ -159,7 +144,7 @@ There is also a small FastAPI service (`app/api.py`) over the same code, with `/
 
 No logo or trademark is used anywhere.
 
-| Walkthrough, stop 1 | Walkthrough, stop 3 running live |
+| Walkthrough, stop 1 | Walkthrough, stop 2 running live |
 |---|---|
 | ![Walkthrough](dashboard-walkthrough.jpg) | ![Walkthrough live](dashboard-walkthrough-live.jpg) |
 | Voice of customer | |
@@ -193,7 +178,7 @@ app/eval_retrieval.py    hit@k / MRR for BM25, dense, hybrid and the boosted pip
 app/api.py               FastAPI service over the same code (uvicorn api:app --app-dir app)
 app/dashboard.py         Streamlit entrypoint: UI shell, nav, page routing
 app/views.py             nine of the eleven pages
-app/walkthrough.py       the Walkthrough page (six stops)
+app/walkthrough.py       the Walkthrough page (five stops)
 app/live.py              the Live triage page and the panel the Walkthrough reuses
 app/triage.py            one email through every stage, shared by the Live page and the API
 app/ui.py                Carbon tokens, CSS, Altair theme, data loaders, status checks, small components
