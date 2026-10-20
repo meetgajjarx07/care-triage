@@ -162,6 +162,8 @@ No logo or trademark is used anywhere.
 | Walkthrough, stop 1 | Walkthrough, stop 3 running live |
 |---|---|
 | ![Walkthrough](dashboard-walkthrough.jpg) | ![Walkthrough live](dashboard-walkthrough-live.jpg) |
+| Voice of customer | |
+| ![Voice of customer](dashboard-voice.jpg) | |
 
 | Live triage, one email through every stage | Inbox, reviewing the draft that made something up |
 |---|---|
