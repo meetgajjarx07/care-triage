@@ -49,7 +49,7 @@ Administer
 
 Everything configurable lives in one file, `config/triage.yaml`: models, classifier settings, confidence band thresholds, retrieval constants, QA limits, routing rules and monitoring limits. The pipeline, the dashboard and the API read the same object, and the file's hash is stamped into each run so the Configuration page can tell when a run predates a change. The routing rules are data; `tests/test_parity.py` replays the last run through them.
 
-There is also a small FastAPI service (`app/api.py`) over the same code, with `/health`, `/config`, `/emails`, `/emails/{id}`, `/triage` and `/reviews`, so the dashboard is one client of the pipeline rather than the pipeline itself. `tests/` has 32 offline tests (routing, QA rules, retrieval, config validation, API, parity) that run without Ollama. `docs/` has the architecture with a data-flow diagram, a runbook, and five decision records. `CHANGELOG.md` tracks the versions.
+There is also a small FastAPI service (`app/api.py`) over the same code, with `/health`, `/config`, `/emails`, `/emails/{id}`, `/triage` and `/reviews`, so the dashboard is one client of the pipeline rather than the pipeline itself. `tests/` has 32 offline tests (routing, QA rules, retrieval, config validation, API, parity) that run without Ollama. `docs/` has the architecture with a data-flow diagram, a runbook, five decision records, and a presenter's script for showing the Walkthrough in four minutes ([presenting.md](docs/presenting.md), also as a [PDF](docs/presenting.pdf)). `CHANGELOG.md` tracks the versions.
 
 No logo or trademark is used anywhere.
 
@@ -92,7 +92,7 @@ app/ui.py                Carbon tokens, CSS, Altair theme, data loaders, status 
 app/static/fonts/        IBM Plex Sans and Mono (OFL), served locally
 .streamlit/config.toml   Streamlit theme: Carbon colours, Plex font faces, square corners
 tests/                   30 offline pytest tests; conftest fakes the embedding call
-docs/                    architecture.md (data flow), runbook.md, decisions.md
+docs/                    architecture.md (data flow), runbook.md, decisions.md, presenting.md + .pdf (four-minute script)
 Makefile                 setup, train, run, eval, all, app, api, test, lint, clean
 CHANGELOG.md             versions 0.1.0 to 0.4.0
 models/eval.json         holdout + out-of-fold predictions, confusion matrices, fold scores (written by classify.py)
