@@ -62,3 +62,7 @@ Restart the dashboard and the API so they drop their caches. The review log is a
 - Retrieval is evaluated against a proxy label (the document a category lives in), not per email relevance judgements. The numbers are directional.
 - The whole thing is single machine, single process. The API holds models in memory and is not designed for concurrent writers to the review log.
 - No fine-tuning anywhere. Both language models are used as pulled from Ollama.
+
+## Reviews
+
+`python app/voc.py` runs the review set (about ten minutes with the local model; `--no-llm` for themes and rules only, in seconds) and writes `out/voc_results.csv`, `out/voc_trace.jsonl` and `out/voc_run.json`. The Voice of customer page and Walkthrough stop 6 read those. `scripts/make_reviews.py` regenerates `data/reviews.csv` if the fictional set is edited.

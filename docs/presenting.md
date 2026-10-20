@@ -1,6 +1,6 @@
 # Presenting the Walkthrough in four minutes
 
-The whole video is you on camera for a minute, then one page of the app, the Walkthrough, which is the page `streamlit run app/dashboard.py` opens on. Six stops, a Next button, one live run. About 495 spoken words: 3:32 at a normal pace, 3:48 read slowly to a camera. The shape: who you are and what you did for clients, the problem at the bank, why you rebuilt it here, one email and the pile, the question, four steps done live, the one the system got wrong and what responsible AI looks like, what changed for the business, the honest number, and day one.
+The whole video is you on camera for a minute, then one page of the app, the Walkthrough, which is the page `streamlit run app/dashboard.py` opens on. Seven stops, a Next button, one live run. About 505 spoken words: 3:44 at 135 words a minute, 3:53 read slowly to a camera. The shape: who you are and what you did for clients, the problem at the bank, why you rebuilt it here, one email and the pile, the question, four steps done live, the one the system got wrong and what responsible AI looks like, what changed, the same sorter on reviews, the honest number, and day one.
 
 ## Before recording
 
@@ -17,14 +17,14 @@ Every time:
 
 **Show.** Camera. Look at the lens, not the screen. This first minute is all you, so let it be calm and unhurried.
 
-**Say.** Hi, I'm Khushi Gor. For a year and a half I was an AI engineer at Must IT Services. Our clients were mostly in finance, and my job was turning AI into things they could actually run. I started on the OpenAI platform and ended up building AI that ran inside the client's own walls, so their data never left.
+**Say.** Hi, I'm Khushi Gor. For a year and a half I was an AI engineer at Must IT Services. Our clients were mostly in finance, and my job was making AI they could actually run. I started on the OpenAI platform and ended up building AI that ran inside the client's own walls, so their data never left.
 
-**Say.** One client, a bank, had a problem that lived in an inbox. Every email was opened, sorted and answered by hand, from scratch. The team lead couldn't see the week without reading the pile. I built them a system that sorted the emails, read the mood, found the policy, and drafted a reply for an agent to edit.
+**Say.** One client, a bank, had a problem that lived in an inbox. Every email was opened, sorted and answered by hand. I built them a system that sorted the emails, read the mood, found the policy, and drafted a reply for an agent to edit.
 
-**Say.** I can't show you theirs. So I studied your guarantee, your products and your customer reviews, and built a small version for your inbox.
+**Say.** I can't show you theirs. So I studied your guarantee, your products and your reviews, and built a small version for your inbox.
 
 
-## Part 2. The pile, and the question (1:05)
+## Part 2. The pile, and the question (0:56)
 
 **Show.** Switch to the screen. Walkthrough, stop 1. Jean's email is on the left, the count and the newest emails on the right. Point at the email, then at the table.
 
@@ -32,35 +32,42 @@ Every time:
 
 **Show.** Press Next. Stop 2, the question, big on screen. Pause a beat after you ask it.
 
-**Say.** So the question was simple. Could we sort the pile before a person opens it, and give them a head start on the reply?
+**Say.** Could we sort the pile before a person opens it, and give them a head start on the reply?
 
 
-## Part 3. Four steps, live (1:20)
+## Part 3. Four steps, live (1:10)
 
 **Show.** Press Next. Stop 3. "Charged twice this month" is already selected. Click "Handle this email" as you say "Here's what I built". The first three step cards fill in under a second. The brief and the draft take a few seconds each and say "writing", so keep talking. The last card shows "Looks safe" with green ticks. Point at each card as you reach it; each one carries a tag saying whether that step is an AI model, generative AI, a rule, or a person.
 
 **Say.** Here's what I built, in four steps. One, sort it: what it's about, how she feels. Billing, and unhappy. Two, find the page. It pulls your policy, and a language model throws out the paragraphs that don't answer her. Three, the same model writes a two-line brief and a first draft, from your policy only. It can't promise refunds or give health advice. Four, a person decides.
 
-**Say.** Scan results, health questions, anyone cancelling because it didn't work: those skip the draft and go straight to a Bone Health Consultant. That's a rule from your guarantee, not the model's choice.
+**Say.** Scan results, health questions, anyone cancelling because it didn't work: those skip the draft and go straight to a Bone Health Consultant.
 
 
-## Part 4. The one it got wrong (2:05)
+## Part 4. The one it got wrong (1:50)
 
-**Show.** Press Next. Stop 4. Muriel's email is on the left, the draft on the right. Hover the highlighted sentence as you say "taper off", then point at the red Fail row in the scorecard. On the last three sentences, gesture at the scorecard: that is the log and the guardrails they are hearing about. Slow down here.
+**Show.** Press Next. Stop 4. Muriel's email is on the left, the draft on the right. Hover the highlighted sentence as you say "taper off", then point at the red Fail row in the scorecard. On the last two sentences, gesture at the scorecard: that is the log and the guardrails they are hearing about. Slow down here.
 
-**Say.** Now the part I'm proudest of, because it went wrong. Muriel asked about switching from basic to Plus. The draft told her to taper off her dose. Nothing in your pages says that. A check I built, rules, not another model, asks every sentence where it came from. That one had no answer. The draft failed, and a person wrote the reply. That's what responsible AI looks like in practice. It never sends, every step is logged, and a person has the last word.
-
-
-## Part 5. What changed for the business (2:40)
-
-**Show.** Press Next. Stop 5. Four numbers, the weekly chart, two short paragraphs. Gesture at the agents' paragraph, then the team lead's, then the chart for the business line.
-
-**Say.** For the agents, no more blank screen. Each email arrives sorted, with a draft to edit. For the team lead, the whole week on one screen. And the business hears its customers the same week, not at quarter end. The same sorter could read reviews and chat too, so the whole voice of the customer lands in one place.
+**Say.** Now the part I'm proudest of, because it went wrong. Muriel asked about switching from basic to Plus. The draft told her to taper off her dose. Nothing in your pages says that. A check I built, rules, not another model, asks every sentence where it came from. That one had no answer. The draft failed, a person wrote the reply. That's responsible AI in practice. It never sends, every step is logged, and a person has the last word.
 
 
-## Part 6. The honest number, and day one (3:05)
+## Part 5. What changed (2:25)
 
-**Show.** Press Next. Stop 6. The table of "when it says sure, it is right N in 10".
+**Show.** Press Next. Stop 5. Four numbers, the weekly chart, two short paragraphs. Gesture at the agents' paragraph, then the team lead's.
+
+**Say.** For the agents, no more blank screen. Each email arrives sorted, with a draft to edit. For the team lead, the whole week on one screen.
+
+
+## Part 6. Your reviews (2:37)
+
+**Show.** Press Next. Stop 6. The themes-by-week chart on the left with the amber "Price and value is rising" notice above it; a two-star review on the right with the model's one-line read and the drafted public reply marked QA 100. Point at the tall red bars for "climbing", at the notice for "the week it happens", and at the reply card for the last sentence.
+
+**Say.** Then I pointed the same sorter at reviews, a hundred written to match what your public ones say. Same four steps, and every number on the page is a SQL query, shaped for your warehouse. It found price complaints climbing in the last three weeks. The business should hear that the week it happens, not at quarter end. And a bad review about a scan or a side effect never gets a public reply; a consultant calls instead.
+
+
+## Part 7. The honest number, and day one (3:12)
+
+**Show.** Press Next. Stop 7. The table of "when it says sure, it is right N in 10".
 
 **Say.** The honest number: it's right about three times in four on emails it has never seen. So a person always decides.
 
@@ -73,21 +80,22 @@ Every time:
 | Time | On screen | Action |
 |---|---|---|
 | 0:00 | Camera | Part 1: who you are, the clients, the bank, why this rebuild. A minute, all camera. |
-| 1:05 | Stop 1 | Jean's email, then the pile. |
-| 1:10 | Stop 2 | The question. Pause after it. |
-| 1:20 | Stop 3 | Click "Handle this email". Talk through the wait. Point at the ticks. |
-| 2:05 | Stop 4 | Muriel's draft. Hover the sentence, point at the Fail row, then the scorecard. |
-| 2:40 | Stop 5 | Four numbers, the chart, two paragraphs. |
-| 3:05 | Stop 6 | The honest number, then camera. |
-| 3:15 | Camera | Last paragraph. Done by about 3:40. |
+| 0:56 | Stop 1 | Jean's email, then the pile. |
+| 1:02 | Stop 2 | The question. Pause after it. |
+| 1:10 | Stop 3 | Click "Handle this email". Talk through the wait. Point at the ticks. |
+| 1:50 | Stop 4 | Muriel's draft. Hover the sentence, point at the Fail row, then the scorecard. |
+| 2:25 | Stop 5 | Four numbers, the chart, two paragraphs. |
+| 2:37 | Stop 6 | The rising-theme notice, the red bars, the drafted public reply. |
+| 3:12 | Stop 7 | The honest number, then camera. |
+| 3:21 | Camera | Last paragraph. Done by about 3:44. |
 
 ## If it runs long
 
 In this order, until the timed run is under 3:45:
 
-1. Part 5: drop "The same sorter could read reviews and chat too, so the whole voice of the customer lands in one place."
-2. Part 3: drop "That's a rule from your guarantee, not the model's choice."
-3. Part 1: drop "The team lead couldn't see the week without reading the pile."
+1. Part 7: drop "On day one I'd sit with your consultants and label real emails, because their judgement is what this should learn."
+2. Part 6: drop "Same four steps, and every number on the page is a SQL query, shaped for your warehouse."
+3. Part 1: drop "I started on the OpenAI platform and ended up building AI that ran inside the client's own walls, so their data never left."
 
 ## Plain words
 

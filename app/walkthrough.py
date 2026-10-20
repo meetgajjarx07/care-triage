@@ -1,29 +1,32 @@
-"""Walkthrough: the project told in six stops, inside the Carbon shell.
+"""Walkthrough: the project told in seven stops, inside the Carbon shell.
 
 The stops follow the Round 2 question in order: the problem (1, 2), how it
-was solved (3, 4), the outcome (5, 6). Every stop has the same shape: a
+was solved (3, 4), the outcome (5, 6, 7). Every stop has the same shape: a
 stepper and the Next button at the top, one line of narrative, one piece of
 evidence from the run. Stop three is the Live triage panel; stop four is the
 real E061 draft with its failed check. Nothing on screen is a mock-up.
 """
 import altair as alt
+import pandas as pd
 import streamlit as st
 
-from ui import (G40, G90, INK, GREY, LINE, BLUE, CRIT, h, page_header, footer, section, stats, table,
+from ui import (G40, G60, G70, G90, CORAL, INK, GREY, LINE, BLUE, CRIT, h, page_header, footer, section, stats, table,
                 load_results, load_trace, load_json, has_run, no_run_notice, notification)
 import live
 import views
+import voc_view
 
 # (name, chapter, time stamp in the four-minute video)
-BEATS = [("The pile", "The problem", "1:05"),
-         ("The question", "The problem", "1:10"),
-         ("Four steps, live", "How I solved it", "1:20"),
-         ("The one it got wrong", "How I solved it", "2:05"),
-         ("What changed", "The outcome", "2:40"),
-         ("The honest number", "The outcome", "3:05")]
+BEATS = [("The pile", "The problem", "0:56"),
+         ("The question", "The problem", "1:02"),
+         ("Four steps, live", "How I solved it", "1:10"),
+         ("The one it got wrong", "How I solved it", "1:50"),
+         ("What changed", "The outcome", "2:25"),
+         ("Your reviews", "The outcome", "2:37"),
+         ("The honest number", "The outcome", "3:12")]
 
 CSS = f"""<style>
-.stepper {{ display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; margin: 2px 0 0; }}
+.stepper {{ display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin: 2px 0 0; }}
 .sp {{ border-top: 2px solid {LINE}; padding: 8px 6px 0 0; }}
 .sp .c {{ font-size: 11px; line-height: 14px; letter-spacing: .32px; text-transform: uppercase; color: {GREY}; }}
 .sp .l {{ font-size: 14px; line-height: 18px; color: {GREY}; margin-top: 2px; }}
@@ -56,7 +59,7 @@ def walkthrough():
     df, run, tr = load_results(), load_json("run"), load_trace()
     h(CSS)
     i = st.session_state.setdefault("wt", 0)
-    page_header("Walkthrough", "The project in six stops, in the order of the question. Everything on screen comes from the run.", run)
+    page_header("Walkthrough", "The project in seven stops, in the order of the question. Everything on screen comes from the run.", run)
 
     left, right = st.columns([5, 1.1], gap="large")
     with left:
@@ -139,6 +142,41 @@ def walkthrough():
             h('<div class="plain"><b>For the team lead.</b> The whole week on one screen: what people write about, how they feel, who needs a call. A minute instead of an afternoon.</div>')
 
     elif i == 5:
+        vdf, vrun, vtr = voc_view.load_voc()
+        if vdf.empty:
+            notification("warning", "No review run found.", " Run <code>python app/voc.py</code>; the Voice of customer page explains.")
+        else:
+            wh = voc_view.warehouse(vdf, vrun)
+            top, rt = voc_view.rising(wh)
+            h(f'<div class="lead">Then I pointed the same sorter at <b>{len(vdf)} reviews</b>.</div>')
+            c1, c2 = st.columns([1.3, 1], gap="large")
+            with c1:
+                h('<div class="plain">Reviews on the site and on Amazon say the same things as the emails, in public. Same four steps: sort by theme, read the mood, '
+                  'one line on what the reviewer is saying, and a rule for what happens next. Every number comes from a SQL query over one table, the shape it would have in their warehouse.</div>')
+                if top.recent_per_week > top.before_per_week:
+                    notification("warning", f"{voc_view.THEME_LABEL.get(top.theme, top.theme)} is rising.",
+                                 f" {top.recent_per_week:.1f} reviews a week in the last three weeks, against {top.before_per_week:.1f} a week before. The business should hear that the week it happens.")
+                tw = wh.run("themes_by_week"); tw["week_start"] = pd.to_datetime(tw.week_start); tw["Theme"] = tw.theme.map(voc_view.THEME_LABEL)
+                ch = alt.Chart(tw).mark_bar(size=22).encode(
+                    x=alt.X("week_start:T", title=None, scale=alt.Scale(padding=22), axis=alt.Axis(format="%d %b", labelAngle=0)),
+                    y=alt.Y("sum(n):Q", title=None, axis=alt.Axis(tickMinStep=1)),
+                    color=alt.Color("Theme:N", scale=alt.Scale(domain=list(voc_view.THEME_LABEL.values()), range=[G90, G70, CORAL, G60, G40, "#a6c8ff", "#f1c21b"]), legend=alt.Legend(orient="top", columns=4, title=None)),
+                    tooltip=[alt.Tooltip("week_start:T", format="%d %b"), "Theme", "sentiment", alt.Tooltip("sum(n):Q", title="reviews")]).properties(height=210)
+                st.altair_chart(ch, width="stretch")
+                st.caption("The rise is planted in this fictional set so there is something to find. The query that finds it is on the Voice of customer page.")
+            with c2:
+                ex = vdf[(vdf.sentiment == "negative") & (vdf.pred_theme == "price") & (vdf.action == "draft_reply") & (vdf.qa_score == 100)].sort_values("posted_at", ascending=False)
+                if ex.empty:
+                    ex = vdf[(vdf.sentiment == "negative") & (vdf.action == "draft_reply")].sort_values("posted_at", ascending=False)
+                r = ex.iloc[0]
+                voc_view._review_card(r, r.quote)
+                if r.gist:
+                    h(f'<div class="gist"><b>What the model read:</b> {r.gist}</div>')
+                S = vtr.get(r.id, {}).get("stages", {}); qa = (S.get("check") or {}).get("qa")
+                h('<div class="mail draft"><div class="hd"><span class="s">Public reply, draft</span><span class="m">' + (views.qa_tag(qa["score"], qa["critical_fail"]) if qa else "") + f'</span></div><div class="bd">{r.draft}</div></div>')
+                h('<div class="note" style="margin-top:6px">Checked by the same seven rules as the email drafts. A scan result or a side effect in a review never gets a public reply; a consultant reaches out instead.</div>')
+
+    elif i == 6:
         acc = live._band_words()
         h('<div class="lead">Right about <b>three times in four</b> on emails it has never seen.</div>')
         c1, c2 = st.columns([1, 1], gap="large")

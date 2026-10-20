@@ -1,0 +1,111 @@
+R052 4★ pills         no_action            
+R013 4★ results       no_action            
+R068 5★ support       no_action            
+R067 1★ subscription  draft_reply          drafted 1.2s QA 100
+R033 3★ price         no_action            
+R082 5★ results       no_action            
+R094 1★ price         draft_reply          drafted 1.3s QA 0
+R046 2★ pills         draft_reply          drafted 1.2s QA 100
+R041 4★ price         no_action            
+R026 2★ side_effects  consultant_outreach  
+R017 5★ results       no_action            
+R023 5★ side_effects  no_action            
+R009 4★ results       no_action            
+R054 1★ shipping      draft_reply          drafted 1.1s QA 86
+R064 2★ support       draft_reply          drafted 1.0s QA 100
+R074 4★ subscription  no_action            
+R028 5★ side_effects  no_action            
+R032 1★ price         draft_reply          drafted 1.4s QA 0
+R072 1★ subscription  draft_reply          drafted 1.0s QA 86
+R086 3★ results       no_action            
+R058 5★ shipping      no_action            
+R071 2★ support       draft_reply          drafted 0.9s QA 86
+R079 2★ shipping      draft_reply          drafted 0.9s QA 100
+R098 3★ support       no_action            
+R048 3★ side_effects  no_action            
+R087 1★ results       consultant_outreach  
+R077 2★ subscription  draft_reply          drafted 0.8s QA 100
+R073 2★ subscription  draft_reply          drafted 0.9s QA 86
+R005 2★ results       consultant_outreach  
+R006 5★ results       no_action            
+R022 4★ side_effects  no_action            
+R057 2★ shipping      draft_reply          drafted 1.0s QA 100
+R010 1★ results       consultant_outreach  
+R049 1★ pills         draft_reply          drafted 0.9s QA 86
+R021 2★ side_effects  consultant_outreach  
+R008 3★ results       no_action            
+R019 5★ side_effects  no_action            
+R044 1★ price         draft_reply          drafted 1.2s QA 100
+R097 5★ support       no_action            
+R060 1★ shipping      draft_reply          drafted 0.8s QA 100
+R016 3★ results       no_action            
+R003 4★ results       no_action            
+R089 5★ side_effects  no_action            
+R030 3★ side_effects  no_action            
+R096 2★ shipping      draft_reply          drafted 0.9s QA 100
+R084 2★ results       consultant_outreach  
+R055 2★ shipping      draft_reply          drafted 1.0s QA 100
+R012 2★ subscription  draft_reply          drafted 1.0s QA 100
+R018 2★ results       consultant_outreach  
+R085 5★ results       no_action            
+R053 2★ pills         draft_reply          drafted 0.9s QA 86
+R076 3★ subscription  no_action            
+R047 4★ pills         no_action            
+R063 5★ support       no_action            
+R061 4★ subscription  no_action            
+R092 3★ price         no_action            
+R051 3★ pills         no_action            
+R035 4★ price         no_action            
+R099 1★ shipping      draft_reply          drafted 0.8s QA 100
+R024 3★ pills         no_action            
+R011 5★ results       no_action            
+R015 1★ results       consultant_outreach  
+R083 4★ results       no_action            
+R065 4★ support       no_action            
+R042 2★ price         draft_reply          drafted 1.2s QA 100
+R075 1★ subscription  draft_reply          drafted 1.2s QA 100
+R103 3★ price         no_action            
+R100 4★ subscription  no_action            
+R066 5★ support       no_action            
+R091 1★ price         draft_reply          drafted 1.1s QA 0
+R056 4★ shipping      no_action            
+R059 3★ shipping      no_action            
+R004 1★ results       consultant_outreach  
+R039 2★ price         draft_reply          drafted 0.9s QA 100
+R014 5★ results       no_action            
+R027 4★ side_effects  no_action            
+R043 3★ price         no_action            
+R001 5★ results       no_action            
+R036 1★ price         draft_reply          drafted 1.2s QA 0
+R007 5★ results       no_action            
+R031 2★ price         draft_reply          drafted 0.8s QA 86
+R080 1★ price         draft_reply          drafted 0.8s QA 100
+R101 2★ price         draft_reply          drafted 1.2s QA 100
+R040 1★ price         draft_reply          drafted 1.0s QA 0
+R088 4★ side_effects  no_action            
+R020 1★ side_effects  consultant_outreach  
+R093 2★ price         draft_reply          drafted 1.2s QA 0
+R037 2★ price         draft_reply          drafted 0.8s QA 86
+R104 2★ price         draft_reply          drafted 1.0s QA 0
+R095 4★ pills         no_action            
+R102 1★ price         draft_reply          drafted 1.0s QA 86
+R069 3★ support       no_action            
+R045 2★ price         draft_reply          drafted 0.9s QA 86
+R062 5★ support       no_action            
+R050 5★ pills         no_action            
+R090 2★ price         draft_reply          drafted 1.2s QA 100
+R038 3★ price         no_action            
+R081 4★ subscription  no_action            
+R078 5★ subscription  no_action            
+R002 5★ results       no_action            
+R029 2★ pills         draft_reply          drafted 1.2s QA 86
+R025 1★ results       consultant_outreach  
+R070 4★ support       no_action            
+R034 2★ price         draft_reply          drafted 1.2s QA 100
+
+out-of-fold theme accuracy: 0.904 {'pills': 0.889, 'price': 1.0, 'results': 0.958, 'shipping': 0.889, 'side_effects': 0.786, 'subscription': 0.75, 'support': 0.917}
+action
+no_action              56
+draft_reply            37
+consultant_outreach    11
+wrote out/voc_results.csv, voc_trace.jsonl, voc_run.json

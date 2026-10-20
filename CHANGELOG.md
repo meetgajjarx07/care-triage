@@ -2,6 +2,12 @@
 
 All dates are 2026. Versions follow the `version` field in `config/triage.yaml`, which is stamped into `out/run.json` on every run.
 
+## 0.8.0 (2026-10-19)
+
+- Voice of customer: the same sorter pointed at reviews. `data/reviews.csv` holds 104 fictional reviews shaped like a Yotpo export plus Amazon and independent-site rows, with the themes public AlgaeCal reviews actually talk about. `app/voc.py` embeds them with the same model, predicts one of seven themes out of fold (so every shown theme comes from a model that never saw that review), takes the mood from the stars, has the language model write a one-line gist and copy one phrase out of the review (kept only if it really appears in the text), applies the review rules in `config/triage.yaml` (a scan result or a side effect in a negative review goes to a private consultant outreach, other negative reviews get a drafted public reply under 90 words, the rest are counted), and runs the same seven QA rules on every draft.
+- `warehouse/bigquery_schema.sql` is one `voice_of_customer` table for emails, reviews and, later, calls and chat; `warehouse/queries.sql` holds the seven queries behind every number on the page, run locally on SQLite over the same rows by `app/voc_sql.py`. The Voice of customer page shows the rising theme, themes by week, the mix, by product, what happened to the bad ones, cancel talk across both channels, and the negative reviews with the model's gist, the drafted public reply and its scorecard. A box says how this would run on the company's stack (Yotpo, Amazon, Talkdesk, Cloud Storage, BigQuery, Looker, Salesforce) and that it is a design, not built here.
+- Walkthrough gains a seventh stop, Your reviews. Config version 0.8.0.
+
 ## 0.7.0 (2026-10-19)
 
 - The language model now does three jobs, each with a guard (`app/genai.py`), the same shape as the email system this rebuilds: it grades every retrieved paragraph against the email and drops the ones about something else, with the search's best match always kept; if it rejects all of them it rephrases the question once and searches again, and if that also fails the email is marked a content gap (corrective RAG with a guard, because a 3B grader over-rejects); it writes a two-line brief for whoever handles the email and copies the facts out of it, each fact kept only if it appears in the email text; and it writes the draft, from the kept paragraphs only. It still never routes and never grades its own draft.

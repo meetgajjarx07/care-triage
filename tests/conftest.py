@@ -32,6 +32,8 @@ def no_network(monkeypatch):
     def fake_chat(task, system, user, num_predict=None):
         if task == "grade":
             return json.dumps({"useful": True, "why": "test"})
+        if task == "review":
+            return json.dumps({"gist": "charged twice, wants it fixed", "quote": "two charges", "asks_for": "a refund"})
         if task == "brief":
             return json.dumps({"asks": "a refund of a duplicate charge", "check": "the two charges on the account", "facts": ["two charges", "order 99999"]})
         return json.dumps({"query": "duplicate charge refund subscription"})

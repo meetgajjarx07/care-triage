@@ -1,0 +1,60 @@
+{
+  "run_id": "voc-20261019-222410",
+  "config_version": "0.8.0",
+  "config_hash": "62bdf26b8d51",
+  "started_at": "2026-10-19T22:24:10",
+  "finished_at": "2026-10-19T22:25:33",
+  "wall_seconds": 82.9,
+  "reviews": 104,
+  "window": [
+    "2026-08-03 18:35",
+    "2026-10-10 08:05"
+  ],
+  "sources": {
+    "Yotpo": 67,
+    "Amazon": 32,
+    "Independent site": 5
+  },
+  "embed_model": "nomic-embed-text",
+  "draft_model": "llama3.2",
+  "llm": true,
+  "theme_oof_accuracy": 0.904,
+  "theme_oof_per_theme": {
+    "pills": 0.889,
+    "price": 1.0,
+    "results": 0.958,
+    "shipping": 0.889,
+    "side_effects": 0.786,
+    "subscription": 0.75,
+    "support": 0.917
+  },
+  "themes": [
+    "pills",
+    "price",
+    "results",
+    "shipping",
+    "side_effects",
+    "subscription",
+    "support"
+  ],
+  "sentiments": {
+    "negative": 48,
+    "positive": 40,
+    "neutral": 16
+  },
+  "actions": {
+    "no_action": 56,
+    "draft_reply": 37,
+    "consultant_outreach": 11
+  },
+  "drafted": 37,
+  "qa_critical": 7,
+  "quotes_kept": 102,
+  "quotes_rejected": 2,
+  "planted_trend": "price complaints are weighted into the last three weeks on purpose, to give the page a rise to surface",
+  "timing_seconds": {
+    "embed_all": 0.91,
+    "theme_cv": 0.03,
+    "draft_total": 38.1
+  }
+}

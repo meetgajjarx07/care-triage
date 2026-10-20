@@ -500,7 +500,7 @@ def page_header(title, sub, run, crumbs=None):
     meta = ""
     if run:
         w = run.get("window", ["", ""])
-        meta = (f'<div class="meta"><code>{run.get("run_id","")}</code><br>{run.get("emails","")} emails, '
+        meta = (f'<div class="meta"><code>{run.get("run_id","")}</code><br>{run.get("emails", run.get("reviews", ""))} {run.get("unit", "emails")}, '
                 f'{w[0][:10]} to {w[1][:10]}<br>{run.get("embed_model","")} · {run.get("draft_model") or "no drafting"}</div>')
     bc = f'<div class="crumbs">{crumbs}</div>' if crumbs else ""
     h(f'<div class="ph"><div>{bc}<h1>{title}</h1><div class="sub">{sub}</div></div>{meta}</div>')

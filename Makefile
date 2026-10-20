@@ -3,7 +3,7 @@ PY ?= python
 EMBED := $(shell $(PY) -c "import sys; sys.path.insert(0,'app'); from config import CFG; print(CFG['models']['embed'])")
 DRAFT := $(shell $(PY) -c "import sys; sys.path.insert(0,'app'); from config import CFG; print(CFG['models']['draft'])")
 
-.PHONY: setup train run eval all app api test lint clean
+.PHONY: setup train run voc eval all app api test lint clean
 
 setup:            ## install Python deps and pull both Ollama models
 	pip install -r requirements.txt
@@ -13,13 +13,16 @@ setup:            ## install Python deps and pull both Ollama models
 train:            ## fit classifiers, write models/metrics.json and models/eval.json (~1 min)
 	$(PY) app/classify.py --llm
 
-run:              ## run every email through the pipeline, write out/ (~2 min, drafts locally)
+run:              ## run every email through the pipeline, write out/ (~12 min, drafts locally)
 	$(PY) app/pipeline.py
+
+voc:              ## the same sorter over data/reviews.csv -> out/voc_* (~10 min, drafts public replies locally)
+	$(PY) app/voc.py
 
 eval:             ## retrieval hit@k / MRR -> models/retrieval_eval.json (seconds)
 	$(PY) app/eval_retrieval.py
 
-all: train run eval
+all: train run voc eval
 
 app:              ## the dashboard
 	streamlit run app/dashboard.py

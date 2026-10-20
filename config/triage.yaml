@@ -3,7 +3,7 @@
 # `make run` (or `python app/pipeline.py`); the Configuration page shows the
 # values in force and the hash of this file is stamped into out/run.json.
 
-version: "0.7.0"
+version: "0.8.0"
 owner: "Khushi Gor"
 environment: "local"          # shown in the header; "local" means laptop + Ollama
 
@@ -86,3 +86,41 @@ monitoring:
   low_band_share_max: 0.25            # share of emails in the low confidence band
   correction_rate_max: 0.15           # reviewer corrections / reviewed drafts, per week
   run_age_days_max: 7
+
+# Voice of customer: the same sorter pointed at reviews (data/reviews.csv, all fictional).
+# Themes are predicted out-of-fold, so every review's theme comes from a model that never saw it.
+reviews:
+  themes: [results, side_effects, price, pills, shipping, support, subscription]
+  theme_to_kb:                 # which knowledge-base documents to favour when drafting a public reply
+    results: results_question
+    side_effects: safety_concern
+    price: subscription_billing
+    pills: dosage_question
+    shipping: shipping_issue
+    support: positive_feedback
+    subscription: subscription_billing
+  public_reply_max_words: 90
+  # reply rules, top to bottom, first match wins. Public replies never discuss a person's health or scan.
+  rules:
+    - id: health_in_public
+      name: Health or scan result in a negative review
+      when: {sentiment: negative, theme_in: [results, side_effects]}
+      action: consultant_outreach
+      short: "Consultant reaches out privately"
+      reason: "a scan result or a side effect is not discussed in public; a Bone Health Consultant contacts the reviewer"
+    - id: negative
+      name: Any other negative review
+      when: {sentiment: negative}
+      action: draft_reply
+      short: "Public reply drafted"
+      reason: "a short public reply from the policy, for a person to approve"
+    - id: neutral
+      name: Three stars
+      when: {sentiment: neutral}
+      action: no_action
+      short: "Read, no reply"
+      reason: "counted in the themes; no reply unless a person chooses to"
+  default:
+    action: no_action
+    short: "Thanked in bulk"
+    reason: "positive reviews are counted and thanked in the weekly Yotpo batch"
